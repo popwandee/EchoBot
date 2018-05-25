@@ -26,16 +26,19 @@ foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
      $reply_token = $event->getReplyToken();
      $res = $bot->getProfile('USER_ID');
-     /*
+
      if ($res->isSucceeded()) {
+       $text='getProfile OK';
+       /*
       $profile = $res->getJSONDecodedBody();
       $postData=array();
       $postData[0] = $profile['displayName'];
       $postData[0] = $profile['statusMessage'];
       $postData[0] = $profile['pictureUrl'];
+      */
     }
-     */
-      $bot->replyText($reply_token, $res);
+
+      $bot->replyText($reply_token, $text);
    }
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $reply_token = $event->getReplyToken();
