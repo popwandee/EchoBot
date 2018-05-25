@@ -75,8 +75,9 @@ foreach ($events as $event) {
                   //-----------------------
                 }//end for each
               }else{
-                  $text= $explodeText[0];
-                  $bot->replyText($reply_token, $text);
+                  $text='';
+                  //$text= $explodeText[0];
+                  //$bot->replyText($reply_token, $text);
               }//end no data from mlab
             }//end switch
     }//end if text
