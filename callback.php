@@ -52,7 +52,7 @@ foreach ($events as $event) {
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
-
+              $bot->replyText($reply_token, $text);
               break;
           case 'stock':
               $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';
