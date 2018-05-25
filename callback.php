@@ -54,8 +54,14 @@ foreach ($events as $event) {
               $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
 
               break;
-          case 'stock': $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';break;
-          case 'news': $text=$text.' news update ต่อไปจะรายงานข่าวหุ้นด้วยนะครับ';break;
+          case 'stock':
+              $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';
+              $bot->replyText($reply_token, $text);
+              break;
+          case 'news':
+              $text=$text.' news update ต่อไปจะรายงานข่าวหุ้นด้วยนะครับ';
+              $bot->replyText($reply_token, $text);
+              break;
           default:
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
@@ -65,14 +71,15 @@ foreach ($events as $event) {
               if($isData >0){
                 foreach($data as $rec){
                   $text= $rec->answer;
+                  $bot->replyText($reply_token, $text);
                   //-----------------------
-                }
+                }//end for each
               }else{
-                $text=$explodeText[0];
-              }
-            }
-        $bot->replyText($reply_token, $text);
-    }
-}
+                  $text= $explodeText[0];
+                  $bot->replyText($reply_token, $text);
+              }//end no data from mlab
+            }//end switch
+    }//end if text
+}// end foreach event
 
 echo "OK4";
