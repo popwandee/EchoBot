@@ -35,8 +35,8 @@ foreach ($events as $event) {
         //$bot->replyText($reply_token, $explodeText[0]);
         switch ($explodeText[0]) {
           case 'สอนฮูก':
-              $x_tra = str_replace("สอนฮูก","", $text);
-              $pieces = explode("|", $x_tra);
+              //$x_tra = str_replace("สอนฮูก","", $text);
+              $pieces = explode("|", $explodeText[1]);
               $_question=str_replace("[","",$pieces[0]);
               $_answer=str_replace("]","",$pieces[1]);
               //Post New Data
