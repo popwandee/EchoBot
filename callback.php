@@ -59,7 +59,7 @@ foreach ($events as $event) {
           default:
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$text.'"}');
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
               $data = json_decode($json);
                 foreach($data as $rec){
                   $text= $rec->answer;
