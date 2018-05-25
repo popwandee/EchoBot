@@ -66,7 +66,7 @@ foreach ($events as $event) {
                   //-----------------------
                 }
             }
-        $bot->replyText($reply_token, $text);
+        $bot->replyText($reply_token, $explodeText[0]);
     }
 }
 
