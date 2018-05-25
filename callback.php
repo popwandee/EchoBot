@@ -31,26 +31,21 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $reply_token = $event->getReplyToken();
         $text = $event->getText();
-        switch ($text) {
+        $explodeText=explode(" ",$text);
+        $bot->replyText($reply_token, $explodeText[0]);
+        switch ($explodeText[0]) {
           case 'สอนฮูก':
               $x_tra = str_replace("สอนฮูก","", $text);
               $pieces = explode("|", $x_tra);
               $_question=str_replace("[","",$pieces[0]);
               $_answer=str_replace("]","",$pieces[1]);
               //Post New Data
-              $newData = json_encode(
-                array(
-                  'question' => $_question,
-                  'answer'=> $_answer
-                )
-              );
-              $opts = array(
-                'http' => array(
-                    'method' => "POST",
-                    'header' => "Content-type: application/json",
-                    'content' => $newData
-                 )
-              );
+              $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
