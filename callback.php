@@ -61,10 +61,15 @@ foreach ($events as $event) {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
               $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
                 foreach($data as $rec){
                   $text= $rec->answer;
                   //-----------------------
                 }
+              }else{
+                $text=$explodeText[0];
+              }
             }
         $bot->replyText($reply_token, $text);
     }
