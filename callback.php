@@ -18,6 +18,12 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $reply_token = $event->getReplyToken();
         $text = $event->getText();
+        switch $text {
+          case 'สอนฮูก': $text=$text."สอนฮูก";break;
+          case 'stock': $text=$text.'stock price';break;
+          case 'news': $text=$text.'news update';break;
+          default: echo 'Retrieve data from database';
+        }
         $bot->replyText($reply_token, $text);
     }
 }
