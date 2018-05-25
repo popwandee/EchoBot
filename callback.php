@@ -25,19 +25,7 @@ $events = $bot->parseEventRequest($body, $signature);
 foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
      $reply_token = $event->getReplyToken();
-     $res = $bot->getProfile(USER_ID);
-
-     if ($res->isSucceeded()) {
-       $text='getProfile OK';
-       /*
-      $profile = $res->getJSONDecodedBody();
-      $postData=array();
-      $postData[0] = $profile['displayName'];
-      $postData[0] = $profile['statusMessage'];
-      $postData[0] = $profile['pictureUrl'];
-      */
-    }
-
+     $text = 'รูปอะไรเหรอฮะ';
       $bot->replyText($reply_token, $text);
    }
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
@@ -45,7 +33,30 @@ foreach ($events as $event) {
         $text = $event->getText();
         switch ($text) {
           case 'สอนฮูก':
-              $text=$text."สอนฮูก";
+              $x_tra = str_replace("สอนฮูก","", $text);
+              $pieces = explode("|", $x_tra);
+              $_question=str_replace("[","",$pieces[0]);
+              $_answer=str_replace("]","",$pieces[1]);
+              //Post New Data
+              $newData = json_encode(
+                array(
+                  'question' => $_question,
+                  'answer'=> $_answer
+                )
+              );
+              $opts = array(
+                'http' => array(
+                    'method' => "POST",
+                    'header' => "Content-type: application/json",
+                    'content' => $newData
+                 )
+              );
+
+              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก[คำถาม|คำตอบ]';
 
               break;
           case 'stock': $text=$text.'stock price';break;
