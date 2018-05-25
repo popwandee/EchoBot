@@ -32,7 +32,7 @@ foreach ($events as $event) {
         $reply_token = $event->getReplyToken();
         $text = $event->getText();
         $explodeText=explode(" ",$text);
-        $bot->replyText($reply_token, $explodeText[0]);
+        //$bot->replyText($reply_token, $explodeText[0]);
         switch ($explodeText[0]) {
           case 'สอนฮูก':
               $x_tra = str_replace("สอนฮูก","", $text);
