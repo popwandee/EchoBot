@@ -25,7 +25,7 @@ $events = $bot->parseEventRequest($body, $signature);
 foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
      $reply_token = $event->getReplyToken();
-     $res = $bot->getProfile('userId');
+     $res = $bot->getProfile(USER_ID);
 
      if ($res->isSucceeded()) {
        $text='getProfile OK';
