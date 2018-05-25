@@ -7,8 +7,8 @@ file_put_contents('/tmp/dump.txt', $raw."\n=====================================
 
 echo "Dump temp OK";
 
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '6f6b7e3b1aff242cd4fb0fa3113f7af3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'RvsMabRN/IlT2BtmEoH+KcIbha8F/aPLWWzMKj8lxz/7f9c/Ygu5qvrUGtdlrTwyQwR5tFcgIGGzCkHO/SzIKrdCqUm+sal4t73YOuTPZsQX4bR35g3ZJGTvFilxvO1LVO/I6B1ouhx3UjGWe+OwswdB04t89/1O/w1cDnyilFU=');
 echo "ok 1";
 require __DIR__."/vendor/autoload.php";
 echo "ok 2";
@@ -34,7 +34,7 @@ foreach ($events as $event) {
         $explodeText=explode(" ",$text);
         //$bot->replyText($reply_token, $explodeText[0]);
         switch ($explodeText[0]) {
-          case 'สอนเป็ด':
+          case 'สอนฮูก':
               //$x_tra = str_replace("สอนฮูก","", $text);
               $pieces = explode("|", $explodeText[1]);
               $_question=str_replace("[","",$pieces[0]);
@@ -51,7 +51,7 @@ foreach ($events as $event) {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-              $text = 'ขอบคุณที่สอนเป็ด ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
+              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
 
               break;
           case 'stock': $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';break;
