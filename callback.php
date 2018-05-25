@@ -34,7 +34,7 @@ foreach ($events as $event) {
         $explodeText=explode(" ",$text);
         //$bot->replyText($reply_token, $explodeText[0]);
         switch ($explodeText[0]) {
-          case 'สอนฮูก':
+          case 'สอนเป็ด':
               //$x_tra = str_replace("สอนฮูก","", $text);
               $pieces = explode("|", $explodeText[1]);
               $_question=str_replace("[","",$pieces[0]);
@@ -46,16 +46,16 @@ foreach ($events as $event) {
                                             'content' => $newData
                                              )
                                           );
-
+              // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก[คำถาม|คำตอบ]';
+              $text = 'ขอบคุณที่สอนเป็ด ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
 
               break;
-          case 'stock': $text=$text.'stock price';break;
-          case 'news': $text=$text.'news update';break;
+          case 'stock': $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';break;
+          case 'news': $text=$text.' news update ต่อไปจะรายงานข่าวหุ้นด้วยนะครับ';break;
           default:
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
