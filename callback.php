@@ -25,10 +25,16 @@ $events = $bot->parseEventRequest($body, $signature);
 foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
      $reply_token = $event->getReplyToken();
-     $userPos = $bot->getProfile();
-     $text = "รูปอะไรฮะ";//$event->getText();
-
-     $bot->replyText($reply_token, $text);
+     $res = $bot->getProfile('user-id');
+     if ($res->isSucceeded()) {
+      $profile = $res->getJSONDecodedBody();
+      $postData=array();
+      $postData[0] = $profile['displayName'];
+      $postData[0] = $profile['statusMessage'];
+      $postData[0] = $profile['pictureUrl'];
+       $bot->replyText($reply_token, $postData);
+    }
+     
    }
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $reply_token = $event->getReplyToken();
