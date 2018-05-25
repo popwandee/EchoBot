@@ -25,7 +25,9 @@ $events = $bot->parseEventRequest($body, $signature);
 foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
      $reply_token = $event->getReplyToken();
-     $text = "show image";//$event->getText();
+     $userPos = $bot->getProfile();
+     $text = "รูปอะไรฮะ";//$event->getText();
+
      $bot->replyText($reply_token, $text);
    }
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
