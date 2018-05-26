@@ -20,7 +20,7 @@ $bot = new \LINE\LINEBot(
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
 
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
-
+;
 );
 
 echo "ok 3";
@@ -64,7 +64,7 @@ foreach ($events as $event) {
 
               $pieces = explode("|", $explodeText[1]);
 
-              $_question=str_replace("[","",$pieces[0])
+              $_question=str_replace("[","",$pieces[0]);
               $_answer=str_replace("]","",$pieces[1]);
 
               //Post New Data
@@ -99,7 +99,7 @@ foreach ($events as $event) {
 
             case 'stock':
                 $symbol=$explodeText[1];
-                $text='stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.'click ';
+                $text='stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
                 $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
               $bot->replyText($reply_token, $text);
 
