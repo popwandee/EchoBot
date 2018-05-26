@@ -106,8 +106,12 @@ foreach ($events as $event) {
 
                 $symbol=$explodeText[1];
                 $text= 'stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
-                $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
-                $keepdate = true;
+                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
+                
+$content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
+$jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+//print_r($jarr); // ให้พิมพ์ค่า Array ออกมาดู
+			$keepdate = true;
 $countm= 0;
 while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
   //echo "=================<br />";
