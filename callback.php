@@ -107,6 +107,37 @@ foreach ($events as $event) {
                 $symbol=$explodeText[1];
                 $text= 'stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
                 $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
+                $keepdate = true;
+$countm= 0;
+while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
+  //echo "=================<br />";
+	//echo "$key <BR />";
+//	echo "=================";
+//	echo "<br />";
+  $KeepMainkey = $key; //เก็บคีย์หลัก
+	$count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
+	$getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
+  while (list($key) = each($getarr1)) {
+    //$KeepMidkey = array();
+    //$KeepMidkey = $key; //เก็บคีย์ที่เป้นวัน-เดือน-ปี
+    if ($KeepMainkey=="Meta Data" && $countm=='1') {
+      echo "=================<br />";
+    	echo "$getarr1[$key] <BR />";
+    	echo "=================";
+    	echo "<br />";
+    }
+    $countm++;
+    if ($KeepMainkey!="Meta Data" && $keepdate ) {
+      //echo "$key <BR />"; //แสดงคีย์และผลลัพธ์ขอคีย์ของเมต้า ไม่สามารถแสดงของวันได้เนื่องจากมี arrayซ้อนอยู่อีกชั้น
+      $keepdate = false;
+      $getarrayday = $getarr1[$key];
+    while (list($key) = each($getarrayday)) {
+        $text= "&nbsp&nbsp&nbsp&nbsp $key ==>  $getarrayday[$key] <BR />"; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
+    }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
+  }
+  }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
+} //สิ้นสุดการลิสต์คีย์ชั้นแรก
+
               $bot->replyText($reply_token, $text);
 
               break;
