@@ -40,8 +40,11 @@ foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
 
      $reply_token = $event->getReplyToken();
+       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ไม่หื่นนะฮะ'];
 
-     $text = 'รูปอะไรเหรอฮะ';
+    $text = $a[mt_rand(0, count($a) - 1)];
+
+     //$text = 'รูปอะไรเหรอฮะ';
 
       $bot->replyText($reply_token, $text);
 
