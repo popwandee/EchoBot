@@ -55,7 +55,9 @@ foreach ($events as $event) {
               $bot->replyText($reply_token, $text);
               break;
           case 'stock':
-              $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน';
+                 $symbol=$explodeText[1];
+                $text= 'stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
+                $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
               $bot->replyText($reply_token, $text);
               break;
           case 'news':
