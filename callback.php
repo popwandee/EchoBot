@@ -105,7 +105,7 @@ foreach ($events as $event) {
           case 'stock':
 
                 $symbol=$explodeText[1];
-                $text= 'stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
+                $text[0]= 'stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
                 $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
                 
 $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
@@ -113,6 +113,7 @@ $jarr = json_decode($content, true); // แปลงข้อมูล JSON ใ�
 //print_r($jarr); // ให้พิมพ์ค่า Array ออกมาดู
 			$keepdate = true;
 $countm= 0;
+			$text[2]='';
 while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
   //echo "=================<br />";
 	//echo "$key <BR />";
@@ -125,18 +126,14 @@ while (list($key) = each($jarr)) { // ทำการ list ค่า key ขอ�
     //$KeepMidkey = array();
     //$KeepMidkey = $key; //เก็บคีย์ที่เป้นวัน-เดือน-ปี
     if ($KeepMainkey=="Meta Data" && $countm=='1') {
-      echo "=================<br />";
-    	echo "$getarr1[$key] <BR />";
-    	echo "=================";
-    	echo "<br />";
+    	$text[1]= $getarr1[$key]";
     }
     $countm++;
     if ($KeepMainkey!="Meta Data" && $keepdate ) {
-      //echo "$key <BR />"; //แสดงคีย์และผลลัพธ์ขอคีย์ของเมต้า ไม่สามารถแสดงของวันได้เนื่องจากมี arrayซ้อนอยู่อีกชั้น
       $keepdate = false;
       $getarrayday = $getarr1[$key];
     while (list($key) = each($getarrayday)) {
-        $text= "&nbsp&nbsp&nbsp&nbsp $key ==>  $getarrayday[$key] <BR />"; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
+        $text[2]= $text[2]." ".$getarrayday[$key] <BR />"; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
     }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
   }
   }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
