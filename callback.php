@@ -64,8 +64,7 @@ foreach ($events as $event) {
 
               $pieces = explode("|", $explodeText[1]);
 
-              $_question=str_replace("[","",$pieces[0]);
-
+              $_question=str_replace("[","",$pieces[0])
               $_answer=str_replace("]","",$pieces[1]);
 
               //Post New Data
@@ -100,7 +99,7 @@ foreach ($events as $event) {
 
             case 'stock':
                 $symbol=$explodeText[1];
-                $text=$text.' stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol;
+                $text='stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.'click ';
                 $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
               $bot->replyText($reply_token, $text);
 
