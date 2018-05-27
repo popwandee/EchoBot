@@ -113,11 +113,12 @@ foreach ($events as $event) {
                 $countm= 0;
                 while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
                   $KeepMainkey = $key; //เก็บคีย์หลัก
+                  $text=$text.' '.$key;
 	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
 	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                    while (list($key) = each($getarr1)) {
                      if ($KeepMainkey=="Meta Data" && $countm=='1') {
-    	                  $text= $text."$getarr1[$key]";
+    	                  $text= $text.' '.$getarr1[$key];
                       }
                       $countm++;
                       if ($KeepMainkey!="Meta Data" && $keepdate ) {
