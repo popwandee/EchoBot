@@ -118,7 +118,7 @@ foreach ($events as $event) {
 	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                    while (list($key) = each($getarr1)) {
                      if ($KeepMainkey=="Meta Data" && $countm=='1') {
-    	                  $text= $text.' '..$key.' '.$getarr1[$key].' ';
+    	                  $text= $text.' '.$key.' '.$getarr1[$key].' ';
                       }
                       $countm++;
                       if ($KeepMainkey!="Meta Data" && $keepdate ) {
