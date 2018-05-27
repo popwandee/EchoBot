@@ -136,7 +136,7 @@ foreach ($events as $event) {
 
           case 'news':
 
-              $text=$text.' news update ต่อไปจะรายงานข่าวหุ้นด้วยนะครับ';
+              $text='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
 
               $bot->replyText($reply_token, $text);
 
