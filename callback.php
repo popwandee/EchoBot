@@ -118,14 +118,14 @@ foreach ($events as $event) {
 	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                    while (list($key) = each($getarr1)) {
                      if ($KeepMainkey=="Meta Data" && $countm=='1') {
-    	                  $text= $text.' '.$getarr1[$key].' ';
+    	                  $text= $text." "..$key." ".$getarr1[$key]." ";
                       }
                       $countm++;
                       if ($KeepMainkey!="Meta Data" && $keepdate ) {
                         $keepdate = false;
                         $getarrayday = $getarr1[$key];
                         while (list($key) = each($getarrayday)) {
-                          $text= $text." ".$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
+                          $text= $text." ".$key." ".$getarrayday[$key]." " ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
                         }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
                       }
                     }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
