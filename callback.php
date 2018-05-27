@@ -112,8 +112,8 @@ foreach ($events as $event) {
                 $keepdate = true;
                 $countm= 0;
                 while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                  $KeepMainkey = $key; //เก็บคีย์หลัก
-                  //$text=$text.' '.$key;
+                   $KeepMainkey = $key; //เก็บคีย์หลัก
+                   $text=$text.' '.$key;
 	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
 	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                    while (list($key) = each($getarr1)) {
