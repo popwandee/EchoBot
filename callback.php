@@ -146,7 +146,7 @@ foreach ($events as $event) {
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $count_news=0;
             while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-              if($key=="articles"){
+              if($key=='articles'){
                $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                while (list($key) = each($json_arr1)) {
                  ++$count_news;
@@ -158,7 +158,7 @@ foreach ($events as $event) {
                     //echo " ";echo$json_arr1[$key]['url'];
                     //echo "</br>";
                     $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];;
-                    $bot->replyText($reply_token, $text_arr);
+                    $bot->replyText($reply_token, $text_arr[$count_news]);
                   }
               }
             }
