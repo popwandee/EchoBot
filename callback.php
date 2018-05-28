@@ -155,18 +155,30 @@ foreach ($events as $event) {
               $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
               while (list($key) = each($json_arr1)) {
                 ++$count_news;
-                   $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-                   $img_url = $json_arr1[$key]['urlToImage'];
-			                $outputText = new LINE\LINEBot\MessageBuilder\ImageMessageBuilder($img_url, $img_url);
+                   $text_arr[$count_news]['title']=$json_arr1[$key]['title'];
+                   $text_arr[$count_news]['description']=$json_arr1[$key]['description'];
+                   $text_arr[$count_news]['url']=$json_arr1[$key]['url'];
+                   $text_arr[$count_news]['urlToImage'] = $json_arr1[$key]['urlToImage'];
+			                //$outputText = new LINE\LINEBot\MessageBuilder\ImageMessageBuilder($img_url, $img_url);
                  }
              }
            }
-           //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+           $rand_no = mt_rand(0, count($text_arr) - 1);//$text_arr[mt_rand[min,max]]; random index
            //$bot->replyText($reply_token, $text);
+           $columns = array();
+			for($i=0;$i<5;$i++) {
+				$actions = array(
+					new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("Add to Card","action=carousel&button=".$i),
+					new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("View",$text_arr[$rand_no]['url'])
+				);
+				$column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder($text_arr[$rand_no]['title'], $text_arr[$rand_no]['description'], $text_arr[$rand_no]['urlToImage'] , $actions);
+				$columns[] = $column;
+			}
+			$carousel = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
+			$outputText = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("Carousel Demo", $carousel);
            $response = $bot->replyMessage($event->getReplyToken(), $outputText);
              break;
 
-              break;
 
           default:
 
