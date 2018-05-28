@@ -22,6 +22,12 @@ $bot = new \LINE\LINEBot(
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
 
 );
+/*
+my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
+                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
+$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
+*/
 
 echo "ok 3";
 
@@ -42,7 +48,7 @@ foreach ($events as $event) {
      $reply_token = $event->getReplyToken();
        $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.'];
 
-    $text = $a[mt_rand(0, count($a) - 1)];
+    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
 
      //$text = 'รูปอะไรเหรอฮะ';
 
@@ -135,30 +141,28 @@ foreach ($events as $event) {
               break;
 
           case 'news':
-              $text='';
-              $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
-              $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-              $countm= 0;
-              while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                 $KeepMainkey = $key; //เก็บคีย์หลัก
-                 $count = count($json_arr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
-                 $getarr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                 while (list($key) = each($getarr1)) {
-                   if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
-                      $text= $text.' '.$key.' '.$getarr1[$key].' ';
-                    }
-                    $countm++;
-                    if ($KeepMainkey!="Meta Data") {
-                      $getarrayday = $getarr1[$key];
-                      while (list($key) = each($getarrayday)) {
-                        $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
-                      }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
-                    }
-                  }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-                } //สิ้นสุดการลิสต์คีย์ชั้นแรก
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
+          $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+          $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+          $count_news=0;
+            while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
+              if($key=="articles"){
+               $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
+               while (list($key) = each($json_arr1)) {
+                 ++$count_news;
+                    //echo$json_arr1[$key]['title'];
+                    //echo " @ ";echo$json_arr1[$key]['publishedAt'];
+                    //echo$json_arr1[$key]['description'];
+                    //echo$json_arr1[$key]['urlToImage'];
+                    //echo " source: ";echo$json_arr1[$key]['source']['name'];
+                    //echo " ";echo$json_arr1[$key]['url'];
+                    //echo "</br>";
+                    $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];;
+                    $bot->replyText($reply_token, $text_arr);
+                  }
+              }
+            }
 
-              $bot->replyText($reply_token, $text);
 
               break;
 
@@ -206,8 +210,5 @@ foreach ($events as $event) {
 
 echo "OK4";
 /*
-my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
-                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
-$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
+
 */
