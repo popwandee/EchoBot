@@ -23,9 +23,11 @@ $count_news=0;
   }
   //echo '$count_news ='.$count_news;
   //print_r($text_arr);
-  //$random_news_index=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-  //$text=$text_arr[$random_news_index];
-  //echo "last output is ".$text;
+  $random_news_index=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+echo 'random is'.$random_news_index.'</br>';
+echo '$text_arr[$random_news_index] is'.$text_arr[$random_news_index];
+  $text=$text_arr[$random_news_index];
+  echo "last output is ".$text;
   foreach($text_arr as $text){
     echo $text."</br></br>";
   }
