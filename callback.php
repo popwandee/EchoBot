@@ -156,11 +156,14 @@ foreach ($events as $event) {
               while (list($key) = each($json_arr1)) {
                 ++$count_news;
                    $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+                   $img_url = $json_arr1[$key]['urlToImage'];
+			                $outputText = new LINE\LINEBot\MessageBuilder\ImageMessageBuilder($img_url, $img_url);
                  }
              }
            }
-           $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-           $bot->replyText($reply_token, $text);
+           //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+           //$bot->replyText($reply_token, $text);
+           $response = $bot->replyMessage($event->getReplyToken(), $outputText);
              break;
 
               break;
