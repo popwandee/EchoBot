@@ -22,10 +22,10 @@ $count_news=0;
         }
     }
   }
-  echo "$count_news =".$count_news;
+  echo '$count_news ='.$count_news;
   print_r($text_arr);
   $random_news_index=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
   $text=$text_arr[$random_news_index];
-  echo "last output is ".print_r($text);
+  echo "last output is ".$text;
 
   ?>
