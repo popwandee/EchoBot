@@ -12,10 +12,11 @@ echo "json_arr is "; print_r($json_arr);echo "</br>";
     if($key=="articles"){
      $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
      while (list($key) = each($json_arr1)) {
-          echo "key is".$key;print_r($json_arr1[$key]);echo "</br>";
+          echo "title is";echo$json_arr1[$key]['title'];echo "</br>";
+          echo "description is";echo$json_arr1[$key]['description'];echo "</br>";
         }
     }
   }
-  echo "last output is ".print_r($text);
+  //echo "last output is ".print_r($text);
 
   ?>
