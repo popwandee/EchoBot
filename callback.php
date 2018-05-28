@@ -155,7 +155,7 @@ foreach ($events as $event) {
               }
             }
             $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-            $bot->replyText($reply_token, $text);
+            $bot->replyText($reply_token, $text_arr);
 
 
               break;
