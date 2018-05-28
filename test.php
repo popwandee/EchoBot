@@ -10,7 +10,7 @@ echo "json_arr is "; print_r($json_arr);echo "</br>";
 foreach ($json_arr as $key => $json_arr1)
     {
         if (is_array ($json_arr1)
-        {
+        {/*
           foreach ($json_arr1 as $key => $json_arr2)
               {
                   if (is_array ($json_arr2)
@@ -23,7 +23,7 @@ foreach ($json_arr as $key => $json_arr1)
                   {
                       echo $json_arr2."</br>"; // print out element key if not array
                   }
-              }
+              }*/
         }
         else
         {
