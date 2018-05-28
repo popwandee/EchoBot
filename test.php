@@ -17,13 +17,12 @@ $count_news=0;
           //echo " source: ";echo$json_arr1[$key]['source']['name'];
           //echo " ";echo$json_arr1[$key]['url'];
           //echo "</br>";
-           if($count_news<5){
-             echo $count_news;
-          $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-        }else{echo "more than/equal 5"}
+
+               $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+             }
       }
     }
-  }
+
   //echo '$count_news ='.$count_news;
   print_r($text_arr);
   //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
