@@ -12,8 +12,13 @@ echo "json_arr is "; print_r($json_arr);echo "</br>";
     if($key=="articles"){
      $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
      while (list($key) = each($json_arr1)) {
-          echo "title is";echo$json_arr1[$key]['title'];echo "</br>";
-          echo "description is";echo$json_arr1[$key]['description'];echo "</br>";
+          echo "title is";echo$json_arr1[$key]['title'];
+          echo "@";echo$json_arr1[$key]['publishedAt'];
+          echo "description is";echo$json_arr1[$key]['description'];
+          echo "image is";echo$json_arr1[$key]['urlToImage'];
+          echo " source ";echo$json_arr1[$key]['source']['name'];
+          echo "link";echo$json_arr1[$key]['url'];
+          echo "</br>";
         }
     }
   }
