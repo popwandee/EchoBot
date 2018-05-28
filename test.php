@@ -17,7 +17,7 @@ $count_news=0;
           //echo " source: ";echo$json_arr1[$key]['source']['name'];
           //echo " ";echo$json_arr1[$key]['url'];
           //echo "</br>";
-          $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'];
+          $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].echo$json_arr1[$key]['url'];
         }
     }
   }
