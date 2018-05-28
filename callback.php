@@ -12,6 +12,11 @@ define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'RvsMabRN/IlT2BtmEoH+KcIbha8F/aPLWWzM
 echo "ok 1";
 
 require __DIR__."/vendor/autoload.php";
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+$logger = new Logger('LineBot');
+$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
 echo "ok 2";
 
