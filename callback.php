@@ -161,7 +161,7 @@ foreach ($events as $event) {
 
 
               break;
-              case '#m':
+              case 'tel':
               $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
               $content = file_get_contents($news_url); // อ่านข้อมูล JSON
               $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
