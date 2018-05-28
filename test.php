@@ -24,6 +24,7 @@ $count_news=0;
   }
   echo "$count_news =".$count_news;
   print_r($text_arr);
-  //echo "last output is ".print_r($text);
+  $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+  echo "last output is ".print_r($text);
 
   ?>
