@@ -26,7 +26,7 @@ $count_news=0;
   //$random_news_index=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
   //$text=$text_arr[$random_news_index];
   //echo "last output is ".$text;
-  foreach($text_arr as text){
+  foreach($text_arr as $text){
     echo $text."</br></br>";
   }
 
