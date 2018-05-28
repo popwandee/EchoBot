@@ -10,7 +10,7 @@ echo "json_arr is "; print_r($json_arr);echo "</br>";
 $countm= 0;
 while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
    $KeepMainkey = $key; //เก็บคีย์หลัก
-   echo "KeepMainkey is ".$KeepMainkey; echo "</br>";
+   echo $countm."KeepMainkey is ".$KeepMainkey; echo "</br>";
    $count = count($json_arr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
    $getarr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
    echo "getarr1 is "; print_r($getarr1);echo "</br>";
@@ -22,6 +22,6 @@ while (list($key) = each($json_arr)) { // ทำการ list ค่า key ข
       }
       }
     }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-  } //สิ้นสุดการลิสต์คีย์ชั้นแรก
   echo "last output is ".print_r($text);
+  echo $json_arr[articles][0][title];
   ?>
