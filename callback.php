@@ -177,20 +177,23 @@ foreach ($events as $event) {
                  }
              }
            }
-           $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-           $bot->replyText($reply_token, $text);
-/*
+           //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+          // $bot->replyText($reply_token, $text);
+
+$columns = [];
+for ($i = 0; $i < 5; $i++) {//($i = 0; $i < $max; $i++)
 				$actions = array(
 					new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("Add to Card","action=carousel&button="),
-					new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("View",$text_arr[$rand_no]['url'])
+					new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("View",$text_arr[$i]['url'])
 				);
-				$column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder($text_arr[$rand_no]['title'], $text_arr[$rand_no]['description'], $text_arr[$rand_no]['urlToImage'], $actions);
+				$column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder($text_arr[$i]['title'], $text_arr[$i]['description'], $text_arr[$i]['urlToImage'], $actions);
 				$columns[] = $column;
+         }
+         // model Carousel จากอาร์เรย์ของคอลัมน์
+			$carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
+			$template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("Carousel Demo", $carousel_template_builder);
+           $response = $bot->replyMessage($event->getReplyToken(), $template_message);
 
-			$carousel = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
-			$outputText = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("Carousel Demo", $carousel);
-           $response = $bot->replyMessage($event->getReplyToken(), $outputText);
-           */
              break;
 
 
