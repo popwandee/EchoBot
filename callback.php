@@ -180,7 +180,8 @@ foreach ($events as $event) {
              }
            }
            //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-          $bot->replyText($reply_token, $text_arr);
+          //$bot->replyText($reply_token, $text_arr);
+          $response = $bot->replyMessage($event->getReplyToken(), $text_arr);
 /*
 $columns = [];
 for ($i = 0; $i < 5; $i++) {//($i = 0; $i < $max; $i++)
