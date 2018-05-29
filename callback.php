@@ -177,9 +177,9 @@ foreach ($events as $event) {
                  }
              }
            }
-           //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-          // $bot->replyText($reply_token, $text);
-
+           $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+          $bot->replyText($reply_token, $text);
+/*
 $columns = [];
 for ($i = 0; $i < 5; $i++) {//($i = 0; $i < $max; $i++)
 				$actions = array(
@@ -193,7 +193,7 @@ for ($i = 0; $i < 5; $i++) {//($i = 0; $i < $max; $i++)
 			$carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
 			$template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("Carousel Demo", $carousel_template_builder);
            $response = $bot->replyMessage($event->getReplyToken(), $template_message);
-
+*/
              break;
 
 
