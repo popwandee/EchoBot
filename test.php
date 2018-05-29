@@ -9,7 +9,7 @@ $count_news=0;
     if($key=="articles"){
      $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
      while (list($key) = each($json_arr1)) {
-       ++$count_news;
+       $count_news++;
           //echo$json_arr1[$key]['title'];
           //echo " @ ";echo$json_arr1[$key]['publishedAt'];
           //echo$json_arr1[$key]['description'];
