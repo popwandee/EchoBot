@@ -173,12 +173,14 @@ foreach ($events as $event) {
               $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
               while (list($key) = each($json_arr1)) {
                 ++$count_news;
+                if($count_news<5)
                    $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+                  else ;
                  }
              }
            }
-           $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-          $bot->replyText($reply_token, $text);
+           //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+          $bot->replyText($reply_token, $text_arr);
 /*
 $columns = [];
 for ($i = 0; $i < 5; $i++) {//($i = 0; $i < $max; $i++)

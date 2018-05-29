@@ -18,7 +18,9 @@ $count_news=0;
           //echo " ";echo$json_arr1[$key]['url'];
           //echo "</br>";
 
-               $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+          if($count_news<5)
+             $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+            else ;
              }
       }
     }
