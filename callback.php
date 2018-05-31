@@ -181,6 +181,13 @@ foreach ($events as $event) {
             $bot->replyText($reply_token, $text);
              break;
 
+             case 'lang':
+            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
+             $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+             $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+               $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
+               $bot->replyText($reply_token, $text);
+                break;
 
           default:
 
