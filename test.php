@@ -29,7 +29,8 @@ $count_news=0;
   print_r($text_arr);
   //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
   //echo "last output is ".$text;
-  $news_url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=ok' ;
+  $explodeText[1]="Good";
+   $news_url="'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q='.$explodeText[1]" ;
   $content = file_get_contents($news_url); // อ่านข้อมูล JSON
   $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
   print_r($json_arr);
