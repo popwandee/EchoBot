@@ -119,7 +119,7 @@ foreach ($events as $event) {
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
 
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
               $context = stream_context_create($opts);
 
@@ -186,9 +186,9 @@ foreach ($events as $event) {
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
 
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
 
               $data = json_decode($json);
 
