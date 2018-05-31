@@ -33,4 +33,5 @@ $count_news=0;
   $content = file_get_contents($news_url); // อ่านข้อมูล JSON
   $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
   print_r($json_arr);
+  echo $json_arr[0][0][0];
   ?>
