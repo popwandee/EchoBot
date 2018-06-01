@@ -34,17 +34,15 @@ $count_news=0;
   $content = file_get_contents($news_url); // อ่านข้อมูล JSON
   $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
 print_r($json_arr);
-echo "<br>".$json_arr[weather][0][main];
-echo "<br>".$json_arr[weather][0][description];
-echo "<br>".$json_arr[main][pressure];
-echo "<br>".$json_arr[main][humidity];
-echo "<br>".$json_arr[main][temp];
-echo "<br>".$json_arr[main][temp_max];
-echo "<br>".$json_arr[main][temp_min];
-$date = date("Ymd",$json_arr[dt]);
-echo "<br>".$date;
-$sunrise = date("Ymd",$json_arr[sys][sunrise]);echo "<br>".$sunrise;
-echo "<br>".$json_arr[sys][sunset];
-echo "<br>City ".$json_arr[name];
+echo "<br>รายงานสภาพอากาศ ".$json_arr[name];
+$date = date("F j, Y, g:i a",$json_arr[dt]);echo " เวลา ".$date;
+echo " มีลักษณะอากาศ".$json_arr[weather][0][main].$json_arr[weather][0][description];
+echo "<br>ความกดอากาศ ".$json_arr[main][pressure];
+echo "<br>ความชื้นสัมพัทธ์ ".$json_arr[main][humidity];
+echo "<br>อุณหภูมิ ".$json_arr[main][temp];
+echo "<br>อุณหภูมิสูงสุด ".$json_arr[main][temp_max];
+echo "<br>อุณหภูมิต่ำสุด ".$json_arr[main][temp_min];
+$sunrise = date("F j, Y, g:i a",$json_arr[sys][sunrise]);echo "<br>".$sunrise;
+$sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);echo "<br>".$sunset;
 //echo $news_url;
   ?>
