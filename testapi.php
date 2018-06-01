@@ -4,12 +4,12 @@ $news_url="http://api.openweathermap.org/data/2.5/forecast?q=".$explodeText[1]."
 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
 print_r($json_arr);
-$date=date("F j, Y, g:i a",$json_arr[list][0][dt]);
-echo $date;
+//$date=date("F j, Y, g:i a",$json_arr[list][0][dt]);
+//echo $date;
 echo $json_arr[list][0][main][temp];
 echo $json_arr[list][0][main][temp_max];
 echo $json_arr[list][0][main][temp_min];
-echo $json_arr[list][0][weather][0][main];
-echo $json_arr[list][0][weather][0][description];
-echo $json_arr[list][0][weather][0][dt_txt];
+//echo $json_arr[list][0][weather][0][main];
+//echo $json_arr[list][0][weather][0][description];
+//echo $json_arr[list][0][weather][0][dt_txt];
 ?>
