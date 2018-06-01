@@ -182,7 +182,7 @@ foreach ($events as $event) {
              break;
 
              case 'lang':
-            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
+             $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
              $content = file_get_contents($news_url); // อ่านข้อมูล JSON
              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
@@ -190,10 +190,16 @@ foreach ($events as $event) {
                 break;
 
                 case 'weather':
-                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok"; // default city
+                $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                if(is_Null($json_arr)){// no city from api.openweathermap
+                  $explodeText[1]="Bangkok";
+                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                  $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+                  $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                }
                   $text= "รายงานสภาพอากาศ ".$json_arr[name];
                   $date = date("F j, Y, g:i a",$json_arr[dt]);
                   $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
@@ -202,6 +208,10 @@ foreach ($events as $event) {
                   $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
                   $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
                   $text=$text." พระอาทิตย์ตก ".$sunset;
+                  $news_url="http://api.openweathermap.org/data/2.5/forecast?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                  $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+                  $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+
                   $bot->replyText($reply_token, $text);
                    break;
 
