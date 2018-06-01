@@ -6,7 +6,12 @@ $json_arr = json_decode($content, true); // แปลงข้อมูล JSON 
 print_r($json_arr);
 //$date=date("F j, Y, g:i a",$json_arr[list][0][dt]);
 //echo $date;
-echo $json_arr[list][0][dt];
+//echo $json_arr[list][0][dt];
+function print_weather($item, $key)
+{
+    echo "$key => $item\n";
+}
+array_walk_recursive($json_arr, 'print_weather');
 //echo $json_arr[list][0][main][temp_max];
 //echo $json_arr[list][0][main][temp_min];
 //echo $json_arr[list][0][weather][0][main];
