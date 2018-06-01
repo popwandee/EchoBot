@@ -36,5 +36,14 @@ $count_news=0;
 print_r($json_arr);
 echo "<br>".$json_arr[weather][0][main];
 echo "<br>".$json_arr[weather][0][description];
+echo "<br>".$json_arr[main][pressure];
+echo "<br>".$json_arr[main][humidity];
+echo "<br>".$json_arr[main][temp];
+echo "<br>".$json_arr[main][temp_max];
+echo "<br>".$json_arr[main][temp_min];
+echo "<br>".$json_arr[dt];
+echo "<br>".$json_arr[sys][sunrise];
+echo "<br>".$json_arr[sys][sunset];
+echo "<br>City ".$json_arr[name];
 //echo $news_url;
   ?>
