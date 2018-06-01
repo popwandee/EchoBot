@@ -12,6 +12,11 @@ define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33
 echo "ok 1";
 
 require __DIR__."/vendor/autoload.php";
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+$logger = new Logger('LineBot');
+$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
 echo "ok 2";
 
@@ -22,27 +27,51 @@ $bot = new \LINE\LINEBot(
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
 
 );
+/*
+my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
+                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
+$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
+*/
 
 echo "ok 3";
 
 $signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 
-$body = file_get_contents("php://input");
 
+try {
+	$events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
+} catch(\LINE\LINEBot\Exception\InvalidSignatureException $e) {
+	error_log('parseEventRequest failed. InvalidSignatureException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\UnknownEventTypeException $e) {
+	error_log('parseEventRequest failed. UnknownEventTypeException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\UnknownMessageTypeException $e) {
+	error_log('parseEventRequest failed. UnknownMessageTypeException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
+	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
+}
 
-
-$events = $bot->parseEventRequest($body, $signature);
 
 
 
 foreach ($events as $event) {
+  // Postback Event
+	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
+		$logger->info('Postback message has come');
+		continue;
+	}
+	// Location Event
+	if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
+		continue;
+	}
 
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
 
      $reply_token = $event->getReplyToken();
-       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ไม่หื่นนะฮะ'];
+       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.'];
 
-    $text = $a[mt_rand(0, count($a) - 1)];
+    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
 
      //$text = 'รูปอะไรเหรอฮะ';
 
@@ -56,14 +85,13 @@ foreach ($events as $event) {
 
         $text = $event->getText();
 
-        $explodeText=explode(" ",$text)
-	$str = strtolower($explodeText[0]);
-	$param=str_replace($explodeText[0],"",$text);
+        $explodeText=explode(" ",$text);
 
         //$bot->replyText($reply_token, $explodeText[0]);
+
         switch ($explodeText[0]) {
 
-          case 'สอนเป็ด':
+          case 'สอนฮูก':
 
               //$x_tra = str_replace("สอนฮูก","", $text);
 
@@ -91,13 +119,13 @@ foreach ($events as $event) {
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
 
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
               $context = stream_context_create($opts);
 
               $returnValue = file_get_contents($url,false,$context);
 
-              $text = 'ขอบคุณที่สอนเป็ด ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
+              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
 
               $bot->replyText($reply_token, $text);
 
@@ -105,7 +133,7 @@ foreach ($events as $event) {
 
           case 'stock':
 
-                $symbol=$explodeText[1];
+                  $symbol=$explodeText[1];
                 $text= 'stock price ราคาหุ้นรายวัน '.$symbol.' ';
                 $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
                 $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
@@ -117,7 +145,7 @@ foreach ($events as $event) {
 	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
 	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                    while (list($key) = each($getarr1)) {
-                     if ($KeepMainkey=="Meta Data" && $countm=='1') {
+                     if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
     	                  $text= $text.' '.$key.' '.$getarr1[$key].' ';
                       }
                       $countm++;
@@ -136,8 +164,7 @@ foreach ($events as $event) {
               break;
 
           case 'news':
-
-                 $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $count_news=0;
@@ -152,15 +179,17 @@ foreach ($events as $event) {
             }
             $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
             $bot->replyText($reply_token, $text);
-              break;
-case 'lang':
-            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$param ;
+             break;
+
+             case 'lang':
+            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
              $content = file_get_contents($news_url); // อ่านข้อมูล JSON
              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
                $bot->replyText($reply_token, $text);
                 break;
-case 'weather':
+
+                case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
                $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
@@ -180,9 +209,9 @@ case 'weather':
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
 
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
 
               $data = json_decode($json);
 
@@ -219,3 +248,6 @@ case 'weather':
 
 
 echo "OK4";
+/*
+
+*/
