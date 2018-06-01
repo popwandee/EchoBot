@@ -30,9 +30,9 @@ $count_news=0;
   //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
   //echo "last output is ".$text;
   $explodeText[1]="Good";
-   $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
+   $news_url="http://api.openweathermap.org/data/2.5/weather?q=Bangkok,th&appid=cb9473cef915ee0ed20ac67817d06289";
   $content = file_get_contents($news_url); // อ่านข้อมูล JSON
   $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
   print_r($json_arr);
-  echo $json_arr[0][0][0];
+ // echo $json_arr[0][0][0];
   ?>
