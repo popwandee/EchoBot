@@ -57,11 +57,11 @@ foreach ($events as $event) {
         $text = $event->getText();
 
         $explodeText=explode(" ",$text)
-$str = strtolower($explodeText[0]);
-	    $param=str_replace($explodeText[0],"",$text);
+	$str = strtolower($explodeText[0]);
+	$param=str_replace($explodeText[0],"",$text);
 
         //$bot->replyText($reply_token, $explodeText[0]);
-        switch ($str) {
+        switch ($explodeText[0]) {
 
           case 'สอนเป็ด':
 
