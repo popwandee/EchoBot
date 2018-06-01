@@ -10,9 +10,10 @@ $json_arr = json_decode($content, true); // แปลงข้อมูล JSON 
 function print_weather($item, $key)
 {
     echo "$key => $item";
+    echo "<br>";
 
 }
-array_walk($json_arr['list'], 'print_weather');
+//array_walk($json_arr['list'], 'print_weather');
 //echo $json_arr[list][0][main][temp_max];
 //echo $json_arr[list][0][main][temp_min];
 //echo $json_arr[list][0][weather][0][main];
