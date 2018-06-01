@@ -56,11 +56,12 @@ foreach ($events as $event) {
 
         $text = $event->getText();
 
-        $explodeText=explode(" ",$text);
+        $explodeText=explode(" ",$text)
+$str = strtolower($explodeText[0]);
+	    $param=str_replace($explodeText[0],"",$text);
 
         //$bot->replyText($reply_token, $explodeText[0]);
-
-        switch ($explodeText[0]) {
+        switch ($str) {
 
           case 'สอนเป็ด':
 
@@ -153,12 +154,28 @@ foreach ($events as $event) {
             $bot->replyText($reply_token, $text);
               break;
 case 'lang':
-            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
+            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$param ;
              $content = file_get_contents($news_url); // อ่านข้อมูล JSON
              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
                $bot->replyText($reply_token, $text);
                 break;
+case 'weather':
+                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+                $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                  $text= "รายงานสภาพอากาศ ".$json_arr[name];
+                  $date = date("F j, Y, g:i a",$json_arr[dt]);
+                  $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
+                  $text=$text." อุณหภูมิ ".$json_arr[main][temp]."Celsius, อุณหภูมิสูงสุด ".$json_arr[main][temp_max]."Celsius, อุณหภูมิต่ำสุด ".$json_arr[main][temp_min]."Celsius";
+                  $sunrise = date("F j, Y, g:i a",$json_arr[sys][sunrise]);
+                  $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
+                  $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
+                  $text=$text." พระอาทิตย์ตก ".$sunset;
+                  $bot->replyText($reply_token, $text);
+                   break;
+
           default:
 
               $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
