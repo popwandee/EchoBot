@@ -202,6 +202,11 @@ foreach ($events as $event) {
                $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                if(is_Null($json_arr)){$explodeText[1]="Bangkok";
+                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                   $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+                   $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                }
                   $text= "รายงานสภาพอากาศ ".$json_arr[name];
                   $date = date("F j, Y, g:i a",$json_arr[dt]);
                   $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
