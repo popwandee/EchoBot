@@ -42,25 +42,22 @@ $result = $trans->translate($source, $target, $text_parameter);
 //$lang_url="https://translation.googleapis.com/language/translate/v2";
 print_r($result);
 
-$explodeText=explode(" ",$text);
-$text_parameter='';
-$count_element=count($explodeText);
-print_r($explodeText);
-echo $count_element;
 
-for($i=1;$i<$count_element;$i++){
-  $text_parameter=$text_parameter." ".$explodeText[$i];
-  echo $i;
-}
 
-echo $text;
-echo "<br>text_parameter is ".$text_parameter;
-
-$text_parameter='What is it';
-echo $text_parameter;
-$lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
- $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
- $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
- echo "<br>".$lang_url."<br>";
-print_r($json_arr);
+$news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
+$content = file_get_contents($news_url); // อ่านข้อมูล JSON
+$json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+$count_news=0;
+$text='';
+  while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
+    if($key=='articles'){
+     $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
+     while (list($key) = each($json_arr1)) {
+       ++$count_news;
+          //$text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+          $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+        }
+    }
+  }
+  echo $text;
 ?>
