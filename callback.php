@@ -186,9 +186,9 @@ for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeTex
              break;
              case 'Lang':
              case 'lang':
-            $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$text_parameter ;
-             $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
-             $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+             $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
+              $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
+              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];
                $bot->replyText($reply_token, $text);
                 break;

@@ -14,7 +14,7 @@ for($i=1;$i<$count_element;$i++){
 echo $text;
 echo "<br>text_parameter is ".$text_parameter;
 
-$text_parameter="What is it";
+$text_parameter='What is it';
 echo $text_parameter;
 $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
  $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
