@@ -15,6 +15,7 @@ require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
+use \Statickidz\GoogleTranslate;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
@@ -187,13 +188,11 @@ foreach ($events as $event) {
              $text_parameter = str_replace("Lang ","", $text);
              case 'lang':
              $text_parameter = str_replace("lang ","", $text);
-             require_once ('vendor/autoload.php');
-use \Statickidz\GoogleTranslate;
 $source = 'en';
 $target = 'th';
 $trans = new GoogleTranslate();
 $result = $trans->translate($source, $target, $text_parameter);
-
+ $lang_url="https://translation.googleapis.com/language/translate/v2";
 echo $result;
 /*
              $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
