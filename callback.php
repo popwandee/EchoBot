@@ -91,9 +91,9 @@ foreach ($events as $event) {
 
       switch ($explodeText[0]) {
 
-        case 'สอนฮูก':
+        case 'สอนเป็ด':
 
-            $x_tra = str_replace("สอนฮูก ","", $text);
+            $x_tra = str_replace("สอนเป็ด ","", $text);
 
             $pieces = explode("|", $x_tra);
 
@@ -125,7 +125,7 @@ foreach ($events as $event) {
 
             $returnValue = file_get_contents($url,false,$context);
 
-            if($returnValue)$text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
+            if($returnValue)$text = 'ขอบคุณที่สอนเป็ด ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
             else $text="Cannot teach Ducky";
 
             $bot->replyText($reply_token, $text);
