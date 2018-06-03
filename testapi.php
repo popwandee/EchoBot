@@ -14,8 +14,12 @@ function print_weather($item, $key)
 
 }
 //array_walk($json_arr[list], 'print_weather');
-echo "<br>next";
-array_walk_recursive($json_arr, 'print_weather');
+echo "<br>next<br>";
+array_walk($json_arr, 'print_weather');
+echo "<br>next<br>";
+array_walk($json_arr[list], 'print_weather');
+echo "<br>next<br>";
+array_walk($json_arr[city], 'print_weather');
 //echo $json_arr[list][0][main][temp_max];
 //echo $json_arr[list][0][main][temp_min];
 //echo $json_arr[list][0][weather][0][main];
