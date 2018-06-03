@@ -5,12 +5,13 @@ $text_parameter='';
 $count_element=count($explodeText);
 print_r($explodeText);
 echo $count_element;
-/*
+
 foreach($i=1;$i<$count_element;$i++){
-  $text_parameter=$text_parameter.$explodeText[$i];
+//  $text_parameter=$text_parameter.$explodeText[$i];
+  echo $i;
 }
-*/
+
 echo $text;
-echo "<br>text_parameter".$text_parameter;
+echo "<br>text_parameter is ".$text_parameter;
 
 ?>
