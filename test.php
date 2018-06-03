@@ -31,15 +31,17 @@ try {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
 
+
+$text="lang hello yes i do what do you do";
+
 $text_parameter = str_replace("lang ","", $text);
 $source = 'en';
 $target = 'th';
 $trans = new GoogleTranslate();
 $result = $trans->translate($source, $target, $text_parameter);
 //$lang_url="https://translation.googleapis.com/language/translate/v2";
-echo $result;
+print_r($result);
 
-$text="hello yes i do what do you do";
 $explodeText=explode(" ",$text);
 $text_parameter='';
 $count_element=count($explodeText);
