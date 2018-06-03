@@ -44,10 +44,10 @@ $count_news=0;
     if($key=='articles'){
      $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
      while (list($key) = each($json_arr1)) {
-       ++$count_news;
        if($count_news<5)
           $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-        }
+          ++$count_news;
+           }
     }
   }
   //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
