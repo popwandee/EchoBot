@@ -16,7 +16,7 @@ echo "<br>text_parameter is ".$text_parameter;
 
 $text_parameter="What is it";
 echo $text_parameter;
-$lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=.$text_parameter" ;
+$lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
  $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
  $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
  echo "<br>".$lang_url."<br>";
