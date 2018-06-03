@@ -5,7 +5,7 @@ $content = file_get_contents($news_url); // อ่านข้อมูล JSON
 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
 print_r($json_arr);
 foreach($json_arr['list'] as $day => $value) {
-  echo "Max temperature for day " . $day . " will be " . $value[temp][max] . "<br />" ;
+  echo "Max temperature for day " . $day . " will be " . $value[main][temp] . "<br />" ;
 }
 //$date=date("F j, Y, g:i a",$json_arr[list][0][dt]);
 //echo $date;
