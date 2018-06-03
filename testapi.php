@@ -13,7 +13,7 @@ function print_weather($item, $key)
     echo "<br>";
 
 }
-array_walk($json_arr[list], 'print_weather');
+//array_walk($json_arr[list], 'print_weather');
 echo "<br>next";
 array_walk($json_arr, 'print_weather');
 //echo $json_arr[list][0][main][temp_max];
