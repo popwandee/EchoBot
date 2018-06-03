@@ -132,7 +132,7 @@ for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeTex
               $bot->replyText($reply_token, $text);
 
               break;
-
+          case 'Stock':
           case 'stock':
 
                   $symbol=$explodeText[1];
@@ -164,33 +164,35 @@ for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeTex
               $bot->replyText($reply_token, $text);
 
               break;
-
+          case 'News':
           case 'news':
           $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $count_news=0;
+          $text='';
             while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
               if($key=='articles'){
                $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                while (list($key) = each($json_arr1)) {
                  ++$count_news;
                     $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+                    $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
                   }
               }
             }
-            $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
+            //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
             $bot->replyText($reply_token, $text);
              break;
-
+             case 'Lang':
              case 'lang':
-            $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$text_parameter ;
-             $content = file_get_contents($news_url); // อ่านข้อมูล JSON
+            $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$text_parameter ;
+             $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-               $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
+               $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];
                $bot->replyText($reply_token, $text);
                 break;
-
+                case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
                $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
