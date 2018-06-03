@@ -86,18 +86,15 @@ foreach ($events as $event) {
         $text = $event->getText();
 
         $explodeText=explode(" ",$text);
-        $text_parameter='';
-$count_element=count($explodeText);
-for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeText[$i];}
-        //$bot->replyText($reply_token, $explodeText[0]);
+
 
         switch ($explodeText[0]) {
 
           case 'สอนฮูก':
 
-              //$x_tra = str_replace("สอนฮูก","", $text);
+              $x_tra = str_replace("สอนฮูก","", $text);
 
-              $pieces = explode("|", $explodeText[1]);
+              $pieces = explode("|", $x_tra);
 
               $_question=str_replace("[","",$pieces[0]);
 
@@ -176,7 +173,7 @@ for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeTex
                $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                while (list($key) = each($json_arr1)) {
                  ++$count_news;
-                    $text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
+                    //$text_arr[$count_news]=$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
                     $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
                   }
               }
@@ -185,7 +182,9 @@ for($i=1;$i<$count_element;$i++){$text_parameter=$text_parameter." ".$explodeTex
             $bot->replyText($reply_token, $text);
              break;
              case 'Lang':
+             $text_parameter = str_replace("Lang","", $text);
              case 'lang':
+             $text_parameter = str_replace("lang","", $text);
              $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
               $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
               $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
