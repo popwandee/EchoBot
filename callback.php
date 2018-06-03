@@ -188,12 +188,10 @@ foreach ($events as $event) {
              $text_parameter = str_replace("Lang ","", $text);
              case 'lang':
              $text_parameter = str_replace("lang ","", $text);
-$source = 'en';
-$target = 'th';
-$trans = new GoogleTranslate();
-$result = $trans->translate($source, $target, $text_parameter);
- $lang_url="https://translation.googleapis.com/language/translate/v2";
-echo $result;
+             $source = 'en';
+             $target = 'th';
+             $trans = new GoogleTranslate();
+             $result = $trans->translate($source, $target, $text_parameter);
 /*
              $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
               $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
