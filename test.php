@@ -7,7 +7,7 @@ print_r($explodeText);
 echo $count_element;
 
 for($i=1;$i<$count_element;$i++){
-  $text_parameter=$text_parameter.$explodeText[$i];
+  $text_parameter=$text_parameter." ".$explodeText[$i];
   echo $i;
 }
 
