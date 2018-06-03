@@ -185,22 +185,14 @@ foreach ($events as $event) {
              break;
 
              case 'Lang':
-             $text_parameter = str_replace("Lang ","", $text);
              case 'lang':
              $text_parameter = str_replace("lang ","", $text);
+             $text_parameter = str_replace("Lang ","", $text_parameter);
              $source = 'en';
              $target = 'th';
              $trans = new GoogleTranslate();
              $result = $trans->translate($source, $target, $text_parameter);
-/*
-             $lang_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=$text_parameter" ;
-              $content = file_get_contents($lang_url); // อ่านข้อมูล JSON
-              $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-
-               $text="ข้อความ ".$text_parameter.$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];
-
-              */
-               $bot->replyText($reply_token, $result);
+             $bot->replyText($reply_token, $result);
                 break;
 
                 case 'Weather':
