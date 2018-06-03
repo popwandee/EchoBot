@@ -191,6 +191,7 @@ foreach ($events as $event) {
                $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];
                $bot->replyText($reply_token, $text);
                 break;
+                
                 case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
