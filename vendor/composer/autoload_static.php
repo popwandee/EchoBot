@@ -13,6 +13,7 @@ class ComposerStaticInit72c47c27716f1e3c541f211daf663bc1
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'Statickidz\\' => 11,
             'Slim\\' => 5,
         ),
         'P' => 
@@ -40,6 +41,10 @@ class ComposerStaticInit72c47c27716f1e3c541f211daf663bc1
     );
 
     public static $prefixDirsPsr4 = array (
+        'Statickidz\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/statickidz/php-google-translate-free/src',
+        ),
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
