@@ -1,2 +1,3 @@
 !/logs/.gitkeep
 /logs/*
+composer.phar
