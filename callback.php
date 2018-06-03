@@ -175,7 +175,7 @@ foreach ($events as $event) {
               if($key=='articles'){
                $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
                while (list($key) = each($json_arr1)) {
-                 if($count_news<10)
+                 if($count_news<6)
                     $text=$text.$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
                     ++$count_news;
                      }
