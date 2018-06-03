@@ -92,7 +92,7 @@ foreach ($events as $event) {
 
           case 'สอนฮูก':
 
-              $x_tra = str_replace("สอนฮูก","", $text);
+              $x_tra = str_replace("สอนฮูก ","", $text);
 
               $pieces = explode("|", $x_tra);
 
