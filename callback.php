@@ -15,6 +15,7 @@ require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
+use \Statickidz\GoogleTranslate;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
@@ -81,88 +82,89 @@ foreach ($events as $event) {
 
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
 
-        $reply_token = $event->getReplyToken();
+      $reply_token = $event->getReplyToken();
 
-        $text = $event->getText();
+      $text = $event->getText();
 
-        $explodeText=explode(" ",$text);
+      $explodeText=explode(" ",$text);
 
-        //$bot->replyText($reply_token, $explodeText[0]);
 
-        switch ($explodeText[0]) {
+      switch ($explodeText[0]) {
 
-          case 'สอนฮูก':
+        case 'สอนฮูก':
 
-              //$x_tra = str_replace("สอนฮูก","", $text);
+            $x_tra = str_replace("สอนฮูก ","", $text);
 
-              $pieces = explode("|", $explodeText[1]);
+            $pieces = explode("|", $x_tra);
 
-              $_question=str_replace("[","",$pieces[0]);
+            $_question=str_replace("[","",$pieces[0]);
 
-              $_answer=str_replace("]","",$pieces[1]);
+            $_answer=str_replace("]","",$pieces[1]);
 
-              //Post New Data
+            //Post New Data
 
-              $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
+            $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
 
-              $opts = array('http' => array( 'method' => "POST",
+            $opts = array('http' => array( 'method' => "POST",
 
-                                            'header' => "Content-type: application/json",
+                                          'header' => "Content-type: application/json",
 
-                                            'content' => $newData
+                                          'content' => $newData
 
-                                             )
+                                           )
 
-                                          );
+                                        );
 
-              // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
+            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
 
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+            $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
 
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
-              $context = stream_context_create($opts);
+            $context = stream_context_create($opts);
 
-              $returnValue = file_get_contents($url,false,$context);
+            $returnValue = file_get_contents($url,false,$context);
 
-              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
+            if($returnValue)$text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
+            else $text="Cannot teach Ducky";
 
-              $bot->replyText($reply_token, $text);
+            $bot->replyText($reply_token, $text);
 
-              break;
+            break;
 
-          case 'stock':
+            case 'Stock':
+            case 'stock':
 
-                  $symbol=$explodeText[1];
-                $text= 'stock price ราคาหุ้นรายวัน '.$symbol.' ';
-                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
-                $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
-                $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                $keepdate = true;
-                $countm= 0;
-                while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                   $KeepMainkey = $key; //เก็บคีย์หลัก
-	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
-	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                   while (list($key) = each($getarr1)) {
-                     if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
-    	                  $text= $text.' '.$key.' '.$getarr1[$key].' ';
-                      }
-                      $countm++;
-                      if ($KeepMainkey!="Meta Data" && $keepdate ) {
-                        $keepdate = false;
-                        $getarrayday = $getarr1[$key];
-                        while (list($key) = each($getarrayday)) {
-                          $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
-                        }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
-                      }
-                    }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-                  } //สิ้นสุดการลิสต์คีย์ชั้นแรก
+                    $symbol=$explodeText[1];
+                  $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
+                  $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
+                  $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
+                  $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
+                  $keepdate = true;
+                  $countm= 0;
+                  while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
+                     $KeepMainkey = $key; //เก็บคีย์หลัก
+  	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
+  	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
+                     while (list($key) = each($getarr1)) {
+                       if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
+      	                  $text= $text.' '.$key.' '.$getarr1[$key].' ';
+                        }
+                        $countm++;
+                        if ($KeepMainkey!="Meta Data" && $keepdate ) {
+                          $keepdate = false;
+                          $getarrayday = $getarr1[$key];
+                          while (list($key) = each($getarrayday)) {
+                            $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
+                          }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
+                        }
+                      }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
+                    } //สิ้นสุดการลิสต์คีย์ชั้นแรก
 
-              $bot->replyText($reply_token, $text);
+                $bot->replyText($reply_token, $text);
 
-              break;
-
+                break;
+          case 'News':
           case 'news':
           $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
@@ -180,26 +182,23 @@ foreach ($events as $event) {
             $text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
             $bot->replyText($reply_token, $text);
              break;
-
+             case 'Lang':
              case 'lang':
-             $news_url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=".$explodeText[1] ;
-             $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-             $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-               $text=$json_arr[0][0][1]." แปลว่า ".$json_arr[0][0][0];//$text_arr[mt_rand[min,max]]; random index
-               $bot->replyText($reply_token, $text);
+             $text_parameter = str_replace("lang ","", $text);
+             $text_parameter = str_replace("Lang ","", $text_parameter);
+             $source = 'en';
+             $target = 'th';
+             $trans = new GoogleTranslate();
+             $result = $trans->translate($source, $target, $text_parameter);
+             $bot->replyText($reply_token, $result);
                 break;
 
+                case 'Weather':
                 case 'weather':
-                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok"; // default city
-                $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                if(is_Null($json_arr)){// no city from api.openweathermap
-                  $explodeText[1]="Bangkok";
-                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
-                  $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                  $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                }
                   $text= "รายงานสภาพอากาศ ".$json_arr[name];
                   $date = date("F j, Y, g:i a",$json_arr[dt]);
                   $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
@@ -208,12 +207,9 @@ foreach ($events as $event) {
                   $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
                   $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
                   $text=$text." พระอาทิตย์ตก ".$sunset;
-                //  $news_url="http://api.openweathermap.org/data/2.5/forecast?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
-                  //$content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                  //$json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-
                   $bot->replyText($reply_token, $text);
                    break;
+
 
           default:
 
