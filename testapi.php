@@ -53,7 +53,7 @@ $count_news=0;
 
   print_r($text);
 
-$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();echo "4";
+$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();echo "pass 4";
 $multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
                        ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
 echo "5";
