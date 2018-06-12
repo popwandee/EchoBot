@@ -52,10 +52,13 @@ $count_news=0;
 
 
   print_r($text);
-$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+
+$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();echo "4";
 $multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
                        ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
+echo "5";
 $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
+echo "6";print_r($multipleMessageBuilder);
 if($res){ echo "$res is".$res;}
 else { echo "Not good";}
 ?>
