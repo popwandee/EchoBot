@@ -55,11 +55,10 @@ $count_news=0;
 
   print_r($text);
 
-$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder();echo "pass 4";
-$multipleMessageBuilder->ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
-echo "5";
-$res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
-echo "6";print_r($multipleMessageBuilder);
+echo "pass 4";
+
+$res = $bot->replyMessage($replyToken, new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
+echo "pass 5";
 if($res){ echo "$res is".$res;}
 else { echo "Not good";}
 ?>
