@@ -72,8 +72,8 @@ foreach ($events as $event) {
      //$text = 'รูปอะไรเหรอฮะ';
 	  
 $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder($text, $text))
-                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
+$multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
+                       ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
 $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 
 
