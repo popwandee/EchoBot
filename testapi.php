@@ -56,6 +56,6 @@ $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder()
 $multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
                        ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
 $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
-if $res echo "$res is".$res;
-else echo "Not good";
+if($res){ echo "$res is".$res;}
+else { echo "Not good";}
 ?>
