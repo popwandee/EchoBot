@@ -75,6 +75,11 @@ foreach ($events as $event) {
     $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
 
      //$text = 'รูปอะไรเหรอฮะ';
+	   $response = $bot->replyMessage($reply_token, new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg','http://www.hooq.info/photos/1.jpg'));
+if ($response->isSucceeded()) {
+    echo 'Succeeded!';
+    return;
+}
 
       $bot->replyText($reply_token, $text);
 
