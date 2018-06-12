@@ -52,4 +52,10 @@ $count_news=0;
 
 
   print_r($text);
+$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+$multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
+                       ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
+$res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
+
+echo "$res is".$res;
 ?>
