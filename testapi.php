@@ -4,6 +4,8 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
 use \Statickidz\GoogleTranslate;
+use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;
+
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
@@ -53,9 +55,8 @@ $count_news=0;
 
   print_r($text);
 
-$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();echo "pass 4";
-$multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
-                       ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
+$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder();echo "pass 4";
+$multipleMessageBuilder->ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
 echo "5";
 $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 echo "6";print_r($multipleMessageBuilder);
