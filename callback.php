@@ -28,12 +28,7 @@ $bot = new \LINE\LINEBot(
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
 
 );
-/*
-my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
-                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
-$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
-*/
+
 
 echo "ok 3";
 
@@ -75,14 +70,14 @@ foreach ($events as $event) {
     $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
 
      //$text = 'รูปอะไรเหรอฮะ';
-	   $response = $bot->replyMessage($reply_token, new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg','http://www.hooq.info/photos/1.jpg'));
-if ($response->isSucceeded()) {
-    echo 'Succeeded!';
-    return;
-}
+	  
+$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+$multipleMessageBuilder->add(new TextMessageBuilder($text, $text))
+                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
+$res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 
-      $bot->replyText($reply_token, $text);
 
+      
    }
 
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
