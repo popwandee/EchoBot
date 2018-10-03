@@ -36,28 +36,8 @@ try {
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
-foreach ($events as $event) {
-  // Postback Event
-	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
-		$logger->info('Postback message has come');
-		continue;
-	}
-	// Location Event
-	if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
-		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
-		continue;
-	}
-   if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
-     $reply_token = $event->getReplyToken();
-       $a = ['ขอบคุณฮะ', 'OK',''];
-    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
-      $bot->replyText($reply_token, $text);
-   }
-    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-      $reply_token = $event->getReplyToken();
-      $text = $event->getText();
-      $explodeText=explode(" ",$text);
-	    //////////////////////////////////
+
+ //////////////////////////////////
 	     echo "OK default ";
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
               $data = json_decode($json);
@@ -80,6 +60,29 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
               }//end no data from mlab
 	    ///////////////////////////////
+
+foreach ($events as $event) {
+  // Postback Event
+	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
+		$logger->info('Postback message has come');
+		continue;
+	}
+	// Location Event
+	if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
+		continue;
+	}
+   if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
+     $reply_token = $event->getReplyToken();
+       $a = ['ขอบคุณฮะ', 'OK',''];
+    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
+      $bot->replyText($reply_token, $text);
+   }
+    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+      $reply_token = $event->getReplyToken();
+      $text = $event->getText();
+      $explodeText=explode(" ",$text);
+	   
       switch ($explodeText[0]) {
             case 'Stock':
             case 'stock':
