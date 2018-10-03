@@ -195,11 +195,13 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
           default:
+		      echo "OK default ";
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
               $data = json_decode($json);
               $isData=sizeof($data);
 		      print_r($data);
               if($isData >0){
+		      echo "OK isData";
                 foreach($data as $arr){
 			foreach($arr as $rec){
 				print_r($rec);
