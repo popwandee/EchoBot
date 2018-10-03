@@ -204,14 +204,15 @@ foreach ($events as $event) {
 			foreach($arr as $rec){
 				print_r($rec);
                   $text= $rec->telephone;
+				echo $text;
                   $bot->replyText($reply_token, $text);
 			}
                   //-----------------------
                 }//end for each
               }else{
-                  $text='';
+                  $text='No Data';
                   //$text= $explodeText[0];
-                  //$bot->replyText($reply_token, $text);
+                  $bot->replyText($reply_token, $text);
               }//end no data from mlab
             }//end switch
     }//end if text
