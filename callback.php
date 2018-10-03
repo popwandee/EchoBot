@@ -6,13 +6,7 @@ $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
 echo "Hooqs crma46 .. Dump temp OK";
-define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
-define("ALPHAVANTAGE_API_KEY", 'W6PVFUDUDT6NEEN1');
-define("NEWS_API_KEY", 'dca7d30a57ec451cad6540a696a7f60a');
-define("OPENWEATHERMAP_API_KEY", 'cb9473cef915ee0ed20ac67817d06289');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '558ab5cee72171faced07fe0113795c8');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'I2JgX3AxxDJISaIzkFJHgX0FClIpUiGd4J39jPXI2YMLoMq0bbQFYD4uxACCfDZie+8dTshHUeMXofpHEvBWBzqNWboCLF8J1ctCILzMsFs5ODOqeS5waFIB8jU81VO3ZG+UA/w0QONygohJ3MUhUwdB04t89/1O/w1cDnyilFU=');
-echo "ok 1";
+echo "ok 1 NEED API_KEY";
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
