@@ -5,7 +5,7 @@ var_dump(json_decode($raw,1));
 $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
-echo "Hooqs .. Dump temp OK";
+echo "Hooqs crma46 .. Dump temp OK";
 
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '558ab5cee72171faced07fe0113795c8');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'I2JgX3AxxDJISaIzkFJHgX0FClIpUiGd4J39jPXI2YMLoMq0bbQFYD4uxACCfDZie+8dTshHUeMXofpHEvBWBzqNWboCLF8J1ctCILzMsFs5ODOqeS5waFIB8jU81VO3ZG+UA/w0QONygohJ3MUhUwdB04t89/1O/w1cDnyilFU=
@@ -115,11 +115,9 @@ foreach ($events as $event) {
 
               }else{
 
-                  $text='';
+                  $text='ไม่พบข้อมูล';
 
-                  //$text= $explodeText[0];
-
-                  //$bot->replyText($reply_token, $text);
+                  $bot->replyText($reply_token, $text);
 
               }//end no data from mlab
 
