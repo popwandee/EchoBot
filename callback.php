@@ -117,7 +117,7 @@ foreach ($events as $event) {
 
               // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
 
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+              $api_key="";
 
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
@@ -136,7 +136,7 @@ foreach ($events as $event) {
 
                   $symbol=$explodeText[1];
                 $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
+                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=';
                 $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
                 $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 $keepdate = true;
@@ -165,7 +165,7 @@ foreach ($events as $event) {
               break;
           case 'News':
           case 'news':
-          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=' ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $text='';
@@ -194,7 +194,7 @@ foreach ($events as $event) {
                 case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                   $text= "รายงานสภาพอากาศ ".$json_arr[name];
@@ -210,7 +210,7 @@ foreach ($events as $event) {
 
           default:
 
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+              $api_key="";
 
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
