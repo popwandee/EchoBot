@@ -39,7 +39,8 @@ try {
 
  //////////////////////////////////
 	     echo "OK default ";
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
+		$keyword="เขมร";
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$keyword.'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
