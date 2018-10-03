@@ -44,19 +44,13 @@ try {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $arr){
-			foreach($arr as $rec){
-				print_r($rec);
-                  $text= $rec->telephone;
-				echo $text."<br>";
-                  $bot->replyText($reply_token, $text);
-			}
-                  //-----------------------
+				print_r($arr);
                 }//end for each
               }else{
                   $text='No Data';
-                  //$text= $explodeText[0];
-                  $bot->replyText($reply_token, $text);
               }//end no data from mlab
+
+                  $bot->replyText($reply_token, $text);
 	    ///////////////////////////////
 
 foreach ($events as $event) {
