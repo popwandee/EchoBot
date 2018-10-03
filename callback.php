@@ -6,9 +6,12 @@ $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
 echo "Hooq .. Dump temp OK";
-
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("ALPHAVANTAGE_API_KEY", 'W6PVFUDUDT6NEEN1');
+define("NEWS_API_KEY", 'dca7d30a57ec451cad6540a696a7f60a');
+define("OPENWEATHERMAP_API_KEY", 'cb9473cef915ee0ed20ac67817d06289');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '6f6b7e3b1aff242cd4fb0fa3113f7af3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'RvsMabRN/IlT2BtmEoH+KcIbha8F/aPLWWzMKj8lxz/7f9c/Ygu5qvrUGtdlrTwyQwR5tFcgIGGzCkHO/SzIKrdCqUm+sal4t73YOuTPZsQX4bR35g3ZJGTvFilxvO1LVO/I6B1ouhx3UjGWe+OwswdB04t89/1O/w1cDnyilFU=');
 echo "ok 1";
 
 require __DIR__."/vendor/autoload.php";
@@ -91,52 +94,33 @@ foreach ($events as $event) {
 
         switch ($explodeText[0]) {
 
-          case 'สอนฮูก':
-
-              $x_tra = str_replace("สอนฮูก ","", $text);
-
+          case '#สอนฮูก':
+              $x_tra = str_replace("#สอนฮูก ","", $text);
               $pieces = explode("|", $x_tra);
-
               $_question=str_replace("[","",$pieces[0]);
-
               $_answer=str_replace("]","",$pieces[1]);
-
               //Post New Data
-
               $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
-
               $opts = array('http' => array( 'method' => "POST",
-
                                             'header' => "Content-type: application/json",
-
                                             'content' => $newData
-
                                              )
-
                                           );
 
               // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-
-              $api_key="";
-
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
-
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
-
               $returnValue = file_get_contents($url,false,$context);
-
               if($returnValue)$text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
               else $text="Cannot teach HooQ";
-
               $bot->replyText($reply_token, $text);
-
               break;
           case 'Stock':
           case 'stock':
 
                   $symbol=$explodeText[1];
                 $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=';
+                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey='.ALPHAVANTAGE_API_KEY;
                 $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
                 $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 $keepdate = true;
@@ -165,7 +149,7 @@ foreach ($events as $event) {
               break;
           case 'News':
           case 'news':
-          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=' ;
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey='.NEWSAPI_API_KEY ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $text='';
@@ -194,7 +178,7 @@ foreach ($events as $event) {
                 case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                   $text= "รายงานสภาพอากาศ ".$json_arr[name];
@@ -207,49 +191,116 @@ foreach ($events as $event) {
                   $text=$text." พระอาทิตย์ตก ".$sunset;
                   $bot->replyText($reply_token, $text);
                    break;
+	
+          case '#เพิ่มคน':
+              $x_tra = str_replace("#เพิ่มคน ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_name=$pieces[0];
+              $_surname=$pieces[1];
+              $_nickname=$pieces[2];
+              $_nickname2=$pieces[3];
+              $_telephone=$pieces[4];
+              $_jobposition=$pieces[5];
+              $_address=$pieces[6];
+              //Post New Data
 
-          default:
+              $newData = json_encode(array('name' => $_name,'surname'=> $_surname,'nickname'=> $_nickname,'nickname2'=> $_nickname2,'telephone'=> $_telephone,'jobposition'=> $_jobposition,'address'=> $_address) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue)$text = 'เพิ่มคนสำเร็จแล้ว';
+              else $text="ไม่สามารถเพิ่มคนได้";
+              $bot->replyText($reply_token, $text);
 
-              $api_key="";
-
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
-
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
-
+              break;
+          case '#ชื่อเล่น':
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
               $data = json_decode($json);
-
               $isData=sizeof($data);
-
               if($isData >0){
-
+		   $text="";
+		   $count=1;
                 foreach($data as $rec){
-
-                  $text= $rec->answer;
-
-                  $bot->replyText($reply_token, $text);
-
-                  //-----------------------
-
+                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
-
+	      }else{
+		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
+	   case '#ฉายา':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $text="";
+		   $count=1;
+                foreach($data as $rec){
+                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลฉายา ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
+	   case '#ชื่อจริง':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $text="";
+		   $count=1;
+                foreach($data as $rec){
+                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
+	   case '#นามสกุล':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $text="";
+		   $count=1;
+                foreach($data as $rec){
+                 $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
+			
+          default:
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY;
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+                foreach($data as $rec){
+                  $text= $rec->answer;
+                  $bot->replyText($reply_token, $text);
+                }//end for each
               }else{
-
                   $text='';
-
                   //$text= $explodeText[0];
-
                   //$bot->replyText($reply_token, $text);
-
               }//end no data from mlab
-
             }//end switch
-
     }//end if text
-
 }// end foreach event
-
-
-
 echo "OK4";
 /*
 
