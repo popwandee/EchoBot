@@ -70,7 +70,7 @@ foreach ($events as $event) {
    if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
 
      $reply_token = $event->getReplyToken();
-       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.'];
+       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.','เฮียไก่ชอบ','ป๊อบปี้ว่ามัน...ซิกเนเจอร์มาก','ตามว่าก็งั้นๆ','เชษไม่ปลื้ม',''];
 
     $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
 
