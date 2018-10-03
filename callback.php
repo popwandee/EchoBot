@@ -40,9 +40,11 @@ try {
  //////////////////////////////////
 	     echo "OK default ";
 		$keyword="เขมร";
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$keyword.'"}');
+$url='https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$keyword.'"}';
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$keyword.'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
+echo $url;
               if($isData >0){
 		   $text="";
 		   $count=1;
