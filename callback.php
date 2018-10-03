@@ -150,8 +150,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text."<br>";
-		  $text=$text.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $text= $text.'\n'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   $count++;
                 }//end for each
 	      }else{
@@ -167,7 +166,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text.'<br>'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $text= $text.'\n'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   $count++;
                 }//end for each
 	      }else{
@@ -183,7 +182,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text.'<br>'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $text= $text.'\n'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   $count++;
                 }//end for each
 	      }else{
@@ -199,7 +198,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                 $text= $text.'<br>'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                 $text= $text.'\n'.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   $count++;
                 }//end for each
 	      }else{
