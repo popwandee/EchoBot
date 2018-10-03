@@ -1,2 +1,2 @@
 # EchoBot
-# Hooqs พี่ปืน
+# Hooq หลัก
