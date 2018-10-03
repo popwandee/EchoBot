@@ -43,15 +43,19 @@ try {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
+		   $text="";
+		   $count=1;
                 foreach($data as $arr){
-		   print_r($arr);
-                  $bot->replyText($reply_token, $text);
-                }//end for each
+		   //print_r($arr);
+		   $text=$text." ".$count." ".$arr->name." ".$arr->surname." ชื่อเล่น ".$arr->nickname." ฉายา ".$arr->nickname2." โทร.".$arr->telephone." ตำแหน่ง ".$arr->jobposition." ที่อยู่ ".$arr->address;
+                   $count++;  
+		}//end for each
               }else{
                   $text='No Data';
-                  $bot->replyText($reply_token, $text);
+		      echo $text;
               }//end no data from mlab
-
+echo $text;
+                  $bot->replyText($reply_token, $text);
 	    ///////////////////////////////
 
 foreach ($events as $event) {
