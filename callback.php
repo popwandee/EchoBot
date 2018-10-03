@@ -144,7 +144,7 @@ foreach ($events as $event) {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->telephone;
+                  $text= $rec->name.$rec->surname.$rec->nickname.$rec->nickname2.$rec->telephone;
                   //-----------------------
                 }//end for each
 	      }else{
