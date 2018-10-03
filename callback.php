@@ -150,10 +150,9 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text."                  ";
-			$text=$text.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-
-			$count++;
+                  $text= $text."<br>";
+		  $text=$text.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
