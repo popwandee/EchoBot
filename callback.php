@@ -57,6 +57,29 @@ foreach ($events as $event) {
       $reply_token = $event->getReplyToken();
       $text = $event->getText();
       $explodeText=explode(" ",$text);
+	    //////////////////////////////////
+	     echo "OK default ";
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+		      print_r($data);
+              if($isData >0){
+		      echo "OK isData";
+                foreach($data as $arr){
+			foreach($arr as $rec){
+				print_r($rec);
+                  $text= $rec->telephone;
+				echo $text;
+                  $bot->replyText($reply_token, $text);
+			}
+                  //-----------------------
+                }//end for each
+              }else{
+                  $text='No Data';
+                  //$text= $explodeText[0];
+                  $bot->replyText($reply_token, $text);
+              }//end no data from mlab
+	    ///////////////////////////////
       switch ($explodeText[0]) {
             case 'Stock':
             case 'stock':
@@ -195,27 +218,7 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
           default:
-		      echo "OK default ";
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-		      print_r($data);
-              if($isData >0){
-		      echo "OK isData";
-                foreach($data as $arr){
-			foreach($arr as $rec){
-				print_r($rec);
-                  $text= $rec->telephone;
-				echo $text;
-                  $bot->replyText($reply_token, $text);
-			}
-                  //-----------------------
-                }//end for each
-              }else{
-                  $text='No Data';
-                  //$text= $explodeText[0];
-                  $bot->replyText($reply_token, $text);
-              }//end no data from mlab
+		     break;
             }//end switch
     }//end if text
 }// end foreach event
