@@ -7,8 +7,8 @@ file_put_contents('/tmp/dump.txt', $raw."\n=====================================
 
 echo "Ducky ..... Dump temp OK";
 
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
 echo "ok 1";
 
 require __DIR__."/vendor/autoload.php";
@@ -117,7 +117,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 
             // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
 
-            $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+            $api_key="";
 
             $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
@@ -137,7 +137,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 
                     $symbol=$explodeText[1];
                   $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-                  $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
+                  $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=';
                   $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
                   $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                   $keepdate = true;
@@ -167,7 +167,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
           case 'News':
           case 'news':
           $text='';
-          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=dca7d30a57ec451cad6540a696a7f60a' ;
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=' ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $count_news=0;
@@ -199,11 +199,11 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
                 case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 if(is_Null($json_arr)){$explodeText[1]="Bangkok";
-                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=cb9473cef915ee0ed20ac67817d06289" ;
+                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
                    $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                    $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 }
@@ -221,7 +221,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
 
           default:
 
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
+              $api_key="";
 
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
 
