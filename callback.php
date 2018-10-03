@@ -150,15 +150,15 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-                  $bot->replyText($reply_token, $text);
+                  $text= $text."                  ";
+			$text=$text.$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+
 			$count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
-		      
-                  $bot->replyText($reply_token, $text);
 	      }
+                  $bot->replyText($reply_token, $text);
                    break;
 	   case '#ฉายา':
 		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$explodeText[1].'"}');
