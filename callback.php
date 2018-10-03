@@ -37,29 +37,7 @@ try {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
 
- //////////////////////////////////
-	     echo "OK default ";
-		$keyword="นกฮูก";
-$url='https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$keyword.'"}';
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$keyword.'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-echo $url;
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $arr){
-		   //print_r($arr);
-		   $text=$text.' '.$count.' '.$arr->name.' '.$arr->surname.' ชื่อเล่น '.$arr->nickname.' ฉายา '.$arr->nickname2.' โทร'.$arr->telephone.' ตำแหน่ง '.$arr->jobposition.' ที่อยู่ '.$arr->address;
-                   $count++;  
-		}//end for each
-              }else{
-                  $text='No Data';
-		      echo $text;
-              }//end no data from mlab
-echo $text;
-                  $bot->replyText($reply_token, $text);
-	    ///////////////////////////////
+
 
 foreach ($events as $event) {
   // Postback Event
@@ -169,9 +147,11 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
+		   $text="";
+		   $count=1;
                 foreach($data as $rec){
-                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-                  //-----------------------
+                  $text= $text.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
@@ -183,9 +163,11 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
+		   $text="";
+		   $count=1;
                 foreach($data as $rec){
-                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-                  //-----------------------
+                  $text= $text.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลฉายา ".$explodeText[1];
@@ -197,9 +179,11 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
+		   $text="";
+		   $count=1;
                 foreach($data as $rec){
-                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-                  //-----------------------
+                  $text= $text.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1];
@@ -211,9 +195,11 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
+		   $text="";
+		   $count=1;
                 foreach($data as $rec){
-                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
-                  //-----------------------
+                  $text= $text.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $count++;
                 }//end for each
 	      }else{
 		  $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
