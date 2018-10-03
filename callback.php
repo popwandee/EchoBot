@@ -5,7 +5,7 @@ var_dump(json_decode($raw,1));
 $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
-echo "Hooq .. Dump temp OK";
+echo "Hooqs .. Dump temp OK";
 
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
