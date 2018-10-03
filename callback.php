@@ -47,7 +47,7 @@ try {
 		   $count=1;
                 foreach($data as $arr){
 		   //print_r($arr);
-		   $text=$text." ".$count." ".$arr->name." ".$arr->surname." ชื่อเล่น ".$arr->nickname." ฉายา ".$arr->nickname2." โทร.".$arr->telephone." ตำแหน่ง ".$arr->jobposition." ที่อยู่ ".$arr->address;
+		   $text=$text.' '.$count.' '.$arr->name.' '.$arr->surname.' ชื่อเล่น '.$arr->nickname.' ฉายา '.$arr->nickname2.' โทร'.$arr->telephone.' ตำแหน่ง '.$arr->jobposition.' ที่อยู่ '.$arr->address;
                    $count++;  
 		}//end for each
               }else{
