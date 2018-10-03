@@ -216,7 +216,7 @@ foreach ($events as $event) {
               $bot->replyText($reply_token, $text);
 
               break;
-	 case '$ทะเบียน':
+	 case '#ทะเบียน':
 		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
@@ -224,7 +224,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์".$rec->owner.' ผู้ครอบครอง'.$rec->user."\n หมายเหตุ/ประวัติ".$rec->note."\n\n";
+                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
                   $count++;
                 }//end for each
 	      }else{
