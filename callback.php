@@ -139,38 +139,68 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
 	   case '#ชื่อเล่น':
-	      $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'';
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->name.$rec->surname;
-                  $bot->replyText($reply_token, $text);
+                  $text= $rec->telephone;
                   //-----------------------
                 }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
 	      }
+                  $bot->replyText($reply_token, $text);
                    break;
 	   case '#ฉายา':
-		  $text= "ฉายา HOOQS";
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+                foreach($data as $rec){
+                  $text= $rec->telephone;
+                  //-----------------------
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลฉายา ".$explodeText[1];
+	      }
                   $bot->replyText($reply_token, $text);
                    break;
 	   case '#ชื่อจริง':
-		  $text= "ชื่อจริง HOOQS";
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+                foreach($data as $rec){
+                  $text= $rec->telephone;
+                  //-----------------------
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1];
+	      }
                   $bot->replyText($reply_token, $text);
                    break;
 	   case '#นามสกุล':
-		  $text= "นามสกุล HOOQS";
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+                foreach($data as $rec){
+                  $text= $rec->telephone;
+                  //-----------------------
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
+	      }
                   $bot->replyText($reply_token, $text);
                    break;
           default:
-              $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'';
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[0].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->answer;
+                  $text= $rec->telephone;
                   $bot->replyText($reply_token, $text);
                   //-----------------------
                 }//end for each
