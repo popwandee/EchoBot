@@ -10,7 +10,7 @@ define("mlab_api_key", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '558ab5cee72171faced07fe0113795c8');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'I2JgX3AxxDJISaIzkFJHgX0FClIpUiGd4J39jPXI2YMLoMq0bbQFYD4uxACCfDZie+8dTshHUeMXofpHEvBWBzqNWboCLF8J1ctCILzMsFs5ODOqeS5waFIB8jU81VO3ZG+UA/w0QONygohJ3MUhUwdB04t89/1O/w1cDnyilFU=');
 
-echo $mlab_api_key;
+echo mlab_api_key;
 echo "ok 1";
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
