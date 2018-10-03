@@ -195,7 +195,7 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
           default:
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[0].'"}');
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
