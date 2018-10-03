@@ -144,7 +144,7 @@ foreach ($events as $event) {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.$rec->address;
+                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   //-----------------------
                 }//end for each
 	      }else{
@@ -158,7 +158,7 @@ foreach ($events as $event) {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->telephone;
+                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   //-----------------------
                 }//end for each
 	      }else{
@@ -172,7 +172,7 @@ foreach ($events as $event) {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->telephone;
+                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   //-----------------------
                 }//end for each
 	      }else{
@@ -186,7 +186,7 @@ foreach ($events as $event) {
               $isData=sizeof($data);
               if($isData >0){
                 foreach($data as $rec){
-                  $text= $rec->telephone;
+                  $text= $rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
                   //-----------------------
                 }//end for each
 	      }else{
