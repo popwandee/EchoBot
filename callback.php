@@ -5,7 +5,7 @@ var_dump(json_decode($raw,1));
 $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
-echo "Dump temp OK";
+echo "Ducky ..... Dump temp OK";
 
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
