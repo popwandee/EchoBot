@@ -6,9 +6,12 @@ $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
 echo "Hooqs crma46 .. Dump temp OK";
-define("MLAB_API_KEY", '');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("ALPHAVANTAGE_API_KEY", 'W6PVFUDUDT6NEEN1');
+define("NEWS_API_KEY", 'dca7d30a57ec451cad6540a696a7f60a');
+define("OPENWEATHERMAP_API_KEY", 'cb9473cef915ee0ed20ac67817d06289');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '558ab5cee72171faced07fe0113795c8');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'I2JgX3AxxDJISaIzkFJHgX0FClIpUiGd4J39jPXI2YMLoMq0bbQFYD4uxACCfDZie+8dTshHUeMXofpHEvBWBzqNWboCLF8J1ctCILzMsFs5ODOqeS5waFIB8jU81VO3ZG+UA/w0QONygohJ3MUhUwdB04t89/1O/w1cDnyilFU=');
 echo "ok 1";
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
@@ -65,7 +68,7 @@ foreach ($events as $event) {
             case 'stock':
                     $symbol=$explodeText[1];
                   $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-                  $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=';
+                  $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey='.ALPHAVANTAGE_API_KEY;
                   $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
                   $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                   $keepdate = true;
@@ -93,7 +96,7 @@ foreach ($events as $event) {
           case 'News':
           case 'news':
           $text='';
-          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey=' ;
+          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey='.NEWS_API_KEY ;
           $content = file_get_contents($news_url); // อ่านข้อมูล JSON
           $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
           $count_news=0;
@@ -123,11 +126,11 @@ foreach ($events as $event) {
                 case 'Weather':
                 case 'weather':
                 if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
+               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
                 $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                 $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 if(is_Null($json_arr)){$explodeText[1]="Bangkok";
-                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=" ;
+                  $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
                    $content = file_get_contents($news_url); // อ่านข้อมูล JSON
                    $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
                 }
@@ -141,6 +144,30 @@ foreach ($events as $event) {
                   $text=$text." พระอาทิตย์ตก ".$sunset;
                   $bot->replyText($reply_token, $text);
                    break;
+	case '#เพิ่มคน':
+              $x_tra = str_replace("#เพิ่มคน ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_name=$pieces[0];
+              $_surname=$pieces[1];
+              $_nickname=$pieces[2];
+              $_nickname2=$pieces[3];
+              $_telephone=$pieces[4];
+              $_jobposition=$pieces[5];
+              $_address=$pieces[6];
+              //Post New Data
+              $newData = json_encode(array('name' => $_name,'surname'=> $_surname,'nickname'=> $_nickname,'nickname2'=> $_nickname2,'telephone'=> $_telephone,'jobposition'=> $_jobposition,'address'=> $_address) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue)$text = 'เพิ่มคนสำเร็จแล้ว';
+              else $text="ไม่สามารถเพิ่มคนได้";
+              $bot->replyText($reply_token, $text);
+              break;
 	   case '#ชื่อเล่น':
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
               $data = json_decode($json);
@@ -149,7 +176,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
                   $count++;
                 }//end for each
 	      }else{
@@ -165,7 +192,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                 $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
                   $count++;
                 }//end for each
 	      }else{
@@ -181,7 +208,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                  $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
                   $count++;
                 }//end for each
 	      }else{
@@ -197,7 +224,7 @@ foreach ($events as $event) {
 		   $text="";
 		   $count=1;
                 foreach($data as $rec){
-                 $text= $text."\n\n".$count.' '.$rec->name.' '.$rec->surname.' ชื่อเล่น '.$rec->nickname.' ฉายา '.$rec->nickname2.' โทร'.$rec->telephone.' ตำแหน่ง '.$rec->jobposition.' '.$rec->address;
+                 $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
                   $count++;
                 }//end for each
 	      }else{
