@@ -6,11 +6,10 @@ $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
 echo "Hooqs crma46 .. Dump temp OK";
-define("mlab_api_key", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '558ab5cee72171faced07fe0113795c8');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'I2JgX3AxxDJISaIzkFJHgX0FClIpUiGd4J39jPXI2YMLoMq0bbQFYD4uxACCfDZie+8dTshHUeMXofpHEvBWBzqNWboCLF8J1ctCILzMsFs5ODOqeS5waFIB8jU81VO3ZG+UA/w0QONygohJ3MUhUwdB04t89/1O/w1cDnyilFU=');
 
-echo "mlab api key is ".mlab_api_key;
 echo "ok 1";
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
@@ -140,8 +139,17 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
 	   case '#ชื่อเล่น':
-		  $text= "ชื่อเล่น HOOQS";
+	      $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'';
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+                foreach($data as $rec){
+                  $text= $rec->name.$rec->surname;
                   $bot->replyText($reply_token, $text);
+                  //-----------------------
+                }//end for each
+	      }
                    break;
 	   case '#ฉายา':
 		  $text= "ฉายา HOOQS";
@@ -156,8 +164,8 @@ foreach ($events as $event) {
                   $bot->replyText($reply_token, $text);
                    break;
           default:
-              $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.$mlab_api_key.'';
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.$mlab_api_key.'&q={"name":"'.$explodeText[0].'"}');
+              $url = 'https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'';
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqs46/collections/crma46phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[0].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
