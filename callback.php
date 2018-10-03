@@ -6,12 +6,12 @@ $raw = ob_get_clean();
 file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 
 echo "Hooq .. Dump temp OK";
-define("MLAB_API_KEY", '');
-define("ALPHAVANTAGE_API_KEY", '');
-define("NEWS_API_KEY", '');
-define("OPENWEATHERMAP_API_KEY", '');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("ALPHAVANTAGE_API_KEY", 'W6PVFUDUDT6NEEN1');
+define("NEWS_API_KEY", 'dca7d30a57ec451cad6540a696a7f60a');
+define("OPENWEATHERMAP_API_KEY", 'cb9473cef915ee0ed20ac67817d06289');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '6f6b7e3b1aff242cd4fb0fa3113f7af3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'RvsMabRN/IlT2BtmEoH+KcIbha8F/aPLWWzMKj8lxz/7f9c/Ygu5qvrUGtdlrTwyQwR5tFcgIGGzCkHO/SzIKrdCqUm+sal4t73YOuTPZsQX4bR35g3ZJGTvFilxvO1LVO/I6B1ouhx3UjGWe+OwswdB04t89/1O/w1cDnyilFU=');
 echo "ok 1";
 
 require __DIR__."/vendor/autoload.php";
@@ -191,7 +191,47 @@ foreach ($events as $event) {
                   $text=$text." พระอาทิตย์ตก ".$sunset;
                   $bot->replyText($reply_token, $text);
                    break;
-	
+	 case '#เพิ่มรถ':
+              $x_tra = str_replace("#เพิ่มรถ ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_licence_plate=$pieces[0];
+              $_brand=$pieces[1];
+              $_model=$pieces[2];
+              $_color=$pieces[3];
+              $_owner=$pieces[4];
+              $_user=$pieces[5];
+              $_note=$pieces[6];
+              //Post New Data
+              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
+              else $text="ไม่สามารถเพิ่มรถได้";
+              $bot->replyText($reply_token, $text);
+
+              break;
+	 case '$ทะเบียน':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $text="";
+		   $count=1;
+                foreach($data as $rec){
+                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์".$rec->owner.' ผู้ครอบครอง'.$rec->user."\n หมายเหตุ/ประวัติ".$rec->note."\n\n";
+                  $count++;
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
           case '#เพิ่มคน':
               $x_tra = str_replace("#เพิ่มคน ","", $text);
               $pieces = explode("|", $x_tra);
