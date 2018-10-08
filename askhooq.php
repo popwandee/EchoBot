@@ -1,4 +1,4 @@
-<?php  callback.php
+<?php  //callback.php
 
 echo "Hooq .. Dump temp OK";
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
