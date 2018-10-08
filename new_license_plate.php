@@ -69,8 +69,8 @@ try {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มรถได้";
+              if($returnValue) echo "เพิ่มรถสำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถได้";
              
 
     $licenseplate= "1กฆ3977";
@@ -94,7 +94,8 @@ try {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-
+              if($returnValue) echo "เพิ่มรถ1สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ1ได้";
     $licenseplate= "1กฎ340",
     $province=  "กรุงเทพมหานคร",
     $username="อาอีเส๊าะ",
@@ -116,7 +117,8 @@ try {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-
+              if($returnValue) echo "เพิ่มรถ2สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ2ได้";
    $licenseplate= "1กศ6254",
     $province=  "กรุงเทพมหานคร",
     $username= "อุสมาน",
@@ -138,7 +140,8 @@ try {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-
+              if($returnValue) echo "เพิ่มรถ3สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ3ได้";
     $licenseplate= "1กฮ1631",
     $province=  "กรุงเทพมหานคร",
     $username= "มัสตูรา",
@@ -160,5 +163,7 @@ try {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
+              if($returnValue) echo "เพิ่มรถสำเร็จ4แล้ว";
+              else echo "ไม่สามารถเพิ่มรถ4ได้";
 /*
 */
