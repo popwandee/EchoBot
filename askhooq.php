@@ -12,7 +12,7 @@ $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 echo "ok 2";
 
-/*            
+            
     $licenseplate= "1กฆ3977";
     $province= "กรุงเทพมหานคร";
     $username= "สีเย๊าะ";
@@ -36,7 +36,7 @@ echo "ok 2";
               if($returnValue) echo "เพิ่มรถ1สำเร็จแล้ว";
               else echo "ไม่สามารถเพิ่มรถ1ได้";
               
-              */
+              
 
 /*
     $licenseplate= "1กฎ340";
