@@ -1,158 +1,105 @@
-<?php // callback.php
-ob_start();
-$raw = file_get_contents('php://input');
-var_dump(json_decode($raw,1));
-$raw = ob_get_clean();
-file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
+<?php  callback.php
 
-echo "Dump temp OK";
+echo "Hooq .. Dump temp OK";
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
 
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
-echo "ok 1";
-
-require __DIR__."/vendor/autoload.php";
-
+require DIR."/vendor/autoload.php";
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+use \Statickidz\GoogleTranslate;
+$logger = new Logger('LineBot');
+$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 echo "ok 2";
 
-$bot = new \LINE\LINEBot(
-
-    new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
-
-    ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
-;
-);
-
-echo "ok 3";
-
-$signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
-
-$body = file_get_contents("php://input");
-
-
-
-$events = $bot->parseEventRequest($body, $signature);
-
-
-
-foreach ($events as $event) {
-
-   if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
-
-     $reply_token = $event->getReplyToken();
-       $a = ['รูปไรเหรอฮะ', 'รูปหื่นป่าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'เปก','ถูกใจ ใช่เลย','ว้าว ว้าว ว้าว'];
-      $text = $a[mt_rand(0, count($a) - 1)];
-      $bot->replyText($reply_token, $text);
-
-   }
-
-    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-
-        $reply_token = $event->getReplyToken();
-
-        $text = $event->getText();
-
-        $explodeText=explode(" ",$text);
-
-        //$bot->replyText($reply_token, $explodeText[0]);
-
-        switch ($explodeText[0]) {
-
-          case 'สอนฮูก':
-
-              //$x_tra = str_replace("สอนฮูก","", $text);
-
-              $pieces = explode("|", $explodeText[1]);
-
-              $_question=str_replace("[","",$pieces[0]);
-              $_answer=str_replace("]","",$pieces[1]);
-
-              //Post New Data
-
-              $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
-
+            
+    $licenseplate= "1กฆ3977";
+    $province= "กรุงเทพมหานคร";
+    $username= "สีเย๊าะ";
+    $usersurname= "แลนิ";
+    $userid= "3-9501-00430-00-3";
+   $ownername= "โตโยต้า ลีสซิ่ง (ประเทศไทย)";
+    $ownersurname= "จำกัด";
+    $ownerid= "105536113550";
+    $cartype= "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
+    $carbrand= "TOYOTA";
+    $carcolor= "เทา";
+ $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
               $opts = array('http' => array( 'method' => "POST",
-
                                             'header' => "Content-type: application/json",
-
                                             'content' => $newData
-
                                              )
-
                                           );
-
-              // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
-
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
-
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
-
               $returnValue = file_get_contents($url,false,$context);
-
-              $text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
-
-              $bot->replyText($reply_token, $text);
-
-              break;
-
-            case 'stock':
-                $symbol=$explodeText[1];
-                $text='stock price ตรวจสอบราคาหุ้นรายวัน '.$symbol.' click ';
-                $text = $text.'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey=W6PVFUDUDT6NEEN1';
-              $bot->replyText($reply_token, $text);
-
-              break;
-
-          case 'news':
-
-              $text=$text.' news update ต่อไปจะรายงานข่าวหุ้นด้วยนะครับ';
-
-              $bot->replyText($reply_token, $text);
-
-              break;
-
-          default:
-
-              $api_key="6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv";
-
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'';
-
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
-
-              $data = json_decode($json);
-
-              $isData=sizeof($data);
-
-              if($isData >0){
-
-                foreach($data as $rec){
-
-                  $text= $rec->answer;
-
-                  $bot->replyText($reply_token, $text);
-
-                  //-----------------------
-
-                }//end for each
-
-              }else{
-
-                  $text='';
-
-                  //$text= $explodeText[0];
-
-                  //$bot->replyText($reply_token, $text);
-
-              }//end no data from mlab
-
-            }//end switch
-
-    }//end if text
-
-}// end foreach event
-
-
-
-echo "OK4";
+              if($returnValue) echo "เพิ่มรถ1สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ1ได้";
+    $licenseplate= "1กฎ340";
+    $province=  "กรุงเทพมหานคร";
+    $username="อาอีเส๊าะ";
+    $usersurname=  "กาเดร์";
+    $userid= "5-9605-99002-31-2";
+    $ownername="ธนชาต";
+    $ownersurname=  "จำกัด (มหาชน)";
+    $ownerid= "107536001401";
+    $cartype=  "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
+    $carbrand= "MITSUBISHI";
+    $carcolor= "ขาว";
+ $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue) echo "เพิ่มรถ2สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ2ได้";
+   $licenseplate= "1กศ6254";
+    $province=  "กรุงเทพมหานคร";
+    $username= "อุสมาน";
+    $usersurname=  "เจ๊ะแว";
+    $userid= "3-9604-00160-13-3";
+    $ownername= "ทิสโก้",
+    $ownersurname=  "จำกัด(มหาชน)";
+    $ownerid= "107539000171";
+    $cartype=  "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
+    $carbrand= "FORD";
+    $carcolor= "เทา";
+ $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue) echo "เพิ่มรถ3สำเร็จแล้ว";
+              else echo "ไม่สามารถเพิ่มรถ3ได้";
+    $licenseplate= "1กฮ1631";
+    $province=  "กรุงเทพมหานคร";
+    $username= "มัสตูรา";
+    $usersurname= "อูมา";
+    $userid= "3-9609-00016-12-1";
+    $ownername="ลีสซิ่งกสิกรไทย";
+    $ownersurname=  "จำกัด";
+    $ownerid= "105547166951";
+    $cartype=  "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
+    $carbrand= "HONDA";
+    $carcolor= "เทา";
+ $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue) echo "เพิ่มรถสำเร็จ4แล้ว";
+              else echo "ไม่สามารถเพิ่มรถ4ได้";
+/*
+*/
