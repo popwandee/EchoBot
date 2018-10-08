@@ -1,18 +1,23 @@
 <?php  //callback.php
-
+ob_start();
+$raw = file_get_contents('php://input');
+var_dump(json_decode($raw,1));
+$raw = ob_get_clean();
+file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
 echo "Hooq .. Dump temp OK";
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
-
+echo 'define ok\n';
 require DIR."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
 use \Statickidz\GoogleTranslate;
+echo 'use ok\n'
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
-echo "ok 2";
+echo "logger ok <br>";
 
-            
+echo 'define valuable\n';
     $licenseplate= "1กฆ3977";
     $province= "กรุงเทพมหานคร";
     $username= "สีเย๊าะ";
@@ -24,19 +29,21 @@ echo "ok 2";
     $cartype= "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
     $carbrand= "TOYOTA";
     $carcolor= "เทา";
+echo 'ready for insert data\n';
  $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
               $opts = array('http' => array( 'method' => "POST",
                                             'header' => "Content-type: application/json",
                                             'content' => $newData
                                              )
                                           );
+             echo 'insert data\n';
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               if($returnValue) echo "เพิ่มรถ1สำเร็จแล้ว";
               else echo "ไม่สามารถเพิ่มรถ1ได้";
               
-              
+           ?>   
 
 /*
     $licenseplate= "1กฎ340";
