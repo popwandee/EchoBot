@@ -111,9 +111,9 @@ $text = strtolower($text);
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-              if($returnValue){$text = 'เพิ่มรถสำเร็จแล้ว';
+              if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
 			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-			      }else {$text="ไม่สามารถเพิ่มรถได้";
+			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
 			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
               //$bot->replyText($reply_token, $text);
 
@@ -123,21 +123,21 @@ $text = strtolower($text);
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		   $text="";
+		   $$replyText="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
+                  $replyText= $replyText.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
                   $count++;
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }else{
-		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+		  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 			
 
 
-                  //$bot->replyText($reply_token, $text);
+                  //$bot->replyText($reply_token, $replyText);
                    break;
          
          
@@ -146,13 +146,13 @@ $text = strtolower($text);
             }//end switch
 	    /*
 	    	$multiMessage = new MultiMessageBuilder;
-    		$multiMessage->add($text);
+    		$multiMessage->add($replyText);
 	    	$imageMessage = new ImageMessageBuilder($img_url,'https://www.mywebsite.com/imgsrc/photos/f/simpleflower/240');
     		$multiMessage->add($imageMessage);
     		$replyData = $multiMessage;         
               $bot->replyMessage($reply_token,$replyData);
 	      */
-	    $bot->replyText($reply_token, $text);
+	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
 ?>
