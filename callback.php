@@ -83,8 +83,8 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
 
         $reply_token = $event->getReplyToken();
-
-$text = strtolower($event->getText(););
+$text = $event->getText();
+$text = strtolower($text);
         $explodeText=explode(" ",$text);
 
 
@@ -112,9 +112,9 @@ $text = strtolower($event->getText(););
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               if($returnValue){$text = 'เพิ่มรถสำเร็จแล้ว';
-			$img_url="";
+			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 			      }else {$text="ไม่สามารถเพิ่มรถได้";
-			$img_url="";}
+			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
               //$bot->replyText($reply_token, $text);
 
               break;
@@ -129,10 +129,10 @@ $text = strtolower($event->getText(););
                   $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
                   $count++;
                 }//end for each
-		      $img_url = "https://cdn.shopify.com/s/files/1/0379/7669/products/sampleset2_1024x1024.JPG?v=1458740363";
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }else{
 		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
-		      $img_url = "";
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 			
 
@@ -144,12 +144,13 @@ $text = strtolower($event->getText(););
           default:
 		break;	
             }//end switch
-	    	$multiMessage = new MultiMessageBuilder;
-	    $imageMessage = new ImageMessageBuilder($img_url,$img_url);
-    		$multiMessage->add($text);
-    		$multiMessage->add($imageMessage);
-    		$replyData = $multiMessage;         
-              $response = $bot->replyMessage($reply_token,$replyData);
+	    	//$multiMessage = new MultiMessageBuilder;
+	    //$imageMessage = new ImageMessageBuilder($img_url,$img_url);
+    		//$multiMessage->add($text);
+    		//$multiMessage->add($imageMessage);
+    		//$replyData = $multiMessage;         
+              //$response = $bot->replyMessage($reply_token,$replyData);
+	    $bot->replyText($reply_token, $text);
     }//end if text
 }// end foreach event
 ?>
