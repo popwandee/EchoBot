@@ -1,21 +1,6 @@
 <?php  //callback.php
-ob_start();
-$raw = file_get_contents('php://input');
-var_dump(json_decode($raw,1));
-$raw = ob_get_clean();
-file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
-echo "Hooq .. Dump temp OK";
+
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
-echo 'define ok\n';
-require DIR."/vendor/autoload.php";
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
-use \Statickidz\GoogleTranslate;
-echo 'use ok\n'
-$logger = new Logger('LineBot');
-$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
-echo "logger ok <br>";
 
 echo 'define valuable\n';
     $licenseplate= "1กฆ3977";
@@ -113,3 +98,4 @@ echo 'ready for insert data\n';
               if($returnValue) echo "เพิ่มรถสำเร็จ4แล้ว";
               else echo "ไม่สามารถเพิ่มรถ4ได้";
 */
+?>
