@@ -102,13 +102,13 @@ foreach ($events as $event) {
 	      }else{
 		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
 	      }
-			/*
+			$img_url = "https://cdn.shopify.com/s/files/1/0379/7669/products/sampleset2_1024x1024.JPG?v=1458740363";
 my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
-                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
-$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
-*/
-                  $bot->replyText($reply_token, $text);
+$multipleMessageBuilder->add(new TextMessageBuilder($text, 'ขอบคุณที่ใช้บริการค่ะ'))
+                       ->add(new ImageMessageBuilder($img_url, $img_url));
+$res = $bot->replyMessage($reply_token, $multipleMessageBuilder);
+
+                  //$bot->replyText($reply_token, $text);
                    break;
          
          
