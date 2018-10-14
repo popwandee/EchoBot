@@ -8,6 +8,9 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
 use \Statickidz\GoogleTranslate;
+use LINE\LINEBot;
+use LINE\LINEBot\HTTPClient;
+use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
@@ -81,8 +84,7 @@ foreach ($events as $event) {
 
         $reply_token = $event->getReplyToken();
 
-        $text = $event->getText();
-
+$text = strtolower($event->getText(););
         $explodeText=explode(" ",$text);
 
 
@@ -109,9 +111,11 @@ foreach ($events as $event) {
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มรถได้";
-              $bot->replyText($reply_token, $text);
+              if($returnValue){$text = 'เพิ่มรถสำเร็จแล้ว';
+			$img_url="";
+			      }else {$text="ไม่สามารถเพิ่มรถได้";
+			$img_url="";}
+              //$bot->replyText($reply_token, $text);
 
               break;
 	 case '#ทะเบียน':
@@ -125,22 +129,27 @@ foreach ($events as $event) {
                   $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
                   $count++;
                 }//end for each
+		      $img_url = "https://cdn.shopify.com/s/files/1/0379/7669/products/sampleset2_1024x1024.JPG?v=1458740363";
 	      }else{
 		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+		      $img_url = "";
 	      }
-			$img_url = "https://cdn.shopify.com/s/files/1/0379/7669/products/sampleset2_1024x1024.JPG?v=1458740363";
-my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder($text, 'ขอบคุณที่ใช้บริการค่ะ'))
-                       ->add(new ImageMessageBuilder($img_url, $img_url));
-$res = $bot->replyMessage($reply_token, $multipleMessageBuilder);
+			
+
 
                   //$bot->replyText($reply_token, $text);
                    break;
          
          
           default:
-              
+		break;	
             }//end switch
+	    	$multiMessage = new MultiMessageBuilder;
+	    $imageMessage = new ImageMessageBuilder($img_url,$img_url);
+    		$multiMessage->add($text);
+    		$multiMessage->add($imageMessage);
+    		$replyData = $multiMessage;         
+              $response = $bot->replyMessage($reply_token,$replyData);
     }//end if text
 }// end foreach event
 ?>
