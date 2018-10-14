@@ -144,13 +144,15 @@ $text = strtolower($text);
           default:
 		break;	
             }//end switch
+	    /*
 	    	$multiMessage = new MultiMessageBuilder;
     		$multiMessage->add($text);
-	    	$imageMessage = new ImageMessageBuilder($img_url,$img_url);
+	    	$imageMessage = new ImageMessageBuilder($img_url,'https://www.mywebsite.com/imgsrc/photos/f/simpleflower/240');
     		$multiMessage->add($imageMessage);
     		$replyData = $multiMessage;         
               $bot->replyMessage($reply_token,$replyData);
-	    //$bot->replyText($reply_token, $text);
+	      */
+	    $bot->replyText($reply_token, $text);
     }//end if text
 }// end foreach event
 ?>
