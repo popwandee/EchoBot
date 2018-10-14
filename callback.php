@@ -1,12 +1,7 @@
 <?php // callback.php
-ob_start();
-$raw = file_get_contents('php://input');
-var_dump(json_decode($raw,1));
-$raw = ob_get_clean();
-file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
-
-echo "Hooq .. Dump temp OK";
-echo "ok 1 NEED API KEY";
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d2540846576a6e5adb4415db8');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
 
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
@@ -16,7 +11,7 @@ use \Statickidz\GoogleTranslate;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
-echo "ok 2";
+
 
 $bot = new \LINE\LINEBot(
 
@@ -25,14 +20,7 @@ $bot = new \LINE\LINEBot(
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
 
 );
-/*
-my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
-                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
-$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
-*/
 
-echo "ok 3";
 
 $signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 
@@ -50,8 +38,6 @@ try {
 }
 
 
-
-
 foreach ($events as $event) {
   // Postback Event
 	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
@@ -64,18 +50,6 @@ foreach ($events as $event) {
 		continue;
 	}
 
-   if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
-
-     $reply_token = $event->getReplyToken();
-       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.','เฮียไก่ชอบ','ป๊อบปี้ว่ามัน...ซิกเนเจอร์มาก','ตามว่าก็งั้นๆ','เชษไม่ปลื้ม',''];
-
-    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
-
-     //$text = 'รูปอะไรเหรอฮะ';
-
-      $bot->replyText($reply_token, $text);
-
-   }
 
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
 
@@ -88,103 +62,7 @@ foreach ($events as $event) {
 
         switch ($explodeText[0]) {
 
-          case '#สอนฮูก':
-              $x_tra = str_replace("#สอนฮูก ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_question=str_replace("[","",$pieces[0]);
-              $_answer=str_replace("]","",$pieces[1]);
-              //Post New Data
-              $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-
-              // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'ขอบคุณที่สอนฮูก ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนฮูก [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
-              else $text="Cannot teach HooQ";
-              $bot->replyText($reply_token, $text);
-              break;
-          case 'Stock':
-          case 'stock':
-
-                  $symbol=$explodeText[1];
-                $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-                $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey='.ALPHAVANTAGE_API_KEY;
-                $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
-                $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                $keepdate = true;
-                $countm= 0;
-                while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                   $KeepMainkey = $key; //เก็บคีย์หลัก
-	                 $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
-	                 $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                   while (list($key) = each($getarr1)) {
-                     if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
-    	                  $text= $text.' '.$key.' '.$getarr1[$key].' ';
-                      }
-                      $countm++;
-                      if ($KeepMainkey!="Meta Data" && $keepdate ) {
-                        $keepdate = false;
-                        $getarrayday = $getarr1[$key];
-                        while (list($key) = each($getarrayday)) {
-                          $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
-                        }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
-                      }
-                    }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-                  } //สิ้นสุดการลิสต์คีย์ชั้นแรก
-
-              $bot->replyText($reply_token, $text);
-
-              break;
-          case 'News':
-          case 'news':
-          $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey='.NEWSAPI_API_KEY ;
-          $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-          $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-          $text='';
-            while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-              if($key=='articles'){
-               $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-               while (list($key) = each($json_arr1)) {
-                    $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-                  }
-              }
-            }
-            $bot->replyText($reply_token, $text);
-             break;
-
-             case 'Lang':
-             case 'lang':
-             $text_parameter = str_replace("lang ","", $text);
-             $text_parameter = str_replace("Lang ","", $text_parameter);
-             $source = 'en';
-             $target = 'th';
-             $trans = new GoogleTranslate();
-             $result = $trans->translate($source, $target, $text_parameter);
-             $bot->replyText($reply_token, $result);
-                break;
-
-                case 'Weather':
-                case 'weather':
-                if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-               $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
-                $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                  $text= "รายงานสภาพอากาศ ".$json_arr[name];
-                  $date = date("F j, Y, g:i a",$json_arr[dt]);
-                  $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
-                  $text=$text." อุณหภูมิ ".$json_arr[main][temp]."Celsius, อุณหภูมิสูงสุด ".$json_arr[main][temp_max]."Celsius, อุณหภูมิต่ำสุด ".$json_arr[main][temp_min]."Celsius";
-                  $sunrise = date("F j, Y, g:i a",$json_arr[sys][sunrise]);
-                  $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
-                  $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
-                  $text=$text." พระอาทิตย์ตก ".$sunset;
-                  $bot->replyText($reply_token, $text);
-                   break;
+         
 	 case '#เพิ่มรถ':
               $x_tra = str_replace("#เพิ่มรถ ","", $text);
               $pieces = explode("|", $x_tra);
@@ -224,118 +102,19 @@ foreach ($events as $event) {
 	      }else{
 		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
 	      }
+			/*
+my $multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+$multipleMessageBuilder->add(new TextMessageBuilder('text1', 'text2'))
+                       ->add(new AudioMessageBuilder('https://example.com/audio.mp4', 1000));
+$res = $bot->replyMessage('your-reply-token', $multipleMessageBuilder);
+*/
                   $bot->replyText($reply_token, $text);
                    break;
-          case '#เพิ่มคน':
-              $x_tra = str_replace("#เพิ่มคน ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_name=$pieces[0];
-              $_surname=$pieces[1];
-              $_nickname=$pieces[2];
-              $_nickname2=$pieces[3];
-              $_telephone=$pieces[4];
-              $_jobposition=$pieces[5];
-              $_address=$pieces[6];
-              //Post New Data
-
-              $newData = json_encode(array('name' => $_name,'surname'=> $_surname,'nickname'=> $_nickname,'nickname2'=> $_nickname2,'telephone'=> $_telephone,'jobposition'=> $_jobposition,'address'=> $_address) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มคนสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มคนได้";
-              $bot->replyText($reply_token, $text);
-
-              break;
-          case '#ชื่อเล่น':
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
-	   case '#ฉายา':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลฉายา ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
-	   case '#ชื่อจริง':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
-	   case '#นามสกุล':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                 $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
-			
+         
+         
           default:
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY;
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-                foreach($data as $rec){
-                  $text= $rec->answer;
-                  $bot->replyText($reply_token, $text);
-                }//end for each
-              }else{
-                  $text='';
-                  //$text= $explodeText[0];
-                  //$bot->replyText($reply_token, $text);
-              }//end no data from mlab
+              
             }//end switch
     }//end if text
 }// end foreach event
-echo "OK4";
-/*
-
-*/
+?>
