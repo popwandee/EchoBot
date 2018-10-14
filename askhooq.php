@@ -2,7 +2,7 @@
 
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
 
-echo 'define valuable\n';
+echo "define valuable\n";
     $licenseplate= "1กฆ3977";
     $province= "กรุงเทพมหานคร";
     $username= "สีเย๊าะ";
@@ -14,14 +14,14 @@ echo 'define valuable\n';
     $cartype= "รถยนต์นั่งส่วนบุคคลไม่เกิน 7 คน (รย. 01)";
     $carbrand= "TOYOTA";
     $carcolor= "เทา";
-echo 'ready for insert data\n';
+echo "ready for insert data\n";
  $newData = json_encode(array('licenseplate' => $licenseplate,'province'=> $province,'username'=> $username,'usersurname'=> $usersurname,'userid'=> $userid,'ownername'=> $ownername,'ownersurname'=> $ownersurname,'ownerid'=> $ownerid,'cartype'=> $cartype,'carbrand'=> $carbrand,'carcolor'=> $carcolor );
               $opts = array('http' => array( 'method' => "POST",
                                             'header' => "Content-type: application/json",
                                             'content' => $newData
                                              )
                                           );
-             echo 'insert data\n';
+             echo "insert data\n";
               $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
