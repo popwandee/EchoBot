@@ -42,10 +42,12 @@ define("LINE_MESSAGING_API_CHANNEL_SECRET", 'db66a0aa1a057415832cfd97f6963cb3');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", '22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=');
 
 
+
 $bot = new \LINE\LINEBot(
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
 );
+
 $signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 try {
 	$events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
@@ -58,6 +60,7 @@ try {
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
+
 foreach ($events as $event) {
   // Postback Event
 	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
@@ -126,154 +129,15 @@ $text = strtolower($text);
           default:
 		break;	
             }//end switch
-	   $img_uri= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
-        
-        $url_detail ="https://www.hooq.info";
-        // 
-         $action = new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder('รายละเอียดเพิ่มเติม', $url_detail);
-
-                // สร้างคอลัมน์สำหรับ carousel
-                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $text, $img_uri, [$action]);
-                $columns[] = $column;
-            }
-
-            // model Carousel จากอาร์เรย์ของคอลัมน์
-            $carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
-            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder($text, $carousel_template_builder);
-            $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-            $message->add($template_message);
-            $response = $bot->replyMessage($event->replyToken, $message);
+	    /*
+	    	$multiMessage = new MultiMessageBuilder;
+    		$multiMessage->add($replyText);
+	    	$imageMessage = new ImageMessageBuilder($img_url,'https://www.mywebsite.com/imgsrc/photos/f/simpleflower/240');
+    		$multiMessage->add($imageMessage);
+    		$replyData = $multiMessage;         
+              $bot->replyMessage($reply_token,$replyData);
+	      */
 	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
-
-
-       
-/*
-    // ถ้าประเภทข้อความเป็นพิกัด
-    if ('location' == $event_message_type) {
-        // เก็บค่าพิกัด
-        $latitude = $event->message->latitude;
-        $longitude = $event->message->longitude;
-
-        // สร้างลิงค์
-        $url = buildGnaviUrl($latitude, $longitude);
-        
-        // ดึงข้อมูลจากลิงค์พิกัด
-        $json = file_get_contents($url);
-        $results = resultsParse($json);
-
-        // ถ้ามีข้อมูลจากลิงค์
-        if($results != null) {
-
-            // สุ่ม
-            shuffle($results);
-
-            // เลือกแค่ 5 
-            if (count($results) > 5) {
-                $max = 5;
-            } else {
-                $max = count($results);
-            }
-
-            // model Carousel
-            $columns = [];
-            for ($i = 0; $i < $max; $i++) {
-                // // สร้างปุ่มเพื่อให้คลิก
-                $action = new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder('Store details', $results[$i]['url']);
-
-                // สร้างคอลัมน์สำหรับ carousel
-                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder($results[$i]['name'], $info, $results[$i]['image_url'], [$action]);
-                $columns[] = $column;
-            }
-
-            // model Carousel จากอาร์เรย์ของคอลัมน์
-            $carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
-            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder('เก็บรายการข้อมูล (5 ราย)', $carousel_template_builder);
-            $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-            $message->add($template_message);
-            $response = $bot->replyMessage($event->replyToken, $message);
-
-        } else {
-            // เมื่อไม่มีผลการค้นหา
-            $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('ฉันขอโทษ NYA ไม่มีร้านราเมนอยู่ใกล้ ๆ . .');
-            $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-        }
-    }
-*/
-    
-// สร้าง URL สำหรับ GourNavi API
-function buildGnaviUrl($latitude, $longitude) {
-
-    // การตั้งค่า GourNavi API
-    /*
-    $gnavi_uri = 'http://api.gnavi.co.jp/RestSearchAPI/20150630/';
-    $gnavi_acckey = getenv('GNAVI_API_KEY');
-    $gnavi_format = 'json';
-    $gnavi_range = 3;
-    $gnavi_category = 'RSFST08008'; // บะหมี่ราเมน
-
-    // URL รวม
-    $url  = sprintf('%s%s%s%s%s%s%s%s%s%s%s%s%s', $gnavi_uri, '?format=', $gnavi_format, '&keyid=', $gnavi_acckey, '&latitude=', $latitude, '&longitude=', $longitude, '&range=', $gnavi_range, '&category_s=', $gnavi_category);
-
-    return $url;
-    */
-}
-
-// แยกวิเคราะห์ผลลัพธ์ของ GourNavi API
-function resultsParse($json) {
-    $obj  = json_decode($json);
-
-    // การเริ่มต้นอาร์เรย์แบบรวม
-    $results = [];
-
-    $total_hit_count = $obj->{'total_hit_count'};
-
-    if ($total_hit_count !== null) {
-        $n = 0;
-        foreach($obj->{'rest'} as $val) {
-
-            // ชื่อร้านค้า
-            if (checkString($val->{'name'})) {
-                $results[$n]['name'] = $val->{'name'};
-            }
-
-            // ที่อยู่
-            if (checkString($val->{'address'})) {
-                $results[$n]['address'] = $val->{'address'};
-            }
-
-            // Gourmet Navigator URL
-            if (checkString($val->{'url'})) {
-                $results[$n]['url'] = $val->{'url'};
-            }
-
-            // จัดเก็บรูปภาพ
-            if (checkString($val->{'image_url'}->{'shop_image1'})) {
-                $results[$n]['image_url'] = $val->{'image_url'}->{'shop_image1'};
-            } else {
-                $results[$n]['image_url'] = '※※※ รูปภาพใดก็ได้ URL ※※※';
-            }
-
-            // PR
-            if (checkString($val->{'pr'})) {
-                $results[$n]['pr'] = $val->{'pr'};
-            } else {
-                $results[$n]['pr'] = '';
-            }
-
-            $n++;
-        }
-    }
-    return $results;
-}
-
-// ตรวจสอบว่าเป็นสตริงอักขระหรือไม่
-function checkString($input) {
-    if(isset($input) && is_string($input)) {
-        return true;
-    } else {
-        return false;
-    }
-}
 ?>
