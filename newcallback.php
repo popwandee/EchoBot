@@ -5,8 +5,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 
 // Line Developers
- define CHANNEL_SECRET = 'db66a0aa1a057415832cfd97f6963cb3';
- define CHANNEL_ACCESS_TOKEN = '22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=';
+ define("CHANNEL_SECRET", 'db66a0aa1a057415832cfd97f6963cb3');
+ define("CHANNEL_ACCESS_TOKEN",'22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=');
 
 
 
