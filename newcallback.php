@@ -135,7 +135,7 @@ $text = strtolower($text);
                  
                 $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $text, $img_uri, [$action]);
                 $columns[] = $column;
-            }
+            
 	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
