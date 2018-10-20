@@ -133,14 +133,14 @@ $text = strtolower($text);
            $url_detail ="https://www.hooq.info";
            $action = new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder('รายละเอียดเพิ่มเติม', $url_detail);
                  
-                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $text, $img_uri, [$action]);
+                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $replyText, $img_uri, [$action]);
                 $columns[] = $column;
             $carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
-            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder($text, $carousel_template_builder);
+            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder($replyText, $carousel_template_builder);
             $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
             $message->add($template_message);
-            $response = $bot->replyMessage($event->replyToken, $message);
-	    //$bot->replyText($reply_token, $replyText);
+            $response = $bot->replyMessage($reply_token, $message);
+	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
 ?>
