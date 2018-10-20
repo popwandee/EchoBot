@@ -129,14 +129,13 @@ $text = strtolower($text);
           default:
 		break;	
             }//end switch
-	    /*
-	    	$multiMessage = new MultiMessageBuilder;
-    		$multiMessage->add($replyText);
-	    	$imageMessage = new ImageMessageBuilder($img_url,'https://www.mywebsite.com/imgsrc/photos/f/simpleflower/240');
-    		$multiMessage->add($imageMessage);
-    		$replyData = $multiMessage;         
-              $bot->replyMessage($reply_token,$replyData);
-	      */
+	   $img_uri= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
+           $url_detail ="https://www.hooq.info";
+           $action = new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder('รายละเอียดเพิ่มเติม', $url_detail);
+                 
+                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $text, $img_uri, [$action]);
+                $columns[] = $column;
+            }
 	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
