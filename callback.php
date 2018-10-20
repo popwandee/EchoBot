@@ -38,6 +38,9 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuild
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", 'db66a0aa1a057415832cfd97f6963cb3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", '22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=');
 
 $bot = new \LINE\LINEBot(
 
@@ -136,8 +139,35 @@ $text = strtolower($text);
 
                   //$bot->replyText($reply_token, $replyText);
                    break;
-         
-         
+         case '#แก้ไข':
+			$data_string = json_encode('{"licence_plate": $explodeText[1],{"$set":{"note":$explodeText[2]}}}');
+			try { $ch = curl_init();
+				//need to create temp file to pass to curl to use PUT
+				$tempFile = fopen('php://temp/maxmemory:256000', 'w');
+				if (!$tempFile) {
+    					die('could not open temp memory data');
+					}
+					fwrite($tempFile, $data_string);
+					fseek($tempFile, 0); 
+
+				curl_setopt($ch, CURLOPT_URL, 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":'.$explodeText[1].'}');
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, DB_API_REQUEST_TIMEOUT);                                                                    
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                     
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+    					'Content-Type: application/json',                                                                       
+    					'Content-Length: ' . strlen($data_string),
+    						)                                                                              
+						);   
+
+				$cache = curl_exec($ch);
+				curl_close($ch);
+				} catch (Exception $e) {
+    					return FALSE;
+				}
+	     
+			
           default:
 		break;	
             }//end switch
