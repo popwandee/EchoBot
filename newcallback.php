@@ -74,73 +74,22 @@ foreach ($events as $event) {
 	}
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $reply_token = $event->getReplyToken();
-$text = $event->getText();
-$text = strtolower($text);
-        $explodeText=explode(" ",$text);
-        switch ($explodeText[0]) {
+	$text = $event->getText();
+	$text = strtolower($text);
+        $msg=$text."Thank you";
+	$image_url= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
+	$url_detail ="https://www.hooq.info";
+	$messageBuilder = new TextMessageBuilder($msg);
+	$imageBuilder = new ImageMessageBuilder($image_url, $image_url);
+ 
+	$multiMessageBuilder = new MultiMessageBuilder();
+	$multiMessageBuilder->add($messageBuilder)
+                             ->add($imageBuilder);
+ 
+	$bot->replyMessage($bot->replyToken, $multiMessageBuilder);
          
-	 case '#เพิ่มรถ':
-              $x_tra = str_replace("#เพิ่มรถ ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_licence_plate=$pieces[0];
-              $_brand=$pieces[1];
-              $_model=$pieces[2];
-              $_color=$pieces[3];
-              $_owner=$pieces[4];
-              $_user=$pieces[5];
-              $_note=$pieces[6];
-              //Post New Data
-              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
-			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
-			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
-              //$bot->replyText($reply_token, $text);
-              break;
-	 case '#ทะเบียน':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $$replyText="";
-		   $count=1;
-                foreach($data as $rec){
-                  $replyText= $replyText.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
-                  $count++;
-                }//end for each
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }else{
-		  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }
-			
-                  //$bot->replyText($reply_token, $replyText);
-                   break;
-         
-         
-          default:
-		break;	
-            }//end switch
-	   $img_uri= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
-           $url_detail ="https://www.hooq.info";
-           $action = new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder('รายละเอียดเพิ่มเติม', $url_detail);
-                 
-                $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $replyText, $img_uri, [$action]);
-                $columns[] = $column;
-            $carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
-            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder($replyText, $carousel_template_builder);
-            $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-            $message->add($template_message);
-            $response = $bot->replyMessage($reply_token, $message);
-	    $bot->replyText($reply_token, $replyText);
+	
     }//end if text
 }// end foreach event
+
 ?>
