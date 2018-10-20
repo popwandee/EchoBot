@@ -1,6 +1,9 @@
-<?php
-
-require_once __DIR__ . '/vendor/autoload.php';
+<?php // callback.php
+require __DIR__."/vendor/autoload.php";
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+use \Statickidz\GoogleTranslate;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
@@ -31,35 +34,98 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuilder;
+$logger = new Logger('LineBot');
+$logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
+
+define("LINE_MESSAGING_API_CHANNEL_SECRET", 'db66a0aa1a057415832cfd97f6963cb3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", '22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=');
 
 
-// Line Developers
- define("CHANNEL_SECRET",'db66a0aa1a057415832cfd97f6963cb3');
- define("CHANNEL_ACCESS_TOKEN",'22hdP860hpFYokOIcmae6cdlKPpriZO3/XHhRWkLEp8YPkXjS8R36U7reDuvpliAtRKnkbKLNAh2/QByqEocSkrGx3yyz1T6dGdHu9nrSc3t5PejaraL26vuKjCppl3mQ7k/lqhZ4F3XaWH8/4tWiAdB04t89/1O/w1cDnyilFU=');
-
-
-
-// Line Message APIに接続
-$input = file_get_contents('php://input');
-$json = json_decode($input);
-$event = $json->events[0];
-$http_client = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('CHANNEL_ACCESS_TOKEN'));
-$bot = new \LINE\LINEBot($http_client, ['channelSecret' => getenv('CHANNEL_SECRET')]);
-
-// 
-$event_type = $event->type;
-$event_message_type = $event->message->type;
-
-// 
-if ('message' == $event_type) {
-
-    // 
-    if ('text' == $event_message_type) {
-
-        // 
-        $text = $event->message->text;
-
-        $img_uri= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
+$bot = new \LINE\LINEBot(
+    new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
+    ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
+);
+$signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
+try {
+	$events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
+} catch(\LINE\LINEBot\Exception\InvalidSignatureException $e) {
+	error_log('parseEventRequest failed. InvalidSignatureException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\UnknownEventTypeException $e) {
+	error_log('parseEventRequest failed. UnknownEventTypeException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\UnknownMessageTypeException $e) {
+	error_log('parseEventRequest failed. UnknownMessageTypeException => '.var_export($e, true));
+} catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
+	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
+}
+foreach ($events as $event) {
+  // Postback Event
+	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
+		$logger->info('Postback message has come');
+		continue;
+	}
+	// Location Event
+	if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
+		continue;
+	}
+    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+        $reply_token = $event->getReplyToken();
+$text = $event->getText();
+$text = strtolower($text);
+        $explodeText=explode(" ",$text);
+        switch ($explodeText[0]) {
+         
+	 case '#เพิ่มรถ':
+              $x_tra = str_replace("#เพิ่มรถ ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_licence_plate=$pieces[0];
+              $_brand=$pieces[1];
+              $_model=$pieces[2];
+              $_color=$pieces[3];
+              $_owner=$pieces[4];
+              $_user=$pieces[5];
+              $_note=$pieces[6];
+              //Post New Data
+              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
+			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
+			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
+              //$bot->replyText($reply_token, $text);
+              break;
+	 case '#ทะเบียน':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $$replyText="";
+		   $count=1;
+                foreach($data as $rec){
+                  $replyText= $replyText.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
+                  $count++;
+                }//end for each
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }else{
+		  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }
+			
+                  //$bot->replyText($reply_token, $replyText);
+                   break;
+         
+         
+          default:
+		break;	
+            }//end switch
+	   $img_uri= "https://qph.fs.quoracdn.net/main-qimg-f93403f6d32bc43b40d85bd978e88bbf";
         
         $url_detail ="https://www.hooq.info";
         // 
@@ -76,12 +142,15 @@ if ('message' == $event_type) {
             $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
             $message->add($template_message);
             $response = $bot->replyMessage($event->replyToken, $message);
-         // $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($text);
-         // $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-    }
+	    $bot->replyText($reply_token, $replyText);
+    }//end if text
+}// end foreach event
 
+
+       
+/*
     // ถ้าประเภทข้อความเป็นพิกัด
-    else if ('location' == $event_message_type) {
+    if ('location' == $event_message_type) {
         // เก็บค่าพิกัด
         $latitude = $event->message->latitude;
         $longitude = $event->message->longitude;
@@ -130,36 +199,8 @@ if ('message' == $event_type) {
             $response = $bot->replyMessage($event->replyToken, $text_message_builder);
         }
     }
-
-    // สำหรับข้อความอื่น ๆ นอกเหนือจากข้อความและข้อมูลตำแหน่ง
-    else {
-        $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('เขาส่งแสตมป์หรือไม่? แต่ฉันไม่สามารถตอบสนองได้ ฉันขอโทษ NYA <img draggable="false" class="emoji" alt="🍜" src="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" id="exifviewer-img-3" exifid="-1690832363" oldsrc="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" scale="0">');
-        $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-    }
-}
-
-// เมื่อ event เป็นการติดตาม follow bot
-else if ('follow' == $event_type) {
-    // แสดงตัวอิโมจิ
-    $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('ขอบคุณสำหรับการเพิ่มเพื่อน! ขอแสดงความนับถือ NYA<img draggable="false" class="emoji" alt="🍜" src="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" id="exifviewer-img-4" exifid="-1690832363" oldsrc="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" scale="0">');
-    $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-}
-
-// เมื่อ event เป็นการเข้าร่วม join bot
-else if ('join' == $event_type) {
-    // แสดงตัวอิโมจิ
-    $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('ยินดีต้อนรับ! ลองพูดคุยเกี่ยวกับราเม็ง<img draggable="false" class="emoji" alt="🍜" src="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" id="exifviewer-img-5" exifid="-1690832363" oldsrc="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" scale="0">よろしくにゃ<img draggable="false" class="emoji" alt="🍜" src="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" id="exifviewer-img-6" exifid="-1690832363" oldsrc="https://s.w.org/images/core/emoji/2.4/svg/1f35c.svg" scale="0">');
-    $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-}
-
-// การเข้าถึงจากแหล่งอื่นๆ เช่น browser
-else {
-    $text_message_builder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('การเข้าถึงที่ไม่ได้รับอนุญาต');
-    $response = $bot->replyMessage($event->replyToken, $text_message_builder);
-
-    echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-}
-
+*/
+    
 // สร้าง URL สำหรับ GourNavi API
 function buildGnaviUrl($latitude, $longitude) {
 
@@ -234,3 +275,4 @@ function checkString($input) {
         return false;
     }
 }
+?>
