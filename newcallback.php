@@ -135,8 +135,12 @@ $text = strtolower($text);
                  
                 $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder("Name", $text, $img_uri, [$action]);
                 $columns[] = $column;
-            
-	    $bot->replyText($reply_token, $replyText);
+            $carousel_template_builder = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder($columns);
+            $template_message = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder($text, $carousel_template_builder);
+            $message = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+            $message->add($template_message);
+            $response = $bot->replyMessage($event->replyToken, $message);
+	    //$bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
 ?>
