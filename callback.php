@@ -203,7 +203,7 @@ $opts=array('http'=>
     );
 $context= stream_context_create($opts);
 $returnVal = file_get_contents($mlabURL,false,$context);
-$replyText=$replyText."\n ทะเบียน ".$explodeText[2]."\n id:".$deleteId."\n ผลลัพธ์คือ".$returnVal;
+$replyText=$replyText."\n ทะเบียน ".$explodeText[1]."\n id:".$deleteId." DELETED \n รายละเอียด".$returnVal;
 
 }else{ // ไม่พบข้อมูลทะเบียนรถ
          $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1].' ที่จะลบ';
