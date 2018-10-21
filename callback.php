@@ -100,7 +100,7 @@ switch ($explodeText[0]) {
               $_user=$pieces[5];
               $_note=$pieces[6];
               //Post New Data
-              $newData = json_encode(array('license_plate' => $_license_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note,'status'=> 'active') );
+              $newData = json_encode(array('license_plate' => $_license_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note,'status'=>'active') );
               $opts = array('http' => array( 'method' => "POST",
                                             'header' => "Content-type: application/json",
                                             'content' => $newData
@@ -177,7 +177,7 @@ switch ($explodeText[0]) {
    }else{ // ไม่พบข้อมูลทะเบียนรถ
                   $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
                 }
-
+break;
           default:
 		break;
             }//end switch
