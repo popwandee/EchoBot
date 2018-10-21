@@ -83,18 +83,16 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
 
         $reply_token = $event->getReplyToken();
-$text = $event->getText();
-$text = strtolower($text);
+        $text = $event->getText();
+        $text = strtolower($text);
         $explodeText=explode(" ",$text);
 
+switch ($explodeText[0]) {
 
-        switch ($explodeText[0]) {
-
-         
 	 case '#เพิ่มรถ':
               $x_tra = str_replace("#เพิ่มรถ ","", $text);
               $pieces = explode("|", $x_tra);
-              $_licence_plate=$pieces[0];
+              $_license_plate=$pieces[0];
               $_brand=$pieces[1];
               $_model=$pieces[2];
               $_color=$pieces[3];
@@ -102,7 +100,7 @@ $text = strtolower($text);
               $_user=$pieces[5];
               $_note=$pieces[6];
               //Post New Data
-              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
+              $newData = json_encode(array('license_plate' => $_license_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note,'status'=> 'active') );
               $opts = array('http' => array( 'method' => "POST",
                                             'header' => "Content-type: application/json",
                                             'content' => $newData
@@ -112,21 +110,22 @@ $text = strtolower($text);
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
-			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
-			$img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
               //$bot->replyText($reply_token, $text);
 
               break;
+
 	 case '#ทะเบียน':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
+		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		   $$replyText="";
-		   $count=1;
+		          $replyText="";
+		          $count=1;
                 foreach($data as $rec){
-                  $replyText= $replyText.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
+                  $replyText= $replyText.$count.' '.$rec->license_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user;
                   $count++;
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
@@ -134,51 +133,55 @@ $text = strtolower($text);
 		  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
-			
+
 
 
                   //$bot->replyText($reply_token, $replyText);
                    break;
          case '#แก้ไข':
-			$data_string = json_encode('{"licence_plate": $explodeText[1],{"$set":{"note":$explodeText[2]}}}');
-			try { $ch = curl_init();
-				//need to create temp file to pass to curl to use PUT
-				$tempFile = fopen('php://temp/maxmemory:256000', 'w');
-				if (!$tempFile) {
-    					die('could not open temp memory data');
-					}
-					fwrite($tempFile, $data_string);
-					fseek($tempFile, 0); 
+         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+          $data = json_decode($json);
+          $isData=sizeof($data);
+          if($isData >0){
+          $replyText="พบข้อมูลรถที่จะแก้ไข";
+            foreach($data as &$rec){
+              $carUpdateId = $rec->_id;
+              foreach ($carUpdateId as $key=>$value){
+                if ($key==='$oid'){
+                  $updateId=$value;
+                  }
+                }//end foreach carupdateid
+              }//end for each data from json
 
-				curl_setopt($ch, CURLOPT_URL, 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":'.$explodeText[1].'}');
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, DB_API_REQUEST_TIMEOUT);                                                                    
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                     
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-    					'Content-Type: application/json',                                                                       
-    					'Content-Length: ' . strlen($data_string),
-    						)                                                                              
-						);   
+     // update note
+     $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$updateId.'?apiKey='.MLAB_API_KEY;
+     $newNote = json_encode(
+       array(
+         '$set'=>array('note'=>$explodeText[2])
+       )
+     );
 
-				$cache = curl_exec($ch);
-				curl_close($ch);
-				} catch (Exception $e) {
-    					return FALSE;
-				}
-	     
-			
+       // ใช้  '$set' เพื่อไม่ให้เปลี่ยนแปลงทั้งหมด ใน document
+
+     $opts=array('http'=>
+       array(
+         'method'=>'PUT',
+         'header'=>'Content-type: application/json',
+         'content'=>$newNote
+       )
+     );
+     $context= stream_context_create($opts);
+     $returnVal = file_get_contents($mlabURL,false,$context);
+     $replyText=$replyText.' แก้ไขเป็น '.$returnVal;
+     
+   }else{ // ไม่พบข้อมูลทะเบียนรถ
+                  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+                }
+
           default:
-		break;	
+		break;
             }//end switch
-	    /*
-	    	$multiMessage = new MultiMessageBuilder;
-    		$multiMessage->add($replyText);
-	    	$imageMessage = new ImageMessageBuilder($img_url,'https://www.mywebsite.com/imgsrc/photos/f/simpleflower/240');
-    		$multiMessage->add($imageMessage);
-    		$replyData = $multiMessage;         
-              $bot->replyMessage($reply_token,$replyData);
-	      */
+	    
 	    $bot->replyText($reply_token, $replyText);
     }//end if text
 }// end foreach event
