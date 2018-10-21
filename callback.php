@@ -134,11 +134,10 @@ switch ($explodeText[0]) {
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 
-
-
                   //$bot->replyText($reply_token, $replyText);
                    break;
-         case '#แก้ไข':
+		
+         case '#แก้ไขประวัติ':
          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
           $data = json_decode($json);
           $isData=sizeof($data);
@@ -152,7 +151,7 @@ switch ($explodeText[0]) {
                   }
                 }//end foreach carupdateid
               }//end for each data from json
-$replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2].'\n';
+$replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
      // update note
      $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$updateId.'?apiKey='.MLAB_API_KEY;
      $newNote = json_encode(
@@ -172,12 +171,41 @@ $replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2].'\n';
      );
      $context= stream_context_create($opts);
      $returnVal = file_get_contents($mlabURL,false,$context);
-     $replyText=$replyText.'\n ผลลัพธ์คือ '.$returnVal;
+     $replyText=$replyText."\n ผลลัพธ์คือ ".$returnVal;
      
    }else{ // ไม่พบข้อมูลทะเบียนรถ
                   $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
                 }
 break;
+		case '#ลบทะเบียน':
+         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+          $data = json_decode($json);
+          $isData=sizeof($data);
+          if($isData >0){
+          $replyText="พบว่ามีข้อมูลรถที่จะลบ";
+            foreach($data as &$rec){
+              $carUpdateId = $rec->_id;
+              foreach ($carDeleteId as $key=>$value){
+                if ($key==='$oid'){
+                  $deleteId=$value;
+                  }
+                }//end foreach cardeleteid
+              }//end for each data from json
+$replyText=$replyText.' id:'.$deleteId."\n";
+		  //Deleting using REST API
+// สุดท้าย ต้องการจะลบ document 
+//$carLicensePlateId
+$mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$deleteId.'?apiKey='.MLAB_API_KEY;
+$opts=array('http'=>
+  array(
+    'method'=>'DELETE',
+    'header'=>'Content-type: application/json'
+  )
+);
+$context = stream_context_create($opts);
+$returnVal = file_get_contents($mlabURL, false, $context);
+echo "\n Deleted: ".$returnVal;
+		  break;
           default:
 		break;
             }//end switch
