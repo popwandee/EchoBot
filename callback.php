@@ -152,7 +152,7 @@ switch ($explodeText[0]) {
                   }
                 }//end foreach carupdateid
               }//end for each data from json
-
+$replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2].'\n';
      // update note
      $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$updateId.'?apiKey='.MLAB_API_KEY;
      $newNote = json_encode(
@@ -172,7 +172,7 @@ switch ($explodeText[0]) {
      );
      $context= stream_context_create($opts);
      $returnVal = file_get_contents($mlabURL,false,$context);
-     $replyText=$replyText.' แก้ไขเป็น '.$returnVal;
+     $replyText=$replyText.'\n ผลลัพธ์คือ '.$returnVal;
      
    }else{ // ไม่พบข้อมูลทะเบียนรถ
                   $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
