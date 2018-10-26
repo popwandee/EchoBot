@@ -86,7 +86,17 @@ foreach ($events as $event) {
         $text = $event->getText();
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
-
+	    
+// check Profile ID
+	$res = $bot->getProfile('user-id');
+if ($res->isSucceeded()) {
+    $profile = $res->getJSONDecodedBody();
+    $displayName = $profile['displayName'];
+    $statusMessage = $profile['statusMessage'];
+    $pictureUrl = $profile['pictureUrl'];
+}
+	    // else exit;
+	    print_r($profile);
 switch ($explodeText[0]) {
 
 	 case '#เพิ่มรถ':
