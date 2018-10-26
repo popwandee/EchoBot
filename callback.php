@@ -91,7 +91,7 @@ foreach ($events as $event) {
 	$res = $bot->getProfile('user-id');
 if ($res->isSucceeded()) {
     $profile = $res->getJSONDecodedBody();
-    $displayName = $profile['displayName'];
+    $displayName = $profile['displayName']; echo $displayName; echo $statusMessage;
     $statusMessage = $profile['statusMessage'];
     $pictureUrl = $profile['pictureUrl'];
 }
