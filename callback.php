@@ -91,12 +91,13 @@ foreach ($events as $event) {
 	$res = $bot->getProfile('user-id');
 if ($res->isSucceeded()) {
     $profile = $res->getJSONDecodedBody();
-    $displayName = $profile['displayName']; echo $displayName; echo $statusMessage;
+    $displayName = $profile['displayName'];
     $statusMessage = $profile['statusMessage'];
     $pictureUrl = $profile['pictureUrl'];
 }
 	    // else exit;
 	    print_r($profile);
+	     echo $displayName; echo $statusMessage;
 switch ($explodeText[0]) {
 
 	 case '#เพิ่มรถ':
@@ -220,6 +221,7 @@ $replyText=$replyText."\n ทะเบียน ".$explodeText[1]."\n id:".$dele
        }
 break;
           default:
+		 $replyText=$replyText.$displayName.$statusMessage;
 		break;
             }//end switch
 	    
