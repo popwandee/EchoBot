@@ -88,9 +88,13 @@ foreach ($events as $event) {
         $explodeText=explode(" ",$text);
 	    
 // check Profile ID
-	$res = $bot->getProfile('user-id');
-if ($res->isSucceeded()) {
-    $profile = $res->getJSONDecodedBody();
+	   
+               
+                    $fromMid = $event->getFromMid();
+                    $user = $bot->getUserProfile($fromMid);
+	
+if ($user->isSucceeded()) {
+    $profile = $user->getJSONDecodedBody();
     $displayName = $profile['displayName'];
     $statusMessage = $profile['statusMessage'];
     $pictureUrl = $profile['pictureUrl'];
