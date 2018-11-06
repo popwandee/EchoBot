@@ -107,7 +107,7 @@ switch ($explodeText[0]) {
                                             'content' => $newData
                                              )
                                           );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
@@ -119,7 +119,7 @@ switch ($explodeText[0]) {
               break;
 
 	 case '#r':
-		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
@@ -139,7 +139,7 @@ switch ($explodeText[0]) {
                    break;
 		
          case '#e':
-         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
           $data = json_decode($json);
           $isData=sizeof($data);
           if($isData >0){
@@ -154,7 +154,7 @@ switch ($explodeText[0]) {
               }//end for each data from json
 $replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
      // update note
-     $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$updateId.'?apiKey='.MLAB_API_KEY;
+     $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/register_south/'.$updateId.'?apiKey='.MLAB_API_KEY;
      $newNote = json_encode(
        array(
          '$set'=>array('note'=>$explodeText[2])
@@ -180,7 +180,7 @@ $replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
 break;
 
         case '#d':
-$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
  $data = json_decode($json);
  $isData=sizeof($data);
  if($isData >0){
@@ -195,7 +195,7 @@ $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collect
      }//end for each data from json
 
 // delete
-$mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/carregister/'.$deleteId.'?apiKey='.MLAB_API_KEY;
+$mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/register_south/'.$deleteId.'?apiKey='.MLAB_API_KEY;
 $opts=array('http'=>
   array(
     'method'=>'DELETE',
@@ -458,7 +458,7 @@ break;
                                             'content' => $newData
                                              )
                                           );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY;
               $context = stream_context_create($opts);
               $returnValue = file_get_contents($url,false,$context);
               if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
