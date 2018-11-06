@@ -87,25 +87,11 @@ foreach ($events as $event) {
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
 	    
-// check Profile ID
-	   
-               
-                    $fromMid = $event->getFromMid();
-                    $user = $bot->getUserProfile($fromMid);
-	
-if ($user->isSucceeded()) {
-    $profile = $user->getJSONDecodedBody();
-    $displayName = $profile['displayName'];
-    $statusMessage = $profile['statusMessage'];
-    $pictureUrl = $profile['pictureUrl'];
-}
-	    // else exit;
-	    print_r($profile);
-	     echo $displayName; echo $statusMessage;
+
 switch ($explodeText[0]) {
 
-	 case '#เพิ่มรถ':
-              $x_tra = str_replace("#เพิ่มรถ ","", $text);
+	 case '#i':
+              $x_tra = str_replace("#i ","", $text);
               $pieces = explode("|", $x_tra);
               $_license_plate=$pieces[0];
               $_brand=$pieces[1];
@@ -132,7 +118,7 @@ switch ($explodeText[0]) {
 
               break;
 
-	 case '#ทะเบียน':
+	 case '#r':
 		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
@@ -152,7 +138,7 @@ switch ($explodeText[0]) {
                   //$bot->replyText($reply_token, $replyText);
                    break;
 		
-         case '#แก้ไขประวัติ':
+         case '#e':
          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
           $data = json_decode($json);
           $isData=sizeof($data);
@@ -193,7 +179,7 @@ $replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
                 }
 break;
 
-        case '#ลบรถ':
+        case '#d':
 $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
  $data = json_decode($json);
  $isData=sizeof($data);
@@ -224,8 +210,269 @@ $replyText=$replyText."\n ทะเบียน ".$explodeText[1]."\n id:".$dele
          $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1].' ที่จะลบ';
        }
 break;
+		
+		
+		
+	case '#new':
+              $x_tra = str_replace("#new ","", $text);
+         
+              //Post New Data
+              $newData = '[
+  {
+    "licence_plate": "ป9388นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "Y111ED",
+    "color": "ดำ",
+    "user": "นายมาหามุด ลอมะ3-9605-00238-40-1 เลขที่ 13/5ม.3บ.กูตงต.บองอ",
+    "note": "สมาชิกปฏิบัติการ"
+  },
+  {
+    "licence_plate": "ท9358ยะลา",
+    "brand": "YAMAHA",
+    "model": "Y111D",
+    "color": "น้ำเงิน",
+    "user": "นายสะมะแอ เจ๊ะเต๊ะ3-9501-00651-46-8เลขที่61/5ม.9บ้านอุเปต.กรงปินัง",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "คยจ175สงขลา",
+    "brand": "YAMAHA",
+    "model": "4D0400",
+    "color": "เขียว",
+    "user": "นายอับดุลรอหีม เบนอาดัม 3-9402-00134-24-4  เลขที่ 70 หมู่ 10 บ.ท่าคลอง ต.โคกโพธิ์",
+    "note": "สมาชิกปฏิบัติการ"
+  },
+  {
+    "licence_plate": "คตฉ663สงขลา",
+    "brand": "YAMAHA",
+    "model": "LTA-135ED",
+    "color": "แดง",
+    "user": "นายอายุ สาและ 3-9402-00220-18-3  เลขที่  59 หมู่ 5 ล้อแตก ต.บางโกระ",
+    "note": "สมาชิกปฏิบัติการ"
+  },
+  {
+    "licence_plate": "ขทน234นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "5P0700",
+    "color": "ขาว",
+    "user": "น.ส.สนะ ฮามะ3-9605-00368-69-1 เลขที่ 127/5ม.8บ.อาแนต.บองอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขตฉ806นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "50S400",
+    "color": "ขาว",
+    "user": "นางแมะมูเน๊าะ สะแปอิง3-9605-00433-10-7 เลขที่ 91ม.4บ.บาโงต.เฉลิม",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขตฉ488นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "20B500",
+    "color": "ขาว",
+    "user": "นายยะโกะ เจ๊ะหลง3-9605-00236-90-5 เลขที่ 3ม.3บ.กูตงต.บองอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขฉล135นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "20B200",
+    "color": "ดำ",
+    "user": "นายมูฮำมัดเสากี เจ๊ะเล๊าะ3-9605-00628-46-8 เลขที่ 92ม.5บ.ตราแดะต.บาโงสะโต",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขจษ583นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "33S400",
+    "color": "น้ำเงิน",
+    "user": "นายอาหะมัด อูมา2-9602-00007-96-1เลขที่135ม.5บ.โคกกะเปาะต.เกาะสะท้อน",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "ขจว498นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "20B100",
+    "color": "ขาว",
+    "user": "นายยูโซ๊ะ มะเล๊าะ/บอบอ3-9602-00408-01-8เลขที่32/1ม.5บ้านอุเผะต.กรงปินัง",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขงท81นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "AH-115D",
+    "color": "ขาว",
+    "user": "นายซูกีพลี แฉะ3-9605-00056-17-6 เลขที่ 30ม.1บ.มะรือโบตกต.มะรือโบตก",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขงฉ140ยะลา",
+    "brand": "YAMAHA",
+    "model": "20B400",
+    "color": "ดำ",
+    "user": "นายอาแซ วาแม 3-9506-00250-82-9  เลขที่ 65 หมู่ 6 คอลอกาปะ กะรุบี",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขขพ546ยะลา",
+    "brand": "YAMAHA",
+    "model": "20B300",
+    "color": "ดำ",
+    "user": "นางซารีปะห์ ยีดิง 3-9604-00066-62-5  เลขที่ 4 หมู่ 5 บาโงยือแบ็ง กะรุบี",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขขธ198นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BE-115D",
+    "color": "ม่วง",
+    "user": "นายมะหะมะสิศิ ลาเต๊ะ3-9605-00056-67-2 เลขที่ 37ม.2บ.ปละเอ็งต.มะรือโบตก",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "ขขธ165นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "AH-115D",
+    "color": "ดำ",
+    "user": "นายนิอัสวาดี้ เสมอภพ3-9699-00014-53-7 เลขที่ 178ม.8บ.ตันหยงมัสต.ตันหยงมัส",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "ขกย991นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BF-115D-CW",
+    "color": "แดง",
+    "user": "นายอาหมัด สาอุ3-9605-00345-99-2 เลขที่ 80/1ม.1บ.ตะโละต.ตันหยงลิมอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขกม495นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BG-115D-L",
+    "color": "น้ำเงิน",
+    "user": "นายยะยอ ลือบา3-9605-00230-96-6 เลขที่ 71/1ม.2บ.ลาแปต.บองอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "ขกข163นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BE-115C",
+    "color": "ม่วง",
+    "user": "นายอาหะมัด อูมา2-9602-00007-96-1เลขที่135ม.5บ.โคกกะเปาะต.เกาะสะท้อน",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "ขกก104นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BE-115C",
+    "color": "ม่วง",
+    "user": "นายดือราพา เจ๊ะอูมา3-9605-00017-91-3 เลขที่ 104/2ม.4บ.กูจิงลือปะต.เฉลิม",
+    "note": "ผบ.มว.๑ (หน.PLATONG)"
+  },
+  {
+    "licence_plate": "กษว478ปัตตานี",
+    "brand": "YAMAHA",
+    "model": "50S300",
+    "color": "ดำ",
+    "user": "นายมูหะมะยะโกะ ใสทอง 5-9503-00004-74-8 เลขที่ 15/2 หมู่ 8 กอลอกาลี ตะโละดือรามัน",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "กษล479นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BD-115C",
+    "color": "เขียว",
+    "user": "นายรอฟา เจ๊ะดาโอ๊ะ3-9605-00389-10-8 เลขที่ 127/1ม.4บ.บองอต.บองอ",
+    "note": "สมาชิกปฏิบัติการ"
+  },
+  {
+    "licence_plate": "กวค59ปัตตานี",
+    "brand": "YAMAHA",
+    "model": "4D0400",
+    "color": "ชมพู",
+    "user": "น.ส.ซารียะห์ แอสะ3-9605-00402-57-1 เลขที่ 152/1ม.8บ.อาแนต.บองอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "กวค12นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "BT-115E",
+    "color": "แดง",
+    "user": "นายอิบรอเห็ง เจ๊ะอูมา3960500236492 เลขที่ 158ม.2บ.ลาแปต.บองอ",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "กรร104นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "KB-105C",
+    "color": "แดง",
+    "user": "นายซะรอนิง นิเง๊าะ3-9605-00643-97-7 เลขที่ 20ม.2บ.บาโงบือราแงต.ตันหยงลิมอ",
+    "note": "เปอมูดอ"
+  },
+  {
+    "licence_plate": "กรบ905นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "Y111E",
+    "color": "ดำ",
+    "user": "นายต่วนมะ ซายอ3-9605-00632-92-4 เลขที่ 67/1ม.1บ.ตะโละต.ตันหยงลิมอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "กรฉ878นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "L-105",
+    "color": "น้ำเงิน",
+    "user": "นายอาลียาสะ บูละ3-9605-00646-95-3 เลขที่ 58/1ม.2บ.ทุ่งขมิ้นต.ตันหยงลิมอ",
+    "note": "กรรมการฝ่ายปกครองระดับแดอาเราะห์"
+  },
+  {
+    "licence_plate": "กยน487นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "K-105C",
+    "color": "ดำ",
+    "user": "นายมาหะมะ เปาะเต๊ะ3-9605-00240-90-2 เลขที่ 34ม.3บ.กูตงต.บองอ",
+    "note": "กรรมการอาเยาะฝ่ายอูลามา"
+  },
+  {
+    "licence_plate": "กยท304นราธิวาส",
+    "brand": "YAMAHA",
+    "model": "Y100K",
+    "color": "น้ำเงิน",
+    "user": "นายยะยอ ลือบา3-9605-00230-96-6 เลขที่ 71/1ม.2บ.ลาแปต.บองอ",
+    "note": "มวลชนจัดตั้ง"
+  },
+  {
+    "licence_plate": "กมค432ปัตตานี",
+    "brand": "YAMAHA",
+    "model": "BE-115D",
+    "color": "เขียว",
+    "user": "นายซักการียา มะเซ็ง 3-9411-00076-77-4   เลขที่ 29 หมู่ 3 ปล่องหอย",
+    "note": "สมาชิกปฏิบัติการ"
+  }
+]';
+            
+		
+		$opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue){$replyText = 'เพิ่มรถสำเร็จแล้ว';
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
+              //$bot->replyText($reply_token, $text);
+
+              break;	
+		
+		
+		
           default:
-		 $replyText=$replyText.$displayName.$statusMessage;
+		// $replyText=$replyText.$displayName.$statusMessage;
 		break;
             }//end switch
 	    
