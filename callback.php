@@ -38,9 +38,9 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuild
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
-define("MLAB_API_KEY", 'HB4t89/1O/w1cDnyilFU=');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", 'HB4t89/1O/w1cDnyilFU=');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'HB4t89/1O/w1cDnyilFU=');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d2540846576a6e5adb4415db8');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
 
 $bot = new \LINE\LINEBot(
 
@@ -126,7 +126,7 @@ switch ($explodeText[0]) {
 		          $replyText="";
 		          $count=1;
                 foreach($data as $rec){
-                  $replyText= $replyText.'ทะเบียน '.$rec->license_plate.' ยี่ห้อ'.$rec->brand.' รุ่น'.$rec->model.' สี'.$rec->color."\n\n ผู้ครอบครอง ".$rec->user."\n มีประวัติเป็น".$rec->note."\n\n คำแนะนำควรตรวจสอบผู้ขับขี่ และรายงาน \n";
+                  $replyText= $replyText.'#ทะเบียน '.$rec->license_plate.' ยี่ห้อ'.$rec->brand.' รุ่น'.$rec->model.' สี'.$rec->color."\n\n#ผู้ครอบครอง ".$rec->user."\n\n#มีประวัติสงสัยว่าเป็น".$rec->note."\n\n#คำแนะนำ ควรตรวจสอบผู้ขับขี่, ยานพาหนะโดยละเอียด ถ่ายภาพและรายงานให้ ทราบโดยด่วน \n";
                   $count++;
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
