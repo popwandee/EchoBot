@@ -126,12 +126,12 @@ switch ($explodeText[0]) {
 		          $replyText="";
 		          $count=1;
                 foreach($data as $rec){
-                  $replyText= $replyText.$count.' '.$rec->license_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user;
+                  $replyText= $replyText.' '.$rec->license_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n หมายเหตุ ".$rec->note."\n ควรตรวจสอบผู้ขับขี่ และรายงาน \n\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user;
                   $count++;
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }else{
-		  $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+		  $replyText= "ทะเบียนรถ ".$explodeText[1]."  ปกติ, ไม่เกี่ยวข้อง ผกร.";
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 
