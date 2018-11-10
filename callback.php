@@ -126,7 +126,7 @@ switch ($explodeText[0]) {
 		          $replyText="";
 		          $count=1;
                 foreach($data as $rec){
-                  $replyText= $replyText.' '.$rec->license_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n หมายเหตุ ".$rec->note."\n ควรตรวจสอบผู้ขับขี่ และรายงาน \n\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user;
+                  $replyText= $replyText.'ทะเบียน '.$rec->license_plate.' ยี่ห้อ'.$rec->brand.' รุ่น'.$rec->model.' สี'.$rec->color."\n\n ผู้ครอบครอง ".$rec->user."\n มีประวัติเป็น".$rec->note."\n\n คำแนะนำควรตรวจสอบผู้ขับขี่ และรายงาน \n";
                   $count++;
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
