@@ -233,7 +233,7 @@ break;
 		
 /* ตรวจสอบบุคคล */
 	 case '$i':
-              $x_tra = str_replace("$i ","", $text);
+              $x_tra = str_replace('$i ',"", $text);
               $pieces = explode("|", $x_tra);
               $_nationid=$pieces[0];
               $_name=$pieces[1];
