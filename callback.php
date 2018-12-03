@@ -38,9 +38,9 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuild
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
-define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWrmvmetzTXBW7CYVsQv');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d25408465rmvme76a6e5adb4415db8');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrmvmerIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d2540846576a6e5adb4415db8');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
 
 $bot = new \LINE\LINEBot(
 
@@ -131,7 +131,7 @@ switch ($explodeText[0]) {
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }else{
-		  $replyText= "ทะเบียนรถ ".$explodeText[1]."  ปกติ, ไม่เกี่ยวข้อง ผกร.";
+		  $replyText= "ไม่พบทะเบียนรถ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 
@@ -150,7 +150,7 @@ switch ($explodeText[0]) {
                 }//end for each
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }else{
-		  $replyText= "ทะเบียนรถ ".$explodeText[1]."  ปกติ, ไม่เกี่ยวข้อง ผกร.";
+		  $replyText= "ไม่พบทะเบียนรถ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
 
