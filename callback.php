@@ -38,9 +38,9 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuild
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
-define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQvrmvme');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d25408465rmvme76a6e5adb4415db8');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujrmvmeZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d2540846576a6e5adb4415db8');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
 
 $bot = new \LINE\LINEBot(
 
@@ -229,8 +229,122 @@ $replyText=$replyText."\n ทะเบียน ".$explodeText[1]."\n id:".$dele
          $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1].' ที่จะลบ';
        }
 break;
+
 		
+/* ตรวจสอบบุคคล */
+	 case '$i':
+              $x_tra = str_replace("$i ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_nationid=$pieces[0];
+              $_name=$pieces[1];
+              $_address=$pieces[2];
+              $_note=$pieces[3];
+
+              //Post New Data
+              $newData = json_encode(array('nationid' => $_nationid,'name'=> $_name,'address'=> $_address,'note'=> $_note) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue){$replyText = 'เพิ่มข้อมูลบุคคลสำเร็จแล้ว';
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+			      }else {$replyText="ไม่สามารถเพิ่มข้อมูลบุคคลได้";
+			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
+              //$bot->replyText($reply_token, $text);
+              break;
+	 case '$': // เรียกอ่านข้อมูลบุคคล
+		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		          $replyText="";
+		          $count=1;
+                foreach($data as $rec){
+                  $replyText= $replyText.'หมายเลข ปชช. '.$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                  $count++;
+                }//end for each
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }else{
+		  $replyText= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }
+                  //$bot->replyText($reply_token, $replyText);
+                   break;
 		
+         case '$e':
+         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+          $data = json_decode($json);
+          $isData=sizeof($data);
+          if($isData >0){
+          $replyText="พบข้อมูลบุคคลที่จะแก้ไข";
+            foreach($data as &$rec){
+              $peopleUpdateId = $rec->_id;
+              foreach ($peopleUpdateId as $key=>$value){
+                if ($key==='$oid'){
+                  $updateId=$value;
+                  }
+                }//end foreach carupdateid
+              }//end for each data from json
+$replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
+     // update note
+     $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/people/'.$updateId.'?apiKey='.MLAB_API_KEY;
+     $newNote = json_encode(
+       array(
+         '$set'=>array('note'=>$explodeText[2])
+       )
+     );
+       // ใช้  '$set' เพื่อไม่ให้เปลี่ยนแปลงทั้งหมด ใน document
+     $opts=array('http'=>
+       array(
+         'method'=>'PUT',
+         'header'=>'Content-type: application/json',
+         'content'=>$newNote
+       )
+     );
+     $context= stream_context_create($opts);
+     $returnVal = file_get_contents($mlabURL,false,$context);
+     $replyText=$replyText."\n ผลลัพธ์คือ ".$returnVal;
+     
+   }else{ // ไม่พบข้อมูลบุคคล
+                  $replyText= "ไม่พบข้อมูลบุคคล ".$explodeText[1]." ในฐานข้อมูลของหน่วย";
+                }
+break;
+	
+       
+        case '$d':
+$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+ $data = json_decode($json);
+ $isData=sizeof($data);
+ if($isData >0){
+ $replyText="พบข้อมูลบุคคลที่จะลบ\n";
+   foreach($data as &$rec){
+     $carDeleteId = $rec->_id;
+     foreach ($carDeleteId as $key=>$value){
+       if ($key==='$oid'){
+         $deleteId=$value;
+         }
+       }//end foreach carupdateid
+     }//end for each data from json
+// delete
+$mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/people/'.$deleteId.'?apiKey='.MLAB_API_KEY;
+$opts=array('http'=>
+  array(
+    'method'=>'DELETE',
+    'header'=>'Content-type: application/json'
+      )
+    );
+$context= stream_context_create($opts);
+$returnVal = file_get_contents($mlabURL,false,$context);
+$replyText=$replyText."\n หมายเลข ".$explodeText[1]."\n id:".$deleteId." DELETED \n รายละเอียด".$returnVal;
+}else{ // ไม่พบข้อมูลทะเบียนรถ
+         $replyText= "ไม่พบข้อมูลบุคคล ".$explodeText[1].' ที่จะลบ';
+       }
+break;
+		/* จบส่วนตรวจสอบบุคคล */
 		
           default:
 		// $replyText=$replyText.$displayName.$statusMessage;
