@@ -164,10 +164,10 @@ switch ($explodeText[0]) {
 		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย"; 
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  $picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                          $picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
+			  //$picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          //$picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
 			 // กรณีจะตอบเฉพาะข้อความ
 		      //$bot->replyText($replyToken, $textMessage);
@@ -176,10 +176,10 @@ switch ($explodeText[0]) {
 	                $textReplyMessage= "คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ"; 
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  $picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
-                          $picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
+			  //$picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          //$picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
 			 // กรณีจะตอบเฉพาะข้อความ
 		      //$bot->replyText($replyToken, $textMessage);
@@ -337,10 +337,10 @@ break;
 		          $textReplyMessage= "ตอบคุณ ".$userDisplayName."ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย"; 
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  $picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                          $picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
+			  //$picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          //$picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
 			 // กรณีจะตอบเฉพาะข้อความ
 		      //$bot->replyText($replyToken, $textMessage);
@@ -349,10 +349,10 @@ break;
 	                $textReplyMessage= "ตอบคุณ ".$userDisplayName."คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ"; 
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  $picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
-                          $picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
+			  //$picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          //$picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
 			 // กรณีจะตอบเฉพาะข้อความ
 		      //$bot->replyText($replyToken, $textMessage);
