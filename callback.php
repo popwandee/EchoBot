@@ -264,22 +264,64 @@ break;
               //$bot->replyText($reply_token, $text);
               break;
 	 case '$': // เรียกอ่านข้อมูลบุคคล
-		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		          $replyText="";
-		          $count=1;
-                foreach($data as $rec){
-                  $replyText= $replyText.'หมายเลข ปชช. '.$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
-                  $count++;
-                }//end for each
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }else{
-		  $replyText= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }
-                  //$bot->replyText($reply_token, $replyText);
+		        /* ส่วนดึงข้อมูลจากฐานข้อมูล */
+		if (!is_null($explodeText[1])){
+		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+                   $data = json_decode($json);
+                   $isData=sizeof($data);
+		      
+                 if($isData >0){
+		    $count=1;
+		    $textReplyMessage = 'ตอบคุณ @'.$userDisplayName; 
+                    $textMessage = new TextMessageBuilder($textReplyMessage);
+		    $multiMessage->add($textMessage);
+                    foreach($data as $rec){
+			   $count++;
+                           $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			   $textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			   $picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+                           $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
+			   //$picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                           //$picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			   $multiMessage->add($imageMessage);
+			    //$arrayPostData['to']=$replyId;
+			    //$arrayPostData['messages'][0]['type']="text";
+			    //$arrayPostData['messages'][0]['text']="hello";
+			    //pushMsg($arrayHeader,$arrayPostData);
+                           }//end for each
+	            $replyData = $multiMessage;
+			 
+		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+		          $textReplyMessage= "ตอบคุณ ".$userDisplayName."ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย"; 
+			  $textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			  $picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          $picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  $multiMessage->add($imageMessage);
+			  $replyData = $multiMessage;
+			 // กรณีจะตอบเฉพาะข้อความ
+		      //$bot->replyText($replyToken, $textMessage);
+		        } // end $isData>0
+		   }else{ // no $explodeText[1]
+	                $textReplyMessage= "ตอบคุณ ".$userDisplayName."คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ"; 
+			$textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			  $picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          $picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  $multiMessage->add($imageMessage);
+			  $replyData = $multiMessage;
+			 // กรณีจะตอบเฉพาะข้อความ
+		      //$bot->replyText($replyToken, $textMessage);
+		   }// end !is_null($explodeText[1])
+		/* จบส่วนดึงข้อมูลจากฐานข้อมูล */
+		      $response = $bot->replyMessage($replyToken,$replyData);
                    break;
 		
          case '$e':
