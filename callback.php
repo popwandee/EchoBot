@@ -309,9 +309,9 @@ break;
 		      
                  if($isData >0){
 		    $count=1;
-		    $textReplyMessage = 'ตอบคุณ @'.$userDisplayName; 
-                    $textMessage = new TextMessageBuilder($textReplyMessage);
-		    $multiMessage->add($textMessage);
+		    //$textReplyMessage = 'ตอบคุณ @'.$userDisplayName; 
+                    //$textMessage = new TextMessageBuilder($textReplyMessage);
+		    //$multiMessage->add($textMessage);
                     foreach($data as $rec){
 			   $count++;
                            $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
