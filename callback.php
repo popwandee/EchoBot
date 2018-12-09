@@ -98,10 +98,13 @@ foreach ($events as $event) {
 		continue;
 	}
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-        $reply_token = $event->getReplyToken();
+        $replyToken = $event->getReplyToken();
+	$replyData='No Data';
         $text = $event->getText();
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
+	$textReplyMessage="";
+        $multiMessage =     new MultiMessageBuilder;
 	    
 switch ($explodeText[0]) {
 	 case '#i':
