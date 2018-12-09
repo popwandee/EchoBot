@@ -288,31 +288,36 @@ break;
               //$bot->replyText($reply_token, $text);
               break;
 	 case '$': // เรียกอ่านข้อมูลบุคคล
-		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+	      $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		          $replyText="";
-		          $count=1;
+		$replyText="";
+		$count=1;
                 foreach($data as $rec){
                         $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-			   $textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-			   $picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
-                           $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
-			   $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			   $multiMessage->add($imageMessage);
+                        $textMessage = new TextMessageBuilder($textReplyMessage);
+			$multiMessage->add($textMessage);
+			$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
+                        $textMessage = new TextMessageBuilder($textReplyMessage);
+			$multiMessage->add($textMessage);
+			$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+                        $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
+			$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			$multiMessage->add($imageMessage);
 			    //$arrayPostData['to']=$replyId;
 			    //$arrayPostData['messages'][0]['type']="text";
 			    //$arrayPostData['messages'][0]['text']="hello";
 			    //pushMsg($arrayHeader,$arrayPostData);
                            }//end for each
-	                   $replyData = $multiMessage;
+	                $replyData = $multiMessage;
                 }//end for each
-		      // ส่วนส่งกลับข้อมูลให้ LINE
+		      
+	          }else{//end $isData<0;
+		  $replyData = "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+		      
+	      }//end $isData>0;
+	             // ส่วนส่งกลับข้อมูลให้ LINE
                      $response = $bot->replyMessage($replyToken,$replyData);
                      if ($response->isSucceeded()) {
                         echo 'Succeeded!';
@@ -322,10 +327,6 @@ break;
                       echo $statusMessage;
                       $bot->replyText($replyToken, $statusMessage);
 		      }
-	          }else{
-		  $replyText= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-		      
-	      }
                   //$bot->replyText($reply_token, $replyText);
                    break;
 		
