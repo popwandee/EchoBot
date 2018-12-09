@@ -135,22 +135,57 @@ switch ($explodeText[0]) {
               //$bot->replyText($reply_token, $text);
               break;
 	 case '#r':
-		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		          $replyText="";
-		          $count=1;
-                foreach($data as $rec){
-                  $replyText= $replyText.'#ทะเบียน '.$rec->license_plate.' ยี่ห้อ'.$rec->brand.' รุ่น'.$rec->model.' สี'.$rec->color."\n\n#ผู้ครอบครอง ".$rec->user."\n#มีประวัติสงสัยว่าเป็น".$rec->note."\n\n#คำแนะนำ ควรตรวจสอบผู้ขับขี่, ยานพาหนะโดยละเอียด ถ่ายภาพและรายงานให้ ทราบโดยด่วน \n";
-                  $count++;
-                }//end for each
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }else{
-		  $replyText= "ไม่พบทะเบียนรถ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
-	      }
-                  //$bot->replyText($reply_token, $replyText);
+		$replyText="";
+		        /* ส่วนดึงข้อมูลจากฐานข้อมูล */
+		if (!is_null($explodeText[1])){
+		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+                   $data = json_decode($json);
+                   $isData=sizeof($data);
+		      
+                 if($isData >0){
+		    $count=1;
+		    
+                    foreach($data as $rec){
+			   $count++;
+                           $textReplyMessage= '#ทะเบียน '.$rec->license_plate.' ยี่ห้อ'.$rec->brand.' รุ่น'.$rec->model.' สี'.$rec->color."\n\n#ผู้ครอบครอง ".$rec->user."\n#มีประวัติสงสัยว่าเป็น".$rec->note."\n\n#คำแนะนำ ควรตรวจสอบผู้ขับขี่, ยานพาหนะโดยละเอียด ถ่ายภาพและรายงานให้ ทราบโดยด่วน \n";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			   //$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
+                           //$textMessage = new TextMessageBuilder($textReplyMessage);
+			   //$multiMessage->add($textMessage);
+			   //$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+                           //$picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
+			   //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			   //$multiMessage->add($imageMessage);
+                           }//end for each
+	            $replyData = $multiMessage;
+			 
+		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย"; 
+			  $textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			  $picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          $picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
+                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  $multiMessage->add($imageMessage);
+			  $replyData = $multiMessage;
+			 // กรณีจะตอบเฉพาะข้อความ
+		      //$bot->replyText($replyToken, $textMessage);
+		        } // end $isData>0
+		   }else{ // no $explodeText[1]
+	                $textReplyMessage= "คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ"; 
+			$textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			  $picFullSize = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          $picThumbnail = "https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg";
+                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			  $multiMessage->add($imageMessage);
+			  $replyData = $multiMessage;
+			 // กรณีจะตอบเฉพาะข้อความ
+		      //$bot->replyText($replyToken, $textMessage);
+		   }// end !is_null($explodeText[1])
+		/* จบส่วนดึงข้อมูลจากฐานข้อมูล */
+		      $response = $bot->replyMessage($replyToken,$replyData);
                    break;
 		case '#ra':// read all data with car owner
 		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
