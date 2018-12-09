@@ -100,6 +100,7 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $replyToken = $event->getReplyToken();
 	$replyData='No Data';
+	$replyText="";
         $text = $event->getText();
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
@@ -264,6 +265,7 @@ break;
               //$bot->replyText($reply_token, $text);
               break;
 	 case '$': // เรียกอ่านข้อมูลบุคคล
+		$replyText="";
 		        /* ส่วนดึงข้อมูลจากฐานข้อมูล */
 		if (!is_null($explodeText[1])){
 		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
