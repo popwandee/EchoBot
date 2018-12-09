@@ -55,6 +55,37 @@ try {
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
+
+$arrayHeader=array();
+		 $arrayHeader[]="Content-Type:application/json";
+		 $arrayHeader[]="Authorization: Bearer {".LINE_MESSAGING_API_CHANNEL_TOKEN."}";
+                 $content=file_get_contents('php//input');
+                 $arrayJson=json_decode($content,true);
+                 // ส่วนตรวจสอบผู้ใช้
+	    if(isset($arrayJson['events'][0]['source']['userId'])){
+		    // ตรวจสอบ id สำหรับตอบ push message
+	       $replyId=$arrayJson['events'][0]['source']['userId'];
+		   $userId=$replyId;
+	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในกลุ่มหรือไม่ เพื่อขอ id การตอบให้กลุ่ม
+	    else if(isset($arrayJson['events'][0]['source']['groupId'])){
+	       $replyId=$arrayJson['events'][0]['source']['groupId'];
+	       $userId=$arrayJson['events'][0]['source']['userId'];
+	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในห้องหรือไม่ เพื่อขอ id การตอบให้ห้อง
+	    else if(isset($arrayJson['events'][0]['source']['roomId'])){
+	       $replyId=$arrayJson['events'][0]['source']['roomId'];
+	       $userId=$arrayJson['events'][0]['source']['userId'];
+	    }
+		 // ตรวจสอบชื่อผู้ถามเพื่อตรวจสอบสิทธิ์ และหรือบันทึกการใช้
+	       $response = $bot->getProfile($userId);
+                if ($response->isSucceeded()) {// ดึงค่าโดยแปลจาก JSON String .ให้อยู่ใรูปแบบโครงสร้าง ตัวแปร array 
+                   $userData = $response->getJSONDecodedBody(); // return array     
+                            // $userData['userId'] // $userData['displayName'] // $userData['pictureUrl']  // $userData['statusMessage']
+                   $userDisplayName = $userData['displayName']; 
+		}else{
+		   $userDisplayName = $userId;
+		}
+		// จบส่วนการตรวจสอบผู้ใช้
+
 foreach ($events as $event) {
   // Postback Event
 	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
