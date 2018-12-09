@@ -1,5 +1,4 @@
 <?php // callback.php
-
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -37,23 +36,14 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
-
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
 define("LINE_MESSAGING_API_CHANNEL_SECRET", '32af0f0d2540846576a6e5adb4415db8');
 define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'Hf0leB8PvKkMKkKPYw+rujZPrIi9cz6b8SlAksk37KKm648O8AJcCOyexU1qbn6lq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+drBtODoy3uMPFNw+Y6gpamMB46BrtcbwL8oz+1sd71NAdB04t89/1O/w1cDnyilFU=');
-
 $bot = new \LINE\LINEBot(
-
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
-
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
-
 );
-
-
 $signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
-
-
 try {
 	$events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 } catch(\LINE\LINEBot\Exception\InvalidSignatureException $e) {
@@ -65,37 +55,6 @@ try {
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
-
-                 $arrayHeader=array();
-		 $arrayHeader[]="Content-Type:application/json";
-		 $arrayHeader[]="Authorization: Bearer {".LINE_MESSAGING_API_CHANNEL_TOKEN."}";
-                 $content=file_get_contents('php//input');
-                 $arrayJson=json_decode($content,true);
-                 // ส่วนตรวจสอบผู้ใช้
-	    if(isset($arrayJson['events'][0]['source']['userId'])){
-		    // ตรวจสอบ id สำหรับตอบ push message
-	       $replyId=$arrayJson['events'][0]['source']['userId'];
-		   $userId=$replyId;
-	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในกลุ่มหรือไม่ เพื่อขอ id การตอบให้กลุ่ม
-	    else if(isset($arrayJson['events'][0]['source']['groupId'])){
-	       $replyId=$arrayJson['events'][0]['source']['groupId'];
-	       $userId=$arrayJson['events'][0]['source']['userId'];
-	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในห้องหรือไม่ เพื่อขอ id การตอบให้ห้อง
-	    else if(isset($arrayJson['events'][0]['source']['roomId'])){
-	       $replyId=$arrayJson['events'][0]['source']['roomId'];
-	       $userId=$arrayJson['events'][0]['source']['userId'];
-	    }
-		 // ตรวจสอบชื่อผู้ถามเพื่อตรวจสอบสิทธิ์ และหรือบันทึกการใช้
-	       $response = $bot->getProfile($userId);
-                if ($response->isSucceeded()) {// ดึงค่าโดยแปลจาก JSON String .ให้อยู่ใรูปแบบโครงสร้าง ตัวแปร array 
-                   $userData = $response->getJSONDecodedBody(); // return array     
-                            // $userData['userId'] // $userData['displayName'] // $userData['pictureUrl']  // $userData['statusMessage']
-                   $userDisplayName = $userData['displayName']; 
-		}else{
-		   $userDisplayName = $userId;
-		}
-		// จบส่วนการตรวจสอบผู้ใช้
-
 foreach ($events as $event) {
   // Postback Event
 	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
@@ -107,20 +66,13 @@ foreach ($events as $event) {
 		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
 		continue;
 	}
-
-
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-        
-	$replyToken = $event->getReplyToken();
-	$replyData='No Data';
+        $reply_token = $event->getReplyToken();
         $text = $event->getText();
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
-	$textReplyMessage="";
-        $multiMessage =     new MultiMessageBuilder;
-
+	    
 switch ($explodeText[0]) {
-
 	 case '#i':
               $x_tra = str_replace("#i ","", $text);
               $pieces = explode("|", $x_tra);
@@ -146,9 +98,7 @@ switch ($explodeText[0]) {
 			      }else {$replyText="ไม่สามารถเพิ่มรถได้";
 			           $img_url="https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";}
               //$bot->replyText($reply_token, $text);
-
               break;
-
 	 case '#r':
 		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
               $data = json_decode($json);
@@ -165,7 +115,6 @@ switch ($explodeText[0]) {
 		  $replyText= "ไม่พบทะเบียนรถ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
-
                   //$bot->replyText($reply_token, $replyText);
                    break;
 		case '#ra':// read all data with car owner
@@ -184,7 +133,6 @@ switch ($explodeText[0]) {
 		  $replyText= "ไม่พบทะเบียนรถ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
 	      }
-
                   //$bot->replyText($reply_token, $replyText);
                    break;
          case '#e':
@@ -209,9 +157,7 @@ $replyText=$replyText.' id:'.$updateId.' with '.$explodeText[2]."\n";
          '$set'=>array('note'=>$explodeText[2])
        )
      );
-
        // ใช้  '$set' เพื่อไม่ให้เปลี่ยนแปลงทั้งหมด ใน document
-
      $opts=array('http'=>
        array(
          'method'=>'PUT',
@@ -243,7 +189,6 @@ $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collect
          }
        }//end foreach carupdateid
      }//end for each data from json
-
 // delete
 $mlabURL='https://api.mlab.com/api/1/databases/hooqline/collections/register_south/'.$deleteId.'?apiKey='.MLAB_API_KEY;
 $opts=array('http'=>
@@ -255,12 +200,10 @@ $opts=array('http'=>
 $context= stream_context_create($opts);
 $returnVal = file_get_contents($mlabURL,false,$context);
 $replyText=$replyText."\n ทะเบียน ".$explodeText[1]."\n id:".$deleteId." DELETED \n รายละเอียด".$returnVal;
-
 }else{ // ไม่พบข้อมูลทะเบียนรถ
          $replyText= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1].' ที่จะลบ';
        }
 break;
-
 		
 /* ตรวจสอบบุคคล */
 	 case '$i':
@@ -270,7 +213,6 @@ break;
               $_name=$pieces[1];
               $_address=$pieces[2];
               $_note=$pieces[3];
-
               //Post New Data
               $newData = json_encode(array('nationid' => $_nationid,'name'=> $_name,'address'=> $_address,'note'=> $_note) );
               $opts = array('http' => array( 'method' => "POST",
@@ -288,45 +230,21 @@ break;
               //$bot->replyText($reply_token, $text);
               break;
 	 case '$': // เรียกอ่านข้อมูลบุคคล
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+		         $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		$replyText="";
-		$count=1;
+		          $replyText="";
+		          $count=1;
                 foreach($data as $rec){
-                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
-                        $textMessage = new TextMessageBuilder($textReplyMessage);
-			$multiMessage->add($textMessage);
-			$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
-                        $textMessage = new TextMessageBuilder($textReplyMessage);
-			$multiMessage->add($textMessage);
-			$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
-                        $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
-			$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			$multiMessage->add($imageMessage);
-			    //$arrayPostData['to']=$replyId;
-			    //$arrayPostData['messages'][0]['type']="text";
-			    //$arrayPostData['messages'][0]['text']="hello";
-			    //pushMsg($arrayHeader,$arrayPostData);
-                           }//end for each
-	                $replyData = $multiMessage;
+                  $replyText= $replyText.'หมายเลข ปชช. '.$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                  $count++;
                 }//end for each
-		      
-	          }else{//end $isData<0;
-		  $replyData = "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-		      
-	      }//end $isData>0;
-	             // ส่วนส่งกลับข้อมูลให้ LINE
-                     $response = $bot->replyMessage($replyToken,$replyData);
-                     if ($response->isSucceeded()) {
-                        echo 'Succeeded!';
-                        }else{
-                       // Failed ส่งข้อความไม่สำเร็จ
-                      $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody();
-                      echo $statusMessage;
-                      $bot->replyText($replyToken, $statusMessage);
-		      }
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }else{
+		  $replyText= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+		      $img_url = "https://plus.google.com/photos/photo/108961502262758121403/6146705217388476082";
+	      }
                   //$bot->replyText($reply_token, $replyText);
                    break;
 		
