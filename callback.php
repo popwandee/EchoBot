@@ -1,40 +1,59 @@
 <?php // callback.php
-ob_start();
-$raw = file_get_contents('php://input');
-var_dump(json_decode($raw,1));
-$raw = ob_get_clean();
-file_put_contents('/tmp/dump.txt', $raw."\n=====================================\n", FILE_APPEND);
-
-echo "Ducky ..... Dump temp OK";
-
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", '');
-echo "ok 1";
-
+// กรณีต้องการตรวจสอบการแจ้ง error ให้เปิด 3 บรรทัดล่างนี้ให้ทำงาน กรณีไม่ ให้ comment ปิดไป
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require __DIR__."/vendor/autoload.php";
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
 use \Statickidz\GoogleTranslate;
+use LINE\LINEBot;
+use LINE\LINEBot\HTTPClient;
+use LINE\LINEBot\HTTPClient\CurlHTTPClient;
+use LINE\LINEBot\MessageBuilder;
+use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
+use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;
+use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
+use LINE\LINEBot\MessageBuilder\AudioMessageBuilder;
+use LINE\LINEBot\MessageBuilder\VideoMessageBuilder;
+use LINE\LINEBot\ImagemapActionBuilder;
+use LINE\LINEBot\ImagemapActionBuilder\AreaBuilder;
+use LINE\LINEBot\ImagemapActionBuilder\ImagemapMessageActionBuilder ;
+use LINE\LINEBot\ImagemapActionBuilder\ImagemapUriActionBuilder;
+use LINE\LINEBot\MessageBuilder\Imagemap\BaseSizeBuilder;
+use LINE\LINEBot\MessageBuilder\ImagemapMessageBuilder;
+use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
+use LINE\LINEBot\TemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\DatetimePickerTemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\Flex;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 
-echo "ok 2";
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '6f6b7e3b1aff242cd4fb0fa3113f7af3');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'RvsMabRN/IlT2BtmEoH+KcIbha8F/aPLWWzMKj8lxz/7f9c/Ygu5qvrUGtdlrTwyQwR5tFcgIGGzCkHO/SzIKrdCqUm+sal4t73YOuTPZsQX4bR35g3ZJGTvFilxvO1LVO/I6B1ouhx3UjGWe+OwswdB04t89/1O/w1cDnyilFU=
+');
 
 $bot = new \LINE\LINEBot(
-
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
-
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
-
 );
-
-
-echo "ok 3";
-
 $signature = $_SERVER["HTTP_".\LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
-
-
 try {
 	$events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 } catch(\LINE\LINEBot\Exception\InvalidSignatureException $e) {
@@ -47,93 +66,78 @@ try {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
 
+		 $arrayHeader=array();
+		 $arrayHeader[]="Content-Type:application/json";
+		 $arrayHeader[]="Authorization: Bearer {".LINE_MESSAGING_API_CHANNEL_TOKEN."}";
+                 $content=file_get_contents('php//input');
+
+                 $arrayJson=json_decode($content,true);
+                 // ส่วนตรวจสอบผู้ใช้
+
+	       $groupId='';$roomId='';// default value
+	    if(isset($arrayJson['events'][0]['source']['userId'])){// ตรวจสอบ id สำหรับตอบ push message
+	       $userId=$arrayJson['events'][0]['source']['userId'];
+	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในกลุ่มหรือไม่ เพื่อขอ id การตอบให้กลุ่ม
+	    else if(isset($arrayJson['events'][0]['source']['groupId'])){
+	       $groupId=$arrayJson['events'][0]['source']['groupId'];
+	       $userId=$arrayJson['events'][0]['source']['userId'];
+	    }  //ตรวจสอบว่าเหตุการณ์เกิดขึ้นในห้องหรือไม่ เพื่อขอ id การตอบให้ห้อง
+	    else if(isset($arrayJson['events'][0]['source']['roomId'])){
+	       $roomId=$arrayJson['events'][0]['source']['roomId'];
+	       $userId=$arrayJson['events'][0]['source']['userId'];
+	    }
+		 // ตรวจสอบชื่อผู้ถามเพื่อตรวจสอบสิทธิ์ และหรือบันทึกการใช้
+
+	$replyData='No Data';
+             $userId="Group : ".$groupId." Room : ".$roomId." User : ".$userId;
+             $textMessage = new TextMessageBuilder($userId);
+	     $multiMessage->add($textMessage);
+             $replyData = $multiMessage;
+            
 
 
-
+	       $response = $bot->getProfile($userId);
+                if ($response->isSucceeded()) {// ดึงค่าโดยแปลจาก JSON String .ให้อยู่ใรูปแบบโครงสร้าง ตัวแปร array 
+                   $userData = $response->getJSONDecodedBody(); // return array     
+			
+                            // $userData['userId'] // $userData['displayName'] // $userData['pictureUrl']  // $userData['statusMessage']
+                   $userDisplayName = $userData['displayName']; 
+		}else{
+		   $userDisplayName = $userId;
+		}
+		*/
+		// จบส่วนการตรวจสอบผู้ใช้
+        
 foreach ($events as $event) {
+	
+        $replyToken = $event->getReplyToken();
+	 $response = $bot->replyMessage($replyToken,$replyData);
+           if ($response->isSucceeded()) { echo 'Succeeded!';return;} // Failed ส่งข้อความไม่สำเร็จ
+	
+             $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody();
+             echo $statusMessage;
+             $bot->replyText($replyToken, $statusMessage);
   // Postback Event
-	if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
+    if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
 		continue;
 	}
 	// Location Event
-	if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+    if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
 		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
 		continue;
 	}
-
-   if ($event  instanceof \LINE\LINEBot\Event\MessageEvent\ImageMessage){
-
-     $reply_token = $event->getReplyToken();
-       $a = ['ว้าว ว้าว ว้าว', 'อุ๊ยตาย ว้ายกรีดดดด', 'ชอบๆ', 'ขอบคุณฮะ', 'OK', 'OK, I Like it.'];
-
-    $text = $a[mt_rand(0, count($a) - 1)];//$a[min,max];
-
-     //$text = 'รูปอะไรเหรอฮะ';
-	  
-$multipleMessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-$multipleMessageBuilder->add(new TextMessageBuilder('ชอบๆ', 'OK'))
-                       ->add(new ImageMessageBuilder('http://www.hooq.info/photos/1.jpg', 'http://www.hooq.info/photos/1.jpg'));
-$res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
-
-
-      
-   }
-
     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-
-      $reply_token = $event->getReplyToken();
-
-      $text = $event->getText();
-
-      $explodeText=explode(" ",$text);
-
-
+       
+        $text = $event->getText();
+        $text = strtolower($text);
+        $explodeText=explode(" ",$text);
+	$textReplyMessage="";
+        $multiMessage =     new MultiMessageBuilder;
+	  
+		      
       switch ($explodeText[0]) {
-
-        case 'สอนเป็ด':
-
-            $x_tra = str_replace("สอนเป็ด ","", $text);
-
-            $pieces = explode("|", $x_tra);
-
-            $_question=str_replace("[","",$pieces[0]);
-
-            $_answer=str_replace("]","",$pieces[1]);
-
-            //Post New Data
-
-            $newData = json_encode(array('question' => $_question,'answer'=> $_answer) );
-
-            $opts = array('http' => array( 'method' => "POST",
-
-                                          'header' => "Content-type: application/json",
-
-                                          'content' => $newData
-
-                                           )
-
-                                        );
-
-            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-
-            $api_key="";
-
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
-
-            $context = stream_context_create($opts);
-
-            $returnValue = file_get_contents($url,false,$context);
-
-            if($returnValue)$text = 'ขอบคุณที่สอนเป็ด ฮะ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด [คำถาม|คำตอบ] ต้องเว้นวรรคด้วยนะ  สอบถามราคาหุ้นพิมพ์ stock ถามข่าวพิมพ์ news';
-            else $text="Cannot teach Ducky";
-
-            $bot->replyText($reply_token, $text);
-
-            break;
-
-            case 'Stock':
-            case 'stock':
+          case 'stock':
 
                     $symbol=$explodeText[1];
                   $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
@@ -161,7 +165,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
                       }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
                     } //สิ้นสุดการลิสต์คีย์ชั้นแรก
 
-                $bot->replyText($reply_token, $text);
+                $bot->replyText($replyToken, $text);
 
                 break;
           case 'News':
@@ -183,7 +187,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
             }
 
             //$text=$text_arr[mt_rand(0, count($text_arr) - 1)];//$text_arr[mt_rand[min,max]]; random index
-            $bot->replyText($reply_token, $text);
+            $bot->replyText($replyToken, $text);
              break;
              case 'Lang':
              case 'lang':
@@ -193,7 +197,7 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
              $target = 'th';
              $trans = new GoogleTranslate();
              $result = $trans->translate($source, $target, $text_parameter);
-             $bot->replyText($reply_token, $result);
+             $bot->replyText($replyToken, $result);
                 break;
 
                 case 'Weather':
@@ -217,51 +221,43 @@ $res = $bot->replyMessage( $reply_token, $multipleMessageBuilder);
                   $text=$text." พระอาทิตย์ตก ".$sunset;
                   $bot->replyText($reply_token, $text);
                    break;
-
-
           default:
-
-              $api_key="";
-
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'';
-
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.$api_key.'&q={"question":"'.$explodeText[0].'"}');
-
+		 //$textMessage= $userDisplayName."คุณไม่ได้ถามตามที่กำหนดค่ะ".$replyId.$userId; 
+		 //$bot->replyText($replyToken, $textMessage);
+	      $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
+              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
               $data = json_decode($json);
-
               $isData=sizeof($data);
-
+		  $text='';
               if($isData >0){
-
                 foreach($data as $rec){
-
-                  $text= $rec->answer;
-
-                  $bot->replyText($reply_token, $text);
-
+                  $text= $text." \n".$rec->answer;
                   //-----------------------
-
                 }//end for each
-
               }else{
-
                   $text='';
-
                   //$text= $explodeText[0];
-
                   //$bot->replyText($reply_token, $text);
-
               }//end no data from mlab
-
+		      
+                  $bot->replyText($replyToken, $text);
+		break;
             }//end switch
-
-    }//end if text
-
+	    
+	   // ส่วนส่งกลับข้อมูลให้ LINE
+           $response = $bot->replyMessage($replyToken,$replyData);
+           if ($response->isSucceeded()) {
+              echo 'Succeeded!';
+              return;
+              }
+ 
+              // Failed ส่งข้อความไม่สำเร็จ
+             $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody();
+             echo $statusMessage;
+             $bot->replyText($replyToken, $statusMessage);
+         }//end if event is textMessage
 }// end foreach event
+           
 
 
-
-echo "OK4";
-/*
-
-*/
+         
