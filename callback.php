@@ -11,10 +11,27 @@ use \Statickidz\GoogleTranslate;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
+use LINE\LINEBot\Constant\Flex\ComponentLayout;
+use LINE\LINEBot\Constant\Flex\ComponentIconSize;
+use LINE\LINEBot\Constant\Flex\ComponentImageSize;
+use LINE\LINEBot\Constant\Flex\ComponentImageAspectRatio;
+use LINE\LINEBot\Constant\Flex\ComponentImageAspectMode;
+use LINE\LINEBot\Constant\Flex\ComponentFontSize;
+use LINE\LINEBot\Constant\Flex\ComponentFontWeight;
+use LINE\LINEBot\Constant\Flex\ComponentMargin;
+use LINE\LINEBot\Constant\Flex\ComponentSpacing;
+use LINE\LINEBot\Constant\Flex\ComponentButtonStyle;
+use LINE\LINEBot\Constant\Flex\ComponentButtonHeight;
+use LINE\LINEBot\Constant\Flex\ComponentSpaceSize;
+use LINE\LINEBot\Constant\Flex\ComponentGravity;
 use LINE\LINEBot\MessageBuilder;
+use LINE\LINEBot\MessageBuilder\RawMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
 use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;
+use LINE\LINEBot\MessageBuilder\Imagemap\BaseSizeBuilder;
+use LINE\LINEBot\MessageBuilder\ImagemapMessageBuilder;
+use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use LINE\LINEBot\MessageBuilder\LocationMessageBuilder;
 use LINE\LINEBot\MessageBuilder\AudioMessageBuilder;
 use LINE\LINEBot\MessageBuilder\VideoMessageBuilder;
@@ -22,9 +39,6 @@ use LINE\LINEBot\ImagemapActionBuilder;
 use LINE\LINEBot\ImagemapActionBuilder\AreaBuilder;
 use LINE\LINEBot\ImagemapActionBuilder\ImagemapMessageActionBuilder ;
 use LINE\LINEBot\ImagemapActionBuilder\ImagemapUriActionBuilder;
-use LINE\LINEBot\MessageBuilder\Imagemap\BaseSizeBuilder;
-use LINE\LINEBot\MessageBuilder\ImagemapMessageBuilder;
-use LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use LINE\LINEBot\TemplateActionBuilder;
 use LINE\LINEBot\TemplateActionBuilder\DatetimePickerTemplateActionBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
@@ -39,8 +53,17 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\FlexMessageBuilder;
-use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\BoxComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\ButtonComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\IconComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\ImageComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\TextComponentBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\BubbleContainerBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ComponentBuilder\SpacerComponentBuilder;
+use LINE\LINEBot\QuickReplyBuilder\ButtonBuilder\QuickReplyButtonBuilder;
+use LINE\LINEBot\QuickReplyBuilder\QuickReplyMessageBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
@@ -374,11 +397,8 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
-		      $altText="this is a flex message";
-		      $flexMessage = new FlexMessageBuilder($altText); ;
-		     
-		     $replyData=$flexMessage;  
-  
+		     $flexData = new FlexReplyMessageBuilder;
+                     $replyData = $flexData->get();
 		      break;
           default:
 
@@ -430,6 +450,117 @@ case 'news':
          }//end if event is textMessage
 }// end foreach event
 
+
+
+    class FlexReplyMessageBuilder
+{
+    /**
+     * Create  flex message
+     *
+     * @return \LINE\LINEBot\MessageBuilder\FlexMessageBuilder
+     */
+    public static function get()
+    {
+        return FlexMessageBuilder::builder()
+            ->setAltText('Lisa')
+            ->setContents(
+                BubbleContainerBuilder::builder()
+                    ->setHero(self::createHeroBlock())
+                    ->setBody(self::createBodyBlock())
+                    ->setFooter(self::createFooterBlock())
+            );
+    }
+    private static function createHeroBlock()
+    {
+        return ImageComponentBuilder::builder()
+            ->setUrl('https://www.hooq.info/RTA/1.jpg')
+            ->setSize(ComponentImageSize::FULL)
+            ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
+            ->setAspectMode(ComponentImageAspectMode::COVER)
+            ->setAction(new UriTemplateActionBuilder(null, 'https://www.hooq.info'));
+    }
+    private static function createBodyBlock()
+    {
+        $title = TextComponentBuilder::builder()
+            ->setText('คำถาม')
+            ->setWeight(ComponentFontWeight::BOLD)
+            ->setSize(ComponentFontSize::XL);
+        $goldStar = IconComponentBuilder::builder()
+            ->setUrl('https://www.hooq.info/RTA/2.jpg')
+            ->setSize(ComponentIconSize::SM);
+        $grayStar = IconComponentBuilder::builder()
+            ->setUrl('https://www.hooq.info/RTA/3.jpg')
+            ->setSize(ComponentIconSize::SM);
+        $point = TextComponentBuilder::builder()
+            ->setText('4.0')
+            ->setSize(ComponentFontSize::SM)
+            ->setColor('#999999')
+            ->setMargin(ComponentMargin::MD)
+            ->setFlex(0);
+        $review = BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::BASELINE)
+            ->setMargin(ComponentMargin::MD)
+            ->setContents([$goldStar, $goldStar, $goldStar, $goldStar, $grayStar, $point]);
+        $place = BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::BASELINE)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setContents([
+                TextComponentBuilder::builder()
+                    ->setText('ที่อยู่')
+                    ->setColor('#aaaaaa')
+                    ->setSize(ComponentFontSize::SM)
+                    ->setFlex(1),
+                TextComponentBuilder::builder()
+                    ->setText('Samsen, Bangkok')
+                    ->setWrap(true)
+                    ->setColor('#666666')
+                    ->setSize(ComponentFontSize::SM)
+                    ->setFlex(5)
+            ]);
+        $time = BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::BASELINE)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setContents([
+                TextComponentBuilder::builder()
+                    ->setText('Time')
+                    ->setColor('#aaaaaa')
+                    ->setSize(ComponentFontSize::SM)
+                    ->setFlex(1),
+                TextComponentBuilder::builder()
+                    ->setText('10:00 - 23:00')
+                    ->setWrap(true)
+                    ->setColor('#666666')
+                    ->setSize(ComponentFontSize::SM)
+                    ->setFlex(5)
+            ]);
+        $info = BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setMargin(ComponentMargin::LG)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setContents([$place, $time]);
+        return BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setContents([$title, $review, $info]);
+    }
+    private static function createFooterBlock()
+    {
+        $callButton = ButtonComponentBuilder::builder()
+            ->setStyle(ComponentButtonStyle::LINK)
+            ->setHeight(ComponentButtonHeight::SM)
+            ->setAction(new UriTemplateActionBuilder('CALL', 'https://www.hooq.info'));
+        $websiteButton = ButtonComponentBuilder::builder()
+            ->setStyle(ComponentButtonStyle::LINK)
+            ->setHeight(ComponentButtonHeight::SM)
+            ->setAction(new UriTemplateActionBuilder('WEBSITE', 'https://www.hooq.info'));
+        $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
+        return BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setFlex(0)
+            ->setContents([$callButton, $websiteButton, $spacer]);
+    }
+
+} 
 
 /*
 function pushMsg($arrayHeader,$arrayPostData){
