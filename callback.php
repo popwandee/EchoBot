@@ -320,7 +320,11 @@ case '!':
              $trans = new GoogleTranslate();
              $result = $text_parameter." แปลว่า \n";
              $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
-             $bot->replyText($replyToken, $result);
+		       $question = $text_parameter;
+		      $answer = $result;
+		     $flexData = new FlexReplyMessageBuilder;
+                     $replyData = $flexData->get($question,$answer);
+             //$bot->replyText($replyToken, $result);
                 break;
 case 'tran':
             $text_parameter = str_replace("tran ","", $text);
@@ -397,6 +401,7 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
+		      
 		      $question = "Question is?";
 		      $answer = "Answer is ...";
 		     $flexData = new FlexReplyMessageBuilder;
@@ -498,6 +503,8 @@ case 'news':
             ->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::MD)
             ->setContents([$title,  $textAnswer]);
+	
+	    /*    
         $place = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setSpacing(ComponentSpacing::SM)
@@ -530,21 +537,19 @@ case 'news':
                     ->setSize(ComponentFontSize::SM)
                     ->setFlex(5)
             ]);
+	    
         $info = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
             ->setMargin(ComponentMargin::LG)
             ->setSpacing(ComponentSpacing::SM)
-            ->setContents([$place, $time]);
+            ->setContents([$place, $time]);*/
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
-            ->setContents([$title, $review, $info]);
+            ->setContents([$review, $info]);
     }
     private static function createFooterBlock()
     {
-        $callButton = ButtonComponentBuilder::builder()
-            ->setStyle(ComponentButtonStyle::LINK)
-            ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder('CALL', 'https://www.hooq.info'));
+        
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
@@ -554,7 +559,7 @@ case 'news':
             ->setLayout(ComponentLayout::VERTICAL)
             ->setSpacing(ComponentSpacing::SM)
             ->setFlex(0)
-            ->setContents([$callButton, $websiteButton, $spacer]);
+            ->setContents([$websiteButton, $spacer]);
     }
 
 } 
