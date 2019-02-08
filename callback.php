@@ -331,7 +331,8 @@ case '$':
              $source = 'th';
              $target = 'en';
              $trans = new GoogleTranslate();
-             $result = $trans->translate($source, $target, $text_parameter);
+             $result = $text_parameter." แปลว่า ";
+             $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
              $bot->replyText($replyToken, $result);
                 break;
 case 'tran':
@@ -340,7 +341,8 @@ case 'tran':
             $source = 'en';
             $target = 'th';
             $trans = new GoogleTranslate();
-            $result = $trans->translate($source, $target, $text_parameter);
+            $result = $text_parameter." แปลว่า ";
+            $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
             $bot->replyText($replyToken, $result);
                                break;
 case 'Stock':
