@@ -41,6 +41,7 @@ $trans = new GoogleTranslate();
 $result = $trans->translate($source, $target, $text_parameter);
 //$lang_url="https://translation.googleapis.com/language/translate/v2";
 print_r($result);
+//test
 
 
 
