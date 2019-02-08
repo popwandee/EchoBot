@@ -196,7 +196,7 @@ foreach ($events as $event) {
                   $count++;
                 }//end for each
 	      }else{
-		  $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1]." ค่ะ ";
+		  $text= "ลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
 	      }
                   $textReplyMessage= $text;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
@@ -240,22 +240,7 @@ foreach ($events as $event) {
                  }
                            $bot->replyText($replyToken, $text);
                             break;
-              case '#ชื่อจริง':
-               $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"name":"'.$explodeText[1].'"}');
-                       $data = json_decode($json);
-                       $isData=sizeof($data);
-                       if($isData >0){
-                $text="";
-                $count=1;
-                         foreach($data as $rec){
-                           $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                           $count++;
-                         }//end for each
-                 }else{
-               $text= "ไม่พบข้อมูลชื่อจริง ".$explodeText[1];
-                 }
-                           $bot->replyText($replyToken, $text);
-                            break;
+
               case '#นามสกุล':
                $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$explodeText[1].'"}');
                        $data = json_decode($json);
@@ -298,7 +283,7 @@ case '$':
 
 			  $replyData = $multiMessage;
 		break; //break case $
-  case 'สอนเป็ด':
+  case '$lisa':
 
             //Post New Data
 		      $indexCount=1;$answer='';
@@ -319,8 +304,8 @@ case '$':
             $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
-            if($returnValue)$text = 'ขอบคุณที่สอนเป็ด ฮะ ';
-            else $text="Cannot teach Ducky";
+            if($returnValue)$text = 'ขอบคุณที่สอนลิซ่าค่ะ, ลิซ่าจำได้แล้วว่า '.$explodeText[1]." คือ ".$answer;
+            else $text="Cannot teach Lisa";
             $bot->replyText($replyToken, $text);
             break;
 		      // ---------------------------------------------------------------------------//
