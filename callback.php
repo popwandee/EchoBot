@@ -321,9 +321,11 @@ case '!':
              $result = $text_parameter." แปลว่า \n";
              $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
 		       $question = $text_parameter;
-		      $answer = $result;
+		     $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
-                     $replyData = $flexData->get($question,$answer);
+		     $image=rand(1,407);
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+                     $replyData = $flexData->get($question,$answer,$picFullSize);
              
                 break;
 case 'tran':
@@ -337,7 +339,9 @@ case 'tran':
            $question = $text_parameter;
 		      $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
-                     $replyData = $flexData->get($question,$answer);
+		     $image=rand(1,407);
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+                     $replyData = $flexData->get($question,$answer,$picFullSize);
                                break;
 case 'Stock':
 case 'stock':
@@ -468,22 +472,22 @@ case 'news':
      *
      * @return \LINE\LINEBot\MessageBuilder\FlexMessageBuilder
      */
-    public static function get($question,$answer)
+    public static function get($question,$answer,$picFullSize)
     {
         return FlexMessageBuilder::builder()
             ->setAltText('Lisa')
             ->setContents(
                 BubbleContainerBuilder::builder()
-                    ->setHero(self::createHeroBlock())
+                    ->setHero(self::createHeroBlock($picFullSize))
                     ->setBody(self::createBodyBlock($question,$answer))
                     ->setFooter(self::createFooterBlock())
             );
     }
-    private static function createHeroBlock()
+    private static function createHeroBlock($picFullSize)
     {
 	   
         return ImageComponentBuilder::builder()
-            ->setUrl('https://www.hooq.info/photos/1.jpg')
+            ->setUrl($picFullSize)
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
             ->setAspectMode(ComponentImageAspectMode::COVER)
