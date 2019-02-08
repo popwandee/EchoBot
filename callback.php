@@ -210,7 +210,7 @@ foreach ($events as $event) {
                    break;
 
 
-case '$':
+case '!':
 		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
@@ -235,6 +235,7 @@ case '$':
 
 			  $replyData = $multiMessage;
 		break; //break case $
+
   case '$lisa':
 
             //Post New Data
@@ -362,18 +363,19 @@ case 'news':
 		      break;
                   //$text= $explodeText[0];
                   //$bot->replyText($reply_token, $text);
-              }//end no data from hooqbot
+              }//end no data from server
 
 
                     $textReplyMessage= $text;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
 		          $image=rand(1,338);
-
+/*
 			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
                           $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
 			  $multiMessage->add($imageMessage);
+        */
 			  $replyData = $multiMessage;
 		break;
             }//end switch
