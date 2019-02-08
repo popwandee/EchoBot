@@ -397,8 +397,10 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
+		      $question = "Question is?";
+		      $answer = "Answer is ...";
 		     $flexData = new FlexReplyMessageBuilder;
-                     $replyData = $flexData->get();
+                     $replyData = $flexData->get($question,$answer);
 		      break;
           default:
 
@@ -459,14 +461,14 @@ case 'news':
      *
      * @return \LINE\LINEBot\MessageBuilder\FlexMessageBuilder
      */
-    public static function get()
+    public static function get($question,$answer)
     {
         return FlexMessageBuilder::builder()
             ->setAltText('Lisa')
             ->setContents(
                 BubbleContainerBuilder::builder()
                     ->setHero(self::createHeroBlock())
-                    ->setBody(self::createBodyBlock())
+                    ->setBody(self::createBodyBlock($question,$answer))
                     ->setFooter(self::createFooterBlock())
             );
     }
@@ -479,28 +481,23 @@ case 'news':
             ->setAspectMode(ComponentImageAspectMode::COVER)
             ->setAction(new UriTemplateActionBuilder(null, 'https://www.hooq.info'));
     }
-    private static function createBodyBlock()
+    private static function createBodyBlock($question,$answer)
     {
         $title = TextComponentBuilder::builder()
-            ->setText('คำถาม')
+            ->setText($question)
             ->setWeight(ComponentFontWeight::BOLD)
             ->setSize(ComponentFontSize::XL);
-        $goldStar = IconComponentBuilder::builder()
-            ->setUrl('https://www.hooq.info/RTA/2.jpg')
-            ->setSize(ComponentIconSize::SM);
-        $grayStar = IconComponentBuilder::builder()
-            ->setUrl('https://www.hooq.info/RTA/3.jpg')
-            ->setSize(ComponentIconSize::SM);
-        $point = TextComponentBuilder::builder()
-            ->setText('4.0')
+        
+        $textAnswer = TextComponentBuilder::builder()
+            ->setText($answer)
             ->setSize(ComponentFontSize::SM)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
-            ->setFlex(0);
+            ->setFlex(5);
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::MD)
-            ->setContents([$goldStar, $goldStar, $goldStar, $goldStar, $grayStar, $point]);
+            ->setContents([$title,  $textAnswer]);
         $place = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setSpacing(ComponentSpacing::SM)
