@@ -322,9 +322,9 @@ case '!':
              $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
 		       $question = $text_parameter;
 		      $answer = $result;
-		     $flexData = new FlexReplyMessageBuilder;
+		     $flexData = new ReplyTranslateMessage;
                      $replyData = $flexData->get($question,$answer);
-             //$bot->replyText($replyToken, $result);
+             
                 break;
 case 'tran':
             $text_parameter = str_replace("tran ","", $text);
@@ -334,8 +334,10 @@ case 'tran':
             $trans = new GoogleTranslate();
             $result = $text_parameter." แปลว่า \n";
             $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
-            $bot->replyText($replyToken, $result);
-            // CustomSearch API key AIzaSyAQTwJ4MkD5NVnDeWefSYcOn8roGcWI-40
+           $question = $text_parameter;
+		      $answer = $result;
+		     $flexData = new ReplyTranslateMessage;
+                     $replyData = $flexData->get($question,$answer);
                                break;
 case 'Stock':
 case 'stock':
@@ -459,7 +461,7 @@ case 'news':
 
 
 
-    class FlexReplyMessageBuilder
+    class ReplyTranslateMessage
 {
     /**
      * Create  flex message
@@ -479,8 +481,10 @@ case 'news':
     }
     private static function createHeroBlock()
     {
+	    $image=rand(1,407);
+	    $url='https://www.hooq.info/photos/'.$image'.jpg';
         return ImageComponentBuilder::builder()
-            ->setUrl('https://www.hooq.info/RTA/1.jpg')
+            ->setUrl($url)
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
             ->setAspectMode(ComponentImageAspectMode::COVER)
@@ -493,8 +497,8 @@ case 'news':
             ->setWeight(ComponentFontWeight::BOLD)
             ->setSize(ComponentFontSize::XL);
         
-        $textAnswer = TextComponentBuilder::builder()
-            ->setText($answer)
+        $textDetail = TextComponentBuilder::builder()
+            ->setText('ลิซ่าแปลให้นะคะ')
             ->setSize(ComponentFontSize::SM)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
@@ -502,7 +506,7 @@ case 'news':
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::MD)
-            ->setContents([$title,  $textAnswer]);
+            ->setContents([$title,  $textDetail]);
 	
 	    /*    
         $place = BoxComponentBuilder::builder()
@@ -554,7 +558,7 @@ case 'news':
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder('WEBSITE', 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder($answer, 'https://www.hooq.info'));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
