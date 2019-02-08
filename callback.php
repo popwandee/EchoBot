@@ -385,7 +385,7 @@ case 'news':
                             ),
                             new UriTemplateActionBuilder(
                                 'เปิดภาพ', // ข้อความแสดงในปุ่ม
-                                'https://www.hooq.info/RTA/'.$image.'.jpg'
+                                "'https://www.hooq.info/RTA/".$image.".jpg'"
                             ),
                             new PostbackTemplateActionBuilder(
                                 'รายละเอียด', // ข้อความแสดงในปุ่ม
