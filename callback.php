@@ -398,7 +398,7 @@ case 'news':
 		          
 		      $image=rand(1,83);
 		      $image2=$image+1;
-		      $image2=$image+2;
+		      $image3=$image+2;
 
 			//  $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                         //  $picThumbnail = "https://www.hooq.info/RTA/$image.jpg";
