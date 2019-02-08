@@ -409,40 +409,40 @@ case 'news':
 		       // กำหนด action 4 ปุ่ม 4 ประเภท
                         $actionBuilder = array(
                             new MessageTemplateActionBuilder(
-                                'Question',// ข้อความแสดงในปุ่ม
-                                'Answer' // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                                '$explodeText[1]',// ข้อความแสดงในปุ่ม
+                                '$text' // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
                             ),
                             new UriTemplateActionBuilder(
-                                'Click', // ข้อความแสดงในปุ่ม
-                                'https://www.hooq.info'
+                                'เปิดภาพ', // ข้อความแสดงในปุ่ม
+                                'https://www.hooq.info/RTA/$image.jpg'
                             ),
                             new PostbackTemplateActionBuilder(
-                                'Postback', // ข้อความแสดงในปุ่ม
+                                'รายละเอียด', // ข้อความแสดงในปุ่ม
                                 http_build_query(array(
                                     'action'=>'answer',
                                     'id'=>100
                                 )), // ข้อมูลที่จะส่งไปใน webhook ผ่าน postback event
-                                'Detail'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                                '$text'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
                             ),      
                         );
                         $replyData = new TemplateMessageBuilder('Carousel',
                             new CarouselTemplateBuilder(
                                 array(
                                     new CarouselColumnTemplateBuilder(
-                                        'คำถาม',
-                                        'answer',
+                                        '$explodeText[1]',
+                                        '$text',
                                         'https://www.hooq.info/RTA/$image.jpg',
                                         $actionBuilder
                                     ),
                                     new CarouselColumnTemplateBuilder(
-                                        'คำถาม',
-                                        'answer',
+                                        '$explodeText[1]',
+                                        '$text',
                                         'https://www.hooq.info/RTA/$image2.jpg',
                                         $actionBuilder
                                     ),
                                     new CarouselColumnTemplateBuilder(
-                                        'คำถาม',
-                                        'answer',
+                                        '$explodeText[1]',
+                                        '$text',
                                         'https://www.hooq.info/RTA/$image3.jpg',
                                         $actionBuilder
                                     ),                                          
