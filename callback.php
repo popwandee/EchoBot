@@ -185,7 +185,7 @@ foreach ($events as $event) {
 		break; // break case #i
 
 	case '#':
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"name":{"$regex":"'.$explodeText[1].'"}}');
+	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}}]}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
@@ -440,22 +440,7 @@ case 'news':
          }//end if event is textMessage
 }// end foreach event
 
-function getSurname($surname){
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$surname.'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                 $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
-	      }
-               return $text;
-		 }
+
 /*
 function pushMsg($arrayHeader,$arrayPostData){
 		 $strUrl ="https://api.line.me/v2/bot/message/push";
