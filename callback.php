@@ -156,7 +156,7 @@ foreach ($events as $event) {
 		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,338);
+			  //$ranNumber=rand(1,407);
 			 // $picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
 			  //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
                          // $picThumbnail = "https://www.hooq.info/photos/thumbnails/tn_$ranNumber.jpg";
@@ -170,7 +170,7 @@ foreach ($events as $event) {
 	                $textReplyMessage= "คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ";
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,338);
+			  //$ranNumber=rand(1,407);
 			  //$picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
                           //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
 			  ////$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
@@ -227,7 +227,7 @@ foreach ($events as $event) {
                   $textReplyMessage= $text;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,338);
+			  //$ranNumber=rand(1,407);
 			 // $picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
                           //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
 			  //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
@@ -240,7 +240,7 @@ case '!':
 		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-		          $image=rand(1,338);
+		          $image=rand(1,407);
 
 			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
                           $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
@@ -395,13 +395,13 @@ case 'news':
                     $textReplyMessage= $text;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-		          $image=rand(1,338);
-/*
-			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
+		          $image=rand(1,83);
+
+			  $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+                          $picThumbnail = "https://www.hooq.info/RTA/$image.jpg";
                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
 			  $multiMessage->add($imageMessage);
-        */
+
 			  $replyData = $multiMessage;
 		break;
             }//end switch
