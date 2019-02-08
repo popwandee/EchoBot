@@ -331,7 +331,7 @@ case '$':
              $source = 'th';
              $target = 'en';
              $trans = new GoogleTranslate();
-             $result = $text_parameter." แปลว่า ";
+             $result = $text_parameter." แปลว่า \n";
              $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
              $bot->replyText($replyToken, $result);
                 break;
@@ -341,9 +341,10 @@ case 'tran':
             $source = 'en';
             $target = 'th';
             $trans = new GoogleTranslate();
-            $result = $text_parameter." แปลว่า ";
+            $result = $text_parameter." แปลว่า \n";
             $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
             $bot->replyText($replyToken, $result);
+            // CustomSearch API key AIzaSyAQTwJ4MkD5NVnDeWefSYcOn8roGcWI-40
                                break;
 case 'Stock':
 case 'stock':
