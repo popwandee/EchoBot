@@ -185,7 +185,7 @@ foreach ($events as $event) {
 		break; // break case #i
 
 	case '#':
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}}]}');
+	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
@@ -208,7 +208,7 @@ foreach ($events as $event) {
 			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
                    break;
-                  
+
 
 case '$':
 		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
