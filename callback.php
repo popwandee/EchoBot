@@ -480,7 +480,7 @@ case 'news':
                 BubbleContainerBuilder::builder()
                     ->setHero(self::createHeroBlock($picFullSize))
                     ->setBody(self::createBodyBlock($question,$answer))
-                    ->setFooter(self::createFooterBlock())
+                    ->setFooter(self::createFooterBlock($picFullSize))
             );
     }
     private static function createHeroBlock($picFullSize)
@@ -499,19 +499,18 @@ case 'news':
             ->setText($question)
             ->setWeight(ComponentFontWeight::BOLD)
             ->setSize(ComponentFontSize::SM);
-	    ->setwrap(true);
         
         $textDetail = TextComponentBuilder::builder()
             ->setText($answer)
             ->setSize(ComponentFontSize::MD)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
-	    ->setwrap(true);
+	    ->setwrap(true)
             ->setFlex(5);
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::SM)
-            ->setContents([$title,  $textDetail]);
+            ->setContents([$title,$textDetail]);
 	
 	    /*    
         $place = BoxComponentBuilder::builder()
@@ -557,13 +556,13 @@ case 'news':
             //->setContents([$review, $info]);
             ->setContents([$review]);
     }
-    private static function createFooterBlock()
+    private static function createFooterBlock($picFullSize)
     {
         
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder('ข้อมูลเพิ่มเติม', 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder('เพิ่มเติม', $picFullSize));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
