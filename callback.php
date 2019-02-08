@@ -491,24 +491,26 @@ case 'news':
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
             ->setAspectMode(ComponentImageAspectMode::COVER)
-            ->setAction(new UriTemplateActionBuilder(null, 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder(null, $picFullSize));
     }
     private static function createBodyBlock($question,$answer)
     {
         $title = TextComponentBuilder::builder()
             ->setText($question)
             ->setWeight(ComponentFontWeight::BOLD)
-            ->setSize(ComponentFontSize::XL);
+            ->setSize(ComponentFontSize::SM);
+	    ->setwrap(true);
         
         $textDetail = TextComponentBuilder::builder()
             ->setText($answer)
-            ->setSize(ComponentFontSize::SM)
+            ->setSize(ComponentFontSize::MD)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
-            ->setFlex(0);
+	    ->setwrap(true);
+            ->setFlex(5);
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
-            ->setMargin(ComponentMargin::MD)
+            ->setMargin(ComponentMargin::SM)
             ->setContents([$title,  $textDetail]);
 	
 	    /*    
@@ -561,7 +563,7 @@ case 'news':
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder('เว็บไซต์', 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder('ข้อมูลเพิ่มเติม', 'https://www.hooq.info'));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
