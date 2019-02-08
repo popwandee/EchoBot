@@ -409,8 +409,8 @@ case 'news':
 		       // กำหนด action 4 ปุ่ม 4 ประเภท
                         $actionBuilder = array(
                             new MessageTemplateActionBuilder(
-                                '$explodeText[1]',// ข้อความแสดงในปุ่ม
-                                '$text' // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                                '"$explodeText[1]"',// ข้อความแสดงในปุ่ม
+                                '"$text"' // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
                             ),
                             new UriTemplateActionBuilder(
                                 'เปิดภาพ', // ข้อความแสดงในปุ่ม
@@ -422,7 +422,7 @@ case 'news':
                                     'action'=>'answer',
                                     'id'=>100
                                 )), // ข้อมูลที่จะส่งไปใน webhook ผ่าน postback event
-                                '$text'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                                '"$text"'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
                             ),      
                         );
                         $replyData = new TemplateMessageBuilder('Carousel',
