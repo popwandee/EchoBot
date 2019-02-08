@@ -183,7 +183,33 @@ foreach ($events as $event) {
 
 
 		break; // break case #i
+    case '$เพิ่มชื่อ':
+    $x_tra = str_replace('$เพิ่มชื่อ ',"", $text);
+    $pieces = explode("|", $x_tra);
+    $rank=$pieces[0];
+    $name=$pieces[1];
+    $lastname=$pieces[2];
+    $nickname=$pieces[3];
+    $position=$pieces[4];
+    $Tel1=$pieces[5];
 
+    //Post New Data
+    $newData = json_encode(array('rank' => $rank,'name'=> $name,'lastname'=> $lastname,'nickname'=> $nickname,'position'=> $position,'Tel1'=> $Tel1) );
+    $opts = array('http' => array( 'method' => "POST",
+                                  'header' => "Content-type: application/json",
+                                  'content' => $newData
+                                   )
+                                );
+    $url = 'https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY;
+    $context = stream_context_create($opts);
+    $returnValue = file_get_contents($url,false,$context);
+    if($returnValue)$text = 'ขอแสดงความยินดีด้วยค่ะ ลิซ่าได้เพิ่มชื่อ'.$rank.' '.$name.' '.$lastname.' '.$Tel1.'ในรายชื่อเรียบร้อยแล้วค่ะ';
+    else $text="ไม่สามารถเพิ่มชื่อได้";
+    $bot->replyText($reply_token, $text);
+
+
+
+  		break; // break case #i
 	case '#':
 	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
               $data = json_decode($json);
