@@ -481,8 +481,7 @@ case 'news':
     }
     private static function createHeroBlock()
     {
-	    $image=rand(1,407);
-	    $url='https://www.hooq.info/photos/'.$image'.jpg';
+	   
         return ImageComponentBuilder::builder()
             ->setUrl('https://www.hooq.info/photos/1.jpg')
             ->setSize(ComponentImageSize::FULL)
@@ -498,7 +497,7 @@ case 'news':
             ->setSize(ComponentFontSize::XL);
         
         $textDetail = TextComponentBuilder::builder()
-            ->setText('ลิซ่าแปลให้นะคะ')
+            ->setText($answer)
             ->setSize(ComponentFontSize::SM)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
@@ -558,7 +557,7 @@ case 'news':
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder('$answer', 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder('เว็บไซต์', 'https://www.hooq.info'));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
