@@ -205,7 +205,7 @@ foreach ($events as $event) {
     $returnValue = file_get_contents($url,false,$context);
     if($returnValue)$text = 'ขอแสดงความยินดีด้วยค่ะ ลิซ่าได้เพิ่มชื่อ'.$rank.' '.$name.' '.$lastname.' '.$Tel1.'ในรายชื่อเรียบร้อยแล้วค่ะ';
     else $text="ไม่สามารถเพิ่มชื่อได้";
-    $bot->replyText($reply_token, $text);
+    $bot->replyText($replyToken, $text);
 
 
 
