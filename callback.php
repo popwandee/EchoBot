@@ -395,7 +395,10 @@ case 'news':
                     $textReplyMessage= $text;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-		          $image=rand(1,83);
+		          
+		      $image=rand(1,83);
+		      $image2=$image+1;
+		      $image2=$image+2;
 
 			  $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                           $picThumbnail = "https://www.hooq.info/RTA/$image.jpg";
@@ -403,6 +406,49 @@ case 'news':
 			  $multiMessage->add($imageMessage);
 
 			  $replyData = $multiMessage;
+		       // กำหนด action 4 ปุ่ม 4 ประเภท
+                        $actionBuilder = array(
+                            new MessageTemplateActionBuilder(
+                                $explodeText[1],// ข้อความแสดงในปุ่ม
+                                $text // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                            ),
+                            new UriTemplateActionBuilder(
+                                'Click', // ข้อความแสดงในปุ่ม
+                                'https://www.hooq.info'
+                            ),
+                            new PostbackTemplateActionBuilder(
+                                'Postback', // ข้อความแสดงในปุ่ม
+                                http_build_query(array(
+                                    'action'=>'answer',
+                                    'id'=>100
+                                )), // ข้อมูลที่จะส่งไปใน webhook ผ่าน postback event
+                                'Detail'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                            ),      
+                        );
+                        $replyData = new TemplateMessageBuilder('Carousel',
+                            new CarouselTemplateBuilder(
+                                array(
+                                    new CarouselColumnTemplateBuilder(
+                                        'คำถาม'.$explodeText[1],
+                                        $text,
+                                        'https://www.hooq.info/RTA/$image.jpg',
+                                        $actionBuilder
+                                    ),
+                                    new CarouselColumnTemplateBuilder(
+                                        'คำถาม'.$explodeText[1],
+                                        $text,
+                                        'https://www.hooq.info/RTA/$image2.jpg',
+                                        $actionBuilder
+                                    ),
+                                    new CarouselColumnTemplateBuilder(
+                                        'คำถาม'.$explodeText[1],
+                                        $text,
+                                        'https://www.hooq.info/RTA/$image3.jpg',
+                                        $actionBuilder
+                                    ),                                          
+                                )
+                            )
+                        );
 		break;
             }//end switch
 
