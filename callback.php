@@ -374,52 +374,27 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
-		      $image=rand(1,83);
-		      $image2=$image+1;
-		      $image3=$image+2;
-		       // กำหนด action 4 ปุ่ม 4 ประเภท
-                        $actionBuilder = array(
-                            new MessageTemplateActionBuilder(
-                                "สมุดรายชื่อ",// ข้อความแสดงในปุ่ม
-                                "รวบรวมรายชื่อเพื่อนพร้อมหมายเลขโทรศัพท์ค่พ" // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
-                            ),
-                            new UriTemplateActionBuilder(
-                                'เปิดภาพ', // ข้อความแสดงในปุ่ม
-                                "'https://www.hooq.info/RTA/".$image.".jpg'"
-                            ),
-                            new PostbackTemplateActionBuilder(
-                                'รายละเอียด', // ข้อความแสดงในปุ่ม
-                                http_build_query(array(
-                                    'action'=>'answer',
-                                    'id'=>100
-                                )), // ข้อมูลที่จะส่งไปใน webhook ผ่าน postback event
-                                'คำตอบ'  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
-                            ),      
-                        );
-                        $replyData = new TemplateMessageBuilder('Carousel',
-                            new CarouselTemplateBuilder(
-                                array(
-                                    new CarouselColumnTemplateBuilder(
-                                        "รถถัง",
-                                        'รถถัง เอ็ม 60 เอ 3',
-                                        "'https://www.hooq.info/RTA/".$image.".jpg'",
-                                        $actionBuilder
-                                    ),
-                                    new CarouselColumnTemplateBuilder(
-                                        'ยานเกราะ',
-                                        'ยานเกราะล้อยาง',
-                                        "'https://www.hooq.info/RTA/".$image2.".jpg'",
-                                        $actionBuilder
-                                    ),
-                                    new CarouselColumnTemplateBuilder(
-                                        'ปืนใหญ่',
-                                        'ปืนใหญ่ต่อสู้อากาศยาน',
-                                        "'https://www.hooq.info/RTA/".$image3.".jpg'",
-                                        $actionBuilder
-                                    ),                                          
-                                )
-                            )
-                        );
+		     $replyData=' {  
+  "type": "flex",
+  "altText": "this is a flex message",
+  "contents": {
+    "type": "bubble",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "hello"
+        },
+        {
+          "type": "text",
+          "text": "world"
+        }
+      ]
+    }
+  }
+}';
 		      break;
           default:
 
