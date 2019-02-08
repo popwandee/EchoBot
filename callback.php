@@ -185,7 +185,7 @@ foreach ($events as $event) {
 		break; // break case #i
 
 	case '#':
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}}]}');
+	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}}]}');
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
@@ -208,55 +208,7 @@ foreach ($events as $event) {
 			  //$multiMessage->add($imageMessage);
 			  $replyData = $multiMessage;
                    break;
-                   case '#ชื่อเล่น':
-                       $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname":"'.$explodeText[1].'"}');
-                       $data = json_decode($json);
-                       $isData=sizeof($data);
-                       if($isData >0){
-                $text="";
-                $count=1;
-                         foreach($data as $rec){
-                           $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                           $count++;
-                         }//end for each
-                 }else{
-               $text= "ไม่พบข้อมูลชื่อเล่น ".$explodeText[1];
-                 }
-                           $bot->replyText($replyToken, $text);
-                            break;
-              case '#ฉายา':
-               $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"nickname2":"'.$explodeText[1].'"}');
-                       $data = json_decode($json);
-                       $isData=sizeof($data);
-                       if($isData >0){
-                $text="";
-                $count=1;
-                         foreach($data as $rec){
-                           $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                           $count++;
-                         }//end for each
-                 }else{
-               $text= "ไม่พบข้อมูลฉายา ".$explodeText[1];
-                 }
-                           $bot->replyText($replyToken, $text);
-                            break;
-
-              case '#นามสกุล':
-               $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"surname":"'.$explodeText[1].'"}');
-                       $data = json_decode($json);
-                       $isData=sizeof($data);
-                       if($isData >0){
-                $text="";
-                $count=1;
-                         foreach($data as $rec){
-                          $text= $text.$count.' '.$rec->name.' '.$rec->surname.' ('.$rec->nickname.' ฉายา '.$rec->nickname2.') '.$rec->jobposition.' โทร'.$rec->telephone.' '.$rec->address."\n\n";
-                           $count++;
-                         }//end for each
-                 }else{
-               $text= "ไม่พบข้อมูลนามสกุล ".$explodeText[1];
-                 }
-                           $bot->replyText($replyToken, $text);
-                            break;
+                  
 
 case '$':
 		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
