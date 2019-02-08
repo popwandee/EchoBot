@@ -399,19 +399,19 @@ case 'news':
                                     new CarouselColumnTemplateBuilder(
                                         "รถถัง",
                                         'รถถัง เอ็ม 60 เอ 3',
-                                        'https://www.hooq.info/RTA/'.$image.'.jpg',
+                                        "'https://www.hooq.info/RTA/".$image.".jpg'",
                                         $actionBuilder
                                     ),
                                     new CarouselColumnTemplateBuilder(
                                         'ยานเกราะ',
                                         'ยานเกราะล้อยาง',
-                                        'https://www.hooq.info/RTA/'.$image2.'.jpg',
+                                        "'https://www.hooq.info/RTA/".$image2.".jpg'",
                                         $actionBuilder
                                     ),
                                     new CarouselColumnTemplateBuilder(
                                         'ปืนใหญ่',
                                         'ปืนใหญ่ต่อสู้อากาศยาน',
-                                        'https://www.hooq.info/RTA/'.$image3.'.jpg',
+                                        "'https://www.hooq.info/RTA/".$image3.".jpg'",
                                         $actionBuilder
                                     ),                                          
                                 )
