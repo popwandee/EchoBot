@@ -19,10 +19,10 @@
 namespace LINE\LINEBot\Event\Parser;
 
 use LINE\LINEBot\Event\MessageEvent;
+use LINE\LINEBot\Event\MessageEvent\UnknownMessage;
+use LINE\LINEBot\Event\UnknownEvent;
 use LINE\LINEBot\Exception\InvalidEventRequestException;
 use LINE\LINEBot\Exception\InvalidSignatureException;
-use LINE\LINEBot\Exception\UnknownEventTypeException;
-use LINE\LINEBot\Exception\UnknownMessageTypeException;
 use LINE\LINEBot\SignatureValidator;
 
 class EventRequestParser
@@ -35,6 +35,7 @@ class EventRequestParser
         'leave' => 'LINE\LINEBot\Event\LeaveEvent',
         'postback' => 'LINE\LINEBot\Event\PostbackEvent',
         'beacon' => 'LINE\LINEBot\Event\BeaconDetectionEvent',
+        'accountLink' => 'LINE\LINEBot\Event\AccountLinkEvent',
     ];
 
     private static $messageType2class = [
@@ -42,6 +43,7 @@ class EventRequestParser
         'image' => 'LINE\LINEBot\Event\MessageEvent\ImageMessage',
         'video' => 'LINE\LINEBot\Event\MessageEvent\VideoMessage',
         'audio' => 'LINE\LINEBot\Event\MessageEvent\AudioMessage',
+        'file' => 'LINE\LINEBot\Event\MessageEvent\FileMessage',
         'location' => 'LINE\LINEBot\Event\MessageEvent\LocationMessage',
         'sticker' => 'LINE\LINEBot\Event\MessageEvent\StickerMessage',
     ];
@@ -53,7 +55,6 @@ class EventRequestParser
      * @return \LINE\LINEBot\Event\BaseEvent[] array
      * @throws InvalidEventRequestException
      * @throws InvalidSignatureException
-     * @throws UnknownEventTypeException
      */
     public static function parseEventRequest($body, $channelSecret, $signature)
     {
@@ -74,10 +75,14 @@ class EventRequestParser
 
         foreach ($parsedReq['events'] as $eventData) {
             $eventType = $eventData['type'];
-            $eventClass = self::$eventType2class[$eventType];
-            if (!isset($eventClass)) {
-                throw new UnknownEventTypeException('Unknown event type has come: ' . $eventType);
+
+            if (!array_key_exists($eventType, self::$eventType2class)) {
+                # Unknown event has come
+                $events[] = new UnknownEvent($eventData);
+                continue;
             }
+
+            $eventClass = self::$eventType2class[$eventType];
 
             if ($eventType === 'message') {
                 $events[] = self::parseMessageEvent($eventData);
@@ -92,16 +97,16 @@ class EventRequestParser
 
     /**
      * @param array $eventData
-     * @return MessageEvent|object
-     * @throws UnknownMessageTypeException
+     * @return MessageEvent
      */
     private static function parseMessageEvent($eventData)
     {
         $messageType = $eventData['message']['type'];
-        $messageClass = self::$messageType2class[$messageType];
-        if (!isset($messageClass)) {
-            throw new UnknownMessageTypeException('Unknown message type has come: ' . $messageType);
+        if (!array_key_exists($messageType, self::$messageType2class)) {
+            return new UnknownMessage($eventData);
         }
+
+        $messageClass = self::$messageType2class[$messageType];
         return new $messageClass($eventData);
     }
 }

@@ -104,16 +104,22 @@ class BaseEvent
     }
 
     /**
+     * Returns the event is unknown or not.
+     *
+     * @return bool
+     */
+    public function isUnknownEvent()
+    {
+        return !($this->isUserEvent() || $this->isGroupEvent() || $this->isRoomEvent());
+    }
+
+    /**
      * Returns user ID of the event.
      *
      * @return string|null
-     * @throws InvalidEventSourceException Raise when called with non user type event.
      */
     public function getUserId()
     {
-        if (!$this->isUserEvent()) {
-            throw new InvalidEventSourceException('This event source is not a user type');
-        }
         return array_key_exists('userId', $this->event['source'])
             ? $this->event['source']['userId']
             : null;
@@ -156,8 +162,7 @@ class BaseEvent
      * (i.e. userId, groupId or roomId).
      *
      * @return null|string
-     *
-     * @throws InvalidEventSourceException Raise when event source type is invalid
+     * @throws InvalidEventSourceException
      */
     public function getEventSourceId()
     {
@@ -173,6 +178,7 @@ class BaseEvent
             return $this->getRoomId();
         }
 
-        throw new InvalidEventSourceException('Invalid event source type, neither `user`, `room` nor `group`');
+        # Unknown event
+        return null;
     }
 }
