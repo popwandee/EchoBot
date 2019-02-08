@@ -498,7 +498,7 @@ case 'news':
             ->setSize(ComponentFontSize::SM)
             ->setColor('#999999')
             ->setMargin(ComponentMargin::MD)
-            ->setFlex(5);
+            ->setFlex(0);
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::MD)
@@ -545,7 +545,8 @@ case 'news':
             ->setContents([$place, $time]);*/
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
-            ->setContents([$review, $info]);
+            //->setContents([$review, $info]);
+            ->setContents([$review]);
     }
     private static function createFooterBlock()
     {
