@@ -422,7 +422,7 @@ case 'news':
                                     'action'=>'answer',
                                     'id'=>100
                                 )), // ข้อมูลที่จะส่งไปใน webhook ผ่าน postback event
-                                $text  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
+                                "'".$text."'"  // ข้อความที่จะแสดงฝั่งผู้ใช้ เมื่อคลิกเลือก
                             ),      
                         );
                         $replyData = new TemplateMessageBuilder('Carousel',
