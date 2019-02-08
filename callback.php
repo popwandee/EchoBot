@@ -238,24 +238,25 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		   $text="";
+		   $result="";
 		   $count=1;
                 foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
+                  $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
                   $count++;
                 }//end for each
+		    $textReplyMessage= $result;
+		    $textMessage = new TextMessageBuilder($textReplyMessage);
+		    $multiMessage->add($textMessage);
+		    $replyData = $multiMessage;   
 	      }else{
 		  $text= "ลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
+		     $result= $text;
+		     $flexData = new ReplyTranslateMessage;
+		     $image=rand(1,83);
+	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+                     $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
 	      }
-                  $textReplyMessage= $text;
-			$textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,407);
-			 // $picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
-                          //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
-			  //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  //$multiMessage->add($imageMessage);
-			  $replyData = $multiMessage;
+                     
                    break;
 
 
@@ -306,9 +307,18 @@ case '!':
             $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
-            if($returnValue)$text = 'ขอบคุณที่สอนลิซ่าค่ะ, ลิซ่าจำได้แล้วว่า '.$explodeText[1]." คือ ".$answer;
-            else $text="Cannot teach Lisa";
-            $bot->replyText($replyToken, $text);
+            if($returnValue){
+		    $text =  'ขอบคุณที่สอนลิซ่าค่ะ';
+		    $text2 = 'ลิซ่าจำได้แล้วว่า '.$explodeText[1]." คือ ".$answer;
+	    }else{ $text="Cannot teach Lisa";
+		  $text2 = '';
+		 }
+            
+          
+		     $flexData = new ReplyTranslateMessage;
+		     $image=rand(1,83);
+	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+                     $replyData = $flexData->get($text,$text2,$picFullSize);
             break;
 		      // ---------------------------------------------------------------------------//
 
@@ -322,8 +332,8 @@ case '!':
 		       $question = $text_parameter;
 		     $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,407);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+		     $image=rand(1,83);
+	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                      $replyData = $flexData->get($question,$answer,$picFullSize);
              
                 break;
@@ -337,8 +347,8 @@ case 'tran':
            $question = $text_parameter;
 		      $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,407);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+		     $image=rand(1,83);
+	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                      $replyData = $flexData->get($question,$answer,$picFullSize);
                                break;
 case 'Stock':
@@ -431,13 +441,13 @@ case 'news':
 
 
                 $textReplyMessage= $text;		          
-		      $image=rand(1,409);
+		     
 		//$picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                       $question = $explodeText[0];
 		      $answer = $text;
 		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,407);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+		     $image=rand(1,83);
+	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
                      $replyData = $flexData->get($question,$answer,$picFullSize);
 		break;
             }//end switch
