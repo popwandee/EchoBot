@@ -318,8 +318,7 @@ case '!':
              $source = 'th';
              $target = 'en';
              $trans = new GoogleTranslate();
-             $result = $text_parameter." แปลว่า \n";
-             $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
+            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
 		       $question = $text_parameter;
 		     $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
@@ -334,8 +333,7 @@ case 'tran':
             $source = 'en';
             $target = 'th';
             $trans = new GoogleTranslate();
-            $result = $text_parameter." แปลว่า \n";
-            $result = $result.$trans->translate($source, $target, $text_parameter)." ค่ะ";
+            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
            $question = $text_parameter;
 		      $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
@@ -432,20 +430,15 @@ case 'news':
               }//end no data from server
 
 
-                $textReplyMessage= $text;
-		$textMessage = new TextMessageBuilder($textReplyMessage);
-		$multiMessage->add($textMessage);
-		          
-		      $image=rand(1,83);
-		      $image2=$image+1;
-		      $image3=$image+2;
-
-		$picFullSize = "https://www.hooq.info/RTA/$image.jpg";
-                $picThumbnail = "https://www.hooq.info/RTA/$image.jpg";
-                $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-		$multiMessage->add($imageMessage);
-                $replyData = $multiMessage;
-		      
+                $textReplyMessage= $text;		          
+		      $image=rand(1,409);
+		//$picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+                      $question = $explodeText[0];
+		      $answer = $text;
+		     $flexData = new ReplyTranslateMessage;
+		     $image=rand(1,407);
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+                     $replyData = $flexData->get($question,$answer,$picFullSize);
 		break;
             }//end switch
 
@@ -562,6 +555,7 @@ case 'news':
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
+            ->setFlex(0)
             ->setAction(new UriTemplateActionBuilder('เพิ่มเติม', $picFullSize));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
