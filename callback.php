@@ -185,7 +185,7 @@ foreach ($events as $event) {
 		break; // break case #i
     case '$เพิ่มชื่อ':
     $x_tra = str_replace('$เพิ่มชื่อ ',"", $text);
-    $pieces = explode("|", $x_tra);
+    $pieces = explode(" ", $x_tra);
     $rank=$pieces[0];
     $name=$pieces[1];
     $lastname=$pieces[2];
@@ -203,7 +203,7 @@ foreach ($events as $event) {
     $url = 'https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY;
     $context = stream_context_create($opts);
     $returnValue = file_get_contents($url,false,$context);
-    if($returnValue)$text = 'ขอแสดงความยินดีด้วยค่ะ ลิซ่าได้เพิ่มชื่อ'.$rank.' '.$name.' '.$lastname.' '.$Tel1.'ในรายชื่อเรียบร้อยแล้วค่ะ';
+    if($returnValue)$text = 'ขอแสดงความยินดีด้วยค่ะ ลิซ่าได้เพิ่มชื่อ '.$rank.' '.$name.' '.$lastname.' '.$Tel1.'ในรายชื่อเรียบร้อยแล้วค่ะ';
     else $text="ไม่สามารถเพิ่มชื่อได้";
     $bot->replyText($replyToken, $text);
 
