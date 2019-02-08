@@ -374,6 +374,9 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
+		      $image=rand(1,83);
+		      $image2=$image+1;
+		      $image3=$image+2;
 		       // กำหนด action 4 ปุ่ม 4 ประเภท
                         $actionBuilder = array(
                             new MessageTemplateActionBuilder(
