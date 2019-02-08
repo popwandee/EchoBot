@@ -558,7 +558,7 @@ case 'news':
         $websiteButton = ButtonComponentBuilder::builder()
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
-            ->setAction(new UriTemplateActionBuilder($answer, 'https://www.hooq.info'));
+            ->setAction(new UriTemplateActionBuilder('$answer', 'https://www.hooq.info'));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
