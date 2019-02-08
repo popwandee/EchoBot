@@ -484,7 +484,7 @@ case 'news':
 	    $image=rand(1,407);
 	    $url='https://www.hooq.info/photos/'.$image'.jpg';
         return ImageComponentBuilder::builder()
-            ->setUrl($url)
+            ->setUrl('https://www.hooq.info/photos/1.jpg')
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
             ->setAspectMode(ComponentImageAspectMode::COVER)
