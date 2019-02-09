@@ -506,7 +506,7 @@ case 'news':
         $textDetail = TextComponentBuilder::builder()
             ->setText($answer)
             ->setSize(ComponentFontSize::LG)
-            ->setColor('#999999')
+            ->setColor('#000000')
             ->setMargin(ComponentMargin::MD)
 	    ->setwrap(true)
             ->setFlex(5);
@@ -566,7 +566,7 @@ case 'news':
             ->setStyle(ComponentButtonStyle::LINK)
             ->setHeight(ComponentButtonHeight::SM)
             ->setFlex(0)
-            ->setAction(new UriTemplateActionBuilder('เพิ่มเติม', $picFullSize));
+            ->setAction(new UriTemplateActionBuilder('เพิ่มเติม','https://www.hooq.info'));
         $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
