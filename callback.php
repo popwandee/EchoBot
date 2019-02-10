@@ -66,9 +66,9 @@ use LINE\LINEBot\QuickReplyBuilder\ButtonBuilder\QuickReplyButtonBuilder;
 use LINE\LINEBot\QuickReplyBuilder\QuickReplyMessageBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
-define("MLAB_API_KEY", '6QxfLc4uRn3rmvmevWrlgzsWtzTXBW7CYVsQv');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0drmvme4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF0rmvme0iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
 $bot = new \LINE\LINEBot(
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
@@ -446,8 +446,8 @@ case 'news':
                       $question = $explodeText[0];
 		      $answer = $text;
 		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+		     $image=rand(1,409);
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
                      $replyData = $flexData->get($question,$answer,$picFullSize);
 		break;
             }//end switch
