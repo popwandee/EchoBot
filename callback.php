@@ -66,9 +66,9 @@ use LINE\LINEBot\QuickReplyBuilder\ButtonBuilder\QuickReplyButtonBuilder;
 use LINE\LINEBot\QuickReplyBuilder\QuickReplyMessageBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
-define("MLAB_API_KEY", '6QxfLc4uRnrmvme3vWrlgzsWtzTXBW7CYVsQv');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b543rmvme81bcbd0345be0d4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33rmvmetIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
+define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
 $bot = new \LINE\LINEBot(
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
@@ -276,12 +276,17 @@ case '!':
                           $picThumbnail = "https://www.hooq.info/photos/$image2.jpg";
                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
 			  $multiMessage->add($imageMessage);
-		       $image3=$image+2;
+		          $image3=$image+2;
 
 			  $picFullSize = "https://www.hooq.info/photos/$image3.jpg";
                           $picThumbnail = "https://www.hooq.info/photos/$image3.jpg";
                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
 			  $multiMessage->add($imageMessage);
+		      
+			  $$originalContentUrl = "https://www.facebook.com/ExquisiteKawaiiMagazine/videos/384726295595053/";
+                          $previewImageUrl = "https://scontent.fbkk5-6.fna.fbcdn.net/v/t1.0-9/50464567_612020695917736_3863943044101308416_o.jpg";
+                          $videoMessage = new VideoMessageBuilder($originalContentUrl, $previewImageUrl,);
+			  $multiMessage->add($videoMessage);
 
 			  $replyData = $multiMessage;
 		break; //break case $
@@ -415,11 +420,11 @@ case 'news':
                                        $bot->replyText($replyToken, $text);
                                         break;
 	      case '@51':
-		      
-		      $question = "Question is?";
-		      $answer = "Answer is ...";
-		     $flexData = new FlexReplyMessageBuilder;
-                     $replyData = $flexData->get($question,$answer);
+		      $question = $text_parameter;
+		      $answer = $result;
+		     $flexData = new ReplyTranslateMessage;
+	             $videoUrl = "https://www.facebook.com/ExquisiteKawaiiMagazine/videos/384726295595053/";
+                     $replyData = $flexData->get($question,$answer,$videoUrl);
 		      break;
           default:
 
