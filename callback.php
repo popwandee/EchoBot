@@ -284,7 +284,7 @@ case '!':
 			  $multiMessage->add($imageMessage);
 		      
 			  $$originalContentUrl = "https://www.facebook.com/ExquisiteKawaiiMagazine/videos/384726295595053/";
-                          $previewImageUrl = "https://scontent.fbkk5-6.fna.fbcdn.net/v/t1.0-9/50464567_612020695917736_3863943044101308416_o.jpg";
+                          $previewImageUrl = "https://scontent.fbkk5-6.fna.fbcdn.net/v/t1.0-9/50464567_612020695917736_3863943044101308416_o.jpg?_nc_cat=101&_nc_ht=scontent.fbkk5-6.fna&oh=3fd7bdc5722cfec5f8bfdf44fe86d417&oe=5CE141D4";
                           $videoMessage = new VideoMessageBuilder($originalContentUrl, $previewImageUrl,);
 			  $multiMessage->add($videoMessage);
 
