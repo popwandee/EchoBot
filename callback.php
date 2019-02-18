@@ -244,8 +244,9 @@ foreach ($events as $event) {
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
                   if(!is_null($rec->Image)){
 			  $imageUrl=$rec->Image;
+			  $result=$result.$imageUrl;
 		  }else{
-		 	 $imageUrl="https://www.hooq.info/photos/100.jpg";
+		 	 $imageUrl="http://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
 		  }
 			$count++;
                 }//end for each
@@ -262,7 +263,7 @@ foreach ($events as $event) {
 		     $result= $text;
 		     $flexData = new ReplyTranslateMessage;
 		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+	             $picFullSize = "http://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
                      $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
 	      }
                      
