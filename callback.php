@@ -243,10 +243,8 @@ foreach ($events as $event) {
                 foreach($data as $rec){
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
                   if(!is_null($rec->Image)){
-			  $result= $result.'มีรูปนะครับ'.$rec->Image;
-		 	 $imageUrl="https://www.hooq.info/photos/".$rec->Image;
+		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
 		  }else{
-			  $result= $result." ไม่มีรูปนะครับ";
 		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
 		  }
 			$count++;
