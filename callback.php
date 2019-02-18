@@ -244,9 +244,10 @@ foreach ($events as $event) {
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
                   if(!is_null($rec->Image)){
 			  $result= $result." มีรูปนะครับ";
+		 	 $imageUrl="https://www.hooq.info/photos/300.jpg";
 		  }else{
 			  $result= $result." ไม่มีรูปนะครับ";
-		 	 $imageUrl="https://www.hooq.info/photos/200.jpg";
+		 	 $imageUrl="https://www.hooq.info/photos/300.jpg";
 		  }
 			$count++;
                 }//end for each
@@ -263,7 +264,7 @@ foreach ($events as $event) {
 		     $result= $text;
 		     $flexData = new ReplyTranslateMessage;
 		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/photos/200.jpg";
+	             $picFullSize = "https://www.hooq.info/photos/400.jpg";
                      $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
 	      }
                      
