@@ -245,7 +245,7 @@ foreach ($events as $event) {
                   if(!is_null($rec->Image)){
 			  $imageUrl="https://www.hooq.info/photos/200.jpg";
 		  }else{
-		 	 $imageUrl="http://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
+		 	 $imageUrl="https://www.hooq.info/photos/200.jpg";
 		  }
 			$count++;
                 }//end for each
@@ -262,7 +262,7 @@ foreach ($events as $event) {
 		     $result= $text;
 		     $flexData = new ReplyTranslateMessage;
 		     $image=rand(1,83);
-	             $picFullSize = "http://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
+	             $picFullSize = "https://www.hooq.info/photos/200.jpg";
                      $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
 	      }
                      
