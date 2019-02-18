@@ -245,7 +245,7 @@ foreach ($events as $event) {
                   if(!is_null($rec->Image)){
 			  $imageUrl=$rec->Image;
 		  }else{
-		 	 $imageUrl="https://www.hooq.info/photos/3.jpg";
+		 	 $imageUrl="https://www.hooq.info/photos/100.jpg";
 		  }
 			$count++;
                 }//end for each
