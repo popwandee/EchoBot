@@ -242,15 +242,15 @@ foreach ($events as $event) {
 		   $count=1;
                 foreach($data as $rec){
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                  if(!is_null($rec->Image)){$imageUrl=$rec->Image;}
+                  if(!is_null($rec->Image)){
+			  $imageUrl=$rec->Image;
+		  }else{
+		 	 $imageUrl="https://www.hooq.info/photos/3.jpg";
+		  }
 			$count++;
                 }//end for each
 		    $textReplyMessage= $result;
 		     $flexData = new ReplyTranslateMessage;
-		      if(is_null($imageUrl)){
-			      $imageUrl="https://www.hooq.info/photos/3.jpg";
-		      }
-		     
                      $replyData = $flexData->get($explodeText[1],$textReplyMessage,$imageUrl);
 		      /*
 		    $textMessage = new TextMessageBuilder($textReplyMessage);
