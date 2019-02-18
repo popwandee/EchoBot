@@ -247,9 +247,7 @@ foreach ($events as $event) {
                 }//end for each
 		    $textReplyMessage= $result;
 		     $flexData = new ReplyTranslateMessage;
-		      if(!is_null($rec->Image)){
-			      $imageUrl=$rec->Image;
-		      }else{
+		      if(is_null($imageUrl)){
 			      $imageUrl="https://www.hooq.info/photos/3.jpg";
 		      }
 		     
