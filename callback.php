@@ -245,6 +245,7 @@ foreach ($events as $event) {
                   if(!is_null($rec->Image)){
 			  $result= $result." มีรูปนะครับ";
 		  }else{
+			  $result= $result." ไม่มีรูปนะครับ";
 		 	 $imageUrl="https://www.hooq.info/photos/200.jpg";
 		  }
 			$count++;
