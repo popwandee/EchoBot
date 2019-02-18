@@ -243,7 +243,7 @@ foreach ($events as $event) {
                 foreach($data as $rec){
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
                   if(!is_null($rec->Image)){
-			  $imageUrl="$rec->Image";
+			  $imageUrl=$rec->Image;
 		  }else{
 		 	 $imageUrl="https://www.hooq.info/photos/200.jpg";
 		  }
