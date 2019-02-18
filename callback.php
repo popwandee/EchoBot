@@ -242,18 +242,29 @@ foreach ($events as $event) {
 		   $count=1;
                 foreach($data as $rec){
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                  $count++;
+                  if(!is_null($rec->Image)){$imageUrl=$rec->Image;}
+			$count++;
                 }//end for each
 		    $textReplyMessage= $result;
+		     $flexData = new ReplyTranslateMessage;
+		      if(!is_null($rec->Image)){
+			      $imageUrl=$rec->Image;
+		      }else{
+			      $imageUrl="https://www.hooq.info/photos/3.jpg";
+		      }
+		     
+                     $replyData = $flexData->get($explodeText[1],$textReplyMessage,$imageUrl);
+		      /*
 		    $textMessage = new TextMessageBuilder($textReplyMessage);
 		    $multiMessage->add($textMessage);
-		    $replyData = $multiMessage;   
+		    $replyData = $multiMessage;  
+		    */
 	      }else{
 		  $text= "ลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
 		     $result= $text;
 		     $flexData = new ReplyTranslateMessage;
 		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/RTA/$image.jpg";
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
                      $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
 	      }
                      
