@@ -352,7 +352,7 @@ case '!':
 		   }// end switch
 	   }// end if
              $trans = new GoogleTranslate();
-            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
+            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
 		       $question = $text_parameter;
 		     $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
@@ -367,7 +367,7 @@ case 'tran':
             $source = 'en';
             $target = 'th';
             $trans = new GoogleTranslate();
-            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
+            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
            $question = $text_parameter;
 		      $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
@@ -388,7 +388,7 @@ case '#tran':
 	   }// end if
             $target = 'th';
             $trans = new GoogleTranslate();
-            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
+            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
            $question = $text_parameter;
 		      $answer = $result;
 		     $flexData = new ReplyTranslateMessage;
