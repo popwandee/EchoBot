@@ -339,10 +339,18 @@ case '!':
 		      // ---------------------------------------------------------------------------//
 
  case 'แปล':
-             $text_parameter = str_replace("แปล ","", $text);
-             $text_parameter = str_replace("แปล ","", $text_parameter);
+             //$text_parameter = str_replace("แปล ","", $text);
+             //$text_parameter = str_replace("แปล ","", $text_parameter);
              $source = 'th';
-             $target = 'en';
+           $text_parameter = str_replace("#tran ","", $text);  
+           if (!is_null($explodeText[1])){
+		   switch ($explodeText[1]) {
+			case 'cn': $target = 'cn' ;$text_parameter = str_replace("cn","", $text_parameter); break;
+			case 'ko': $target = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
+			case 'de': $target = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
+			default: $target = 'th'; break;
+		   }// end switch
+	   }// end if
              $trans = new GoogleTranslate();
             $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
 		       $question = $text_parameter;
@@ -367,6 +375,28 @@ case 'tran':
 	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
                      $replyData = $flexData->get($question,$answer,$picFullSize);
                                break;
+case '#tran':
+		      
+            $text_parameter = str_replace("#tran ","", $text);  
+           if (!is_null($explodeText[1])){
+		   switch ($explodeText[1]) {
+			case 'cn': $source = 'cn' ;$text_parameter = str_replace("cn","", $text_parameter); break;
+			case 'ko': $source = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
+			case 'de': $source = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
+			default: $source = 'en'; break;
+		   }// end switch
+	   }// end if
+            $target = 'th';
+            $trans = new GoogleTranslate();
+            $result = "แปลว่า ".$trans->translate($source, $target, $text_parameter)." ค่ะ";
+           $question = $text_parameter;
+		      $answer = $result;
+		     $flexData = new ReplyTranslateMessage;
+		     $image=rand(1,409);
+	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
+                     $replyData = $flexData->get($question,$answer,$picFullSize);
+                               break;
+
 case 'Stock':
 case 'stock':
             $symbol=$explodeText[1];
