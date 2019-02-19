@@ -380,7 +380,7 @@ case '#tran':
             $text_parameter = str_replace("#tran ","", $text);  
            if (!is_null($explodeText[1])){
 		   switch ($explodeText[1]) {
-			case 'cn': $source = 'cn' ;$text_parameter = str_replace("cn","", $text_parameter); break;
+			case 'cn': $source = 'zh-CN' ;$text_parameter = str_replace("cn","", $text_parameter); break;
 			case 'ko': $source = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
 			case 'de': $source = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
 			default: $source = 'en'; break;
