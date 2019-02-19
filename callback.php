@@ -520,28 +520,28 @@ class ReplyTranslateMessage
      *
      * @return \LINE\LINEBot\MessageBuilder\FlexMessageBuilder
      */
-    public static function get($question,$answer,$picFullSize)
+    public static function get($question,$answer,$picUrl)
     {
         return FlexMessageBuilder::builder()
             ->setAltText('Lisa')
             ->setContents(
                 BubbleContainerBuilder::builder()
-                    ->setHero(self::createHeroBlock($picFullSize))
-                    ->setBody(self::createBodyBlock($question,$answer))
-                    ->setFooter(self::createFooterBlock($picFullSize))
+                    ->setHero(self::createHeroBlock($picUrl))
+                    ->setBody(self::createBodyBlock($question,$answer,$picUrl))
+                    ->setFooter(self::createFooterBlock($picUrl))
             );
     }
-    private static function createHeroBlock($picFullSize)
+    private static function createHeroBlock($picUrl)
     {
 	   
         return ImageComponentBuilder::builder()
-            ->setUrl($picFullSize)
+            ->setUrl($picUrl)
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
             ->setAspectMode(ComponentImageAspectMode::FIT)
-            ->setAction(new UriTemplateActionBuilder(null, $picFullSize));
+            ->setAction(new UriTemplateActionBuilder(null, $picUrl));
     }
-    private static function createBodyBlock($question,$answer)
+    private static function createBodyBlock($question,$answer,$picUrl)
     {
         $title = TextComponentBuilder::builder()
             ->setText($question)
@@ -555,13 +555,19 @@ class ReplyTranslateMessage
             ->setMargin(ComponentMargin::MD)
 	    ->setwrap(true)
             ->setFlex(2);
+	   $image = ImageComponentBuilder::builder()
+            ->setUrl($picUrl)
+            ->setSize(ComponentImageSize::FULL)
+            ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
+            ->setAspectMode(ComponentImageAspectMode::FIT)
+            //->setAction(new UriTemplateActionBuilder(null, $picUrl));
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
             //->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::LG)
             //->setMargin(ComponentMargin::SM)
             ->setSpacing(ComponentSpacing::SM)
-            ->setContents([$title,$textDetail]);
+            ->setContents([$title,$textDetai,$imagel]);
 	
 	    /*    
         $place = BoxComponentBuilder::builder()
@@ -607,7 +613,7 @@ class ReplyTranslateMessage
             //->setContents([$review, $info]);
             ->setContents([$review,$review]);
     }
-    private static function createFooterBlock($picFullSize)
+    private static function createFooterBlock($picUrl)
     {
         
         $websiteButton = ButtonComponentBuilder::builder()
