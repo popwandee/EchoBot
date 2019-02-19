@@ -567,7 +567,7 @@ class ReplyTranslateMessage
             ->setMargin(ComponentMargin::LG)
             //->setMargin(ComponentMargin::SM)
             ->setSpacing(ComponentSpacing::SM)
-            ->setContents([$title,$textDetai,$imagel]);
+            ->setContents([$title,$textDetail,$image]);
 	
 	    /*    
         $place = BoxComponentBuilder::builder()
@@ -611,7 +611,7 @@ class ReplyTranslateMessage
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
             //->setContents([$review, $info]);
-            ->setContents([$review,$review]);
+            ->setContents([$review]);
     }
     private static function createFooterBlock($picUrl)
     {
