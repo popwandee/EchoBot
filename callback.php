@@ -513,8 +513,7 @@ case 'news':
 }// end foreach event
 
 
-
-    class ReplyTranslateMessage
+class ReplyTranslateMessage
 {
     /**
      * Create  flex message
@@ -555,10 +554,13 @@ case 'news':
             ->setColor('#000000')
             ->setMargin(ComponentMargin::MD)
 	    ->setwrap(true)
-            ->setFlex(5);
+            ->setFlex(2);
         $review = BoxComponentBuilder::builder()
-            ->setLayout(ComponentLayout::BASELINE)
-            ->setMargin(ComponentMargin::SM)
+            ->setLayout(ComponentLayout::VERTICAL)
+            //->setLayout(ComponentLayout::BASELINE)
+            ->setMargin(ComponentMargin::LG)
+            //->setMargin(ComponentMargin::SM)
+            ->setSpacing(ComponentSpacing::SM)
             ->setContents([$title,$textDetail]);
 	
 	    /*    
