@@ -342,13 +342,13 @@ case '!':
              //$text_parameter = str_replace("แปล ","", $text);
              //$text_parameter = str_replace("แปล ","", $text_parameter);
              $source = 'th';
-           $text_parameter = str_replace("#tran ","", $text);  
+           $text_parameter = str_replace("แปล ","", $text);  
            if (!is_null($explodeText[1])){
 		   switch ($explodeText[1]) {
 			case 'cn': $target = 'cn' ;$text_parameter = str_replace("cn","", $text_parameter); break;
 			case 'ko': $target = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
 			case 'de': $target = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
-			default: $target = 'th'; break;
+			default: $target = 'en'; break;
 		   }// end switch
 	   }// end if
              $trans = new GoogleTranslate();
