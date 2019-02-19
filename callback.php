@@ -546,8 +546,8 @@ class ReplyTranslateMessage
         $title = TextComponentBuilder::builder()
             ->setText($question)
             ->setWeight(ComponentFontWeight::BOLD)
-            ->setSize(ComponentFontSize::SM);
 	    ->setwrap(true)
+            ->setSize(ComponentFontSize::SM);
         
         $textDetail = TextComponentBuilder::builder()
             ->setText($answer)
