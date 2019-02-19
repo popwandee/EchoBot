@@ -238,14 +238,16 @@ foreach ($events as $event) {
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		   $result="";
-		   $count=1;
+		   $result = "";
+		   $count = 1;
+		   $hasImageUrlStatus = false;
+		      // default image for flex message
+		   $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
                 foreach($data as $rec){
                   $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                  if(!is_null($rec->Image)){
+                  if(!is_null($rec->Image) and (!$hasImageUrlStatus)){
+			 $imageUrlStatus=true;
 		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
-		  }else{
-		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
 		  }
 			$count++;
                 }//end for each
