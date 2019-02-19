@@ -527,7 +527,7 @@ class ReplyTranslateMessage
             ->setContents(
                 BubbleContainerBuilder::builder()
                     ->setHero(self::createHeroBlock($picUrl))
-                    ->setBody(self::createBodyBlock($question,$answer,$picUrl))
+                    ->setBody(self::createBodyBlock($question,$answer))
                     ->setFooter(self::createFooterBlock($picUrl))
             );
     }
@@ -541,7 +541,7 @@ class ReplyTranslateMessage
             ->setAspectMode(ComponentImageAspectMode::FIT)
             ->setAction(new UriTemplateActionBuilder(null, $picUrl));
     }
-    private static function createBodyBlock($question,$answer,$picUrl)
+    private static function createBodyBlock($question,$answer)
     {
         $title = TextComponentBuilder::builder()
             ->setText($question)
@@ -555,19 +555,13 @@ class ReplyTranslateMessage
             ->setMargin(ComponentMargin::MD)
 	    ->setwrap(true)
             ->setFlex(2);
-	   $image = ImageComponentBuilder::builder()
-            ->setUrl($picUrl)
-            ->setSize(ComponentImageSize::FULL)
-            ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
-            ->setAspectMode(ComponentImageAspectMode::FIT)
-            //->setAction(new UriTemplateActionBuilder(null, $picUrl));
         $review = BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
             //->setLayout(ComponentLayout::BASELINE)
             ->setMargin(ComponentMargin::LG)
             //->setMargin(ComponentMargin::SM)
             ->setSpacing(ComponentSpacing::SM)
-            ->setContents([$title,$textDetail,$image]);
+            ->setContents([$title,$textDetail]);
 	
 	    /*    
         $place = BoxComponentBuilder::builder()
