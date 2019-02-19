@@ -538,7 +538,7 @@ class ReplyTranslateMessage
             ->setUrl($picFullSize)
             ->setSize(ComponentImageSize::FULL)
             ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
-            ->setAspectMode(ComponentImageAspectMode::COVER)
+            ->setAspectMode(ComponentImageAspectMode::FIT)
             ->setAction(new UriTemplateActionBuilder(null, $picFullSize));
     }
     private static function createBodyBlock($question,$answer)
@@ -605,7 +605,7 @@ class ReplyTranslateMessage
         return BoxComponentBuilder::builder()
             ->setLayout(ComponentLayout::VERTICAL)
             //->setContents([$review, $info]);
-            ->setContents([$review]);
+            ->setContents([$review,$review]);
     }
     private static function createFooterBlock($picFullSize)
     {
