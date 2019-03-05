@@ -117,7 +117,7 @@ foreach ($events as $event) {
 	    
       switch ($explodeText[0]) {
 
-	case '#i':
+	case '#':
 
 		/* ส่วนดึงข้อมูลจากฐานข้อมูล */
 		if (!is_null($explodeText[1])){
@@ -160,136 +160,31 @@ foreach ($events as $event) {
 
 
 		break; // break case #i
-    case '$เพิ่มชื่อ':
-    $x_tra = str_replace('$เพิ่มชื่อ ',"", $text);
-    $pieces = explode(" ", $x_tra);
-    $rank=$pieces[0];
-    $name=$pieces[1];
-    $lastname=$pieces[2];
-    $nickname=$pieces[3];
-    $position=$pieces[4];
-    $Tel1=$pieces[5];
-
-    //Post New Data
-    $newData = json_encode(array('rank' => $rank,'name'=> $name,'lastname'=> $lastname,'nickname'=> $nickname,'position'=> $position,'Tel1'=> $Tel1) );
-    $opts = array('http' => array( 'method' => "POST",
-                                  'header' => "Content-type: application/json",
-                                  'content' => $newData
-                                   )
-                                );
-    $url = 'https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY;
-    $context = stream_context_create($opts);
-    $returnValue = file_get_contents($url,false,$context);
-    if($returnValue)$text = "ขอแสดงความยินดีด้วยค่ะ\n ลิซ่าได้เพิ่มชื่อ \n".$rank." ".$name." ".$lastname." ".$Tel1."\n ในรายชื่อเรียบร้อยแล้วค่ะ";
-    else $text="ไม่สามารถเพิ่มชื่อได้";
-    $bot->replyText($replyToken, $text);
-
-
-
-  		break; // break case #i
-	case '#':
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $result = "";
-		   $count = 1;
-		   $hasImageUrlStatus = false;
-		      // default image for flex message
-		   $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
-                foreach($data as $rec){
-                  $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                  if(!is_null($rec->Image) and (!$hasImageUrlStatus)){
-			 $imageUrlStatus=true;
-		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
-		  }
-			$count++;
-                }//end for each
-		    $textReplyMessage= $result;
-		     $flexData = new ReplyTranslateMessage;
-                     $replyData = $flexData->get($explodeText[1],$textReplyMessage,$imageUrl);
-		      /*
-		    $textMessage = new TextMessageBuilder($textReplyMessage);
-		    $multiMessage->add($textMessage);
-		    $replyData = $multiMessage;  
-		    */
-	      }else{
-		  $text= "ลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
-		     $result= $text;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/photos/300.jpg";
-                     $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
-	      }
-                     
-                   break;
-
-
-case '!':
-		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
-			  $textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-		          $image=rand(1,407);
-
-			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image2=$image+1;
-
-			  $picFullSize = "https://www.hooq.info/photos/$image2.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image2.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image3=$image+2;
-
-			  $picFullSize = "https://www.hooq.info/photos/$image3.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image3.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		      
-			  $originalContentUrl = "https://www.facebook.com/watch/?v=384726295595053";
-                          $previewImageUrl = "https://scontent.fbkk5-1.fna.fbcdn.net/v/t1.0-9/51654938_2088631114715709_563114124251234304_n.jpg?_nc_cat=109&_nc_ht=scontent.fbkk5-1.fna&oh=c5eacfede9a2e52acd9452cd90658d5d&oe=5CF83498";
-                          $videoMessage = new VideoMessageBuilder($originalContentUrl, $previewImageUrl,);
-			  $multiMessage->add($videoMessage);
-
-			  $replyData = $multiMessage;
-		break; //break case $
-
-  case '$lisa':
-
-            //Post New Data
-		    $indexCount=1;$answer='';
-	    foreach($explodeText as $rec){
-		    $indexCount++;
-		    if($indexCount>1){
-		    $answer= $answer." ".$explodeText[$indexCount];
-		    }
-	    }
-            $newData = json_encode(array('question' => $explodeText[1],'answer'=> $answer) );
-            $opts = array('http' => array( 'method' => "POST",
-                                          'header' => "Content-type: application/json",
-                                          'content' => $newData
-                                           )
-                                        );
-            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
-            $context = stream_context_create($opts);
-            $returnValue = file_get_contents($url,false,$context);
-            if($returnValue){
-		    $text =  'ขอบคุณที่สอนลิซ่าค่ะ';
-		    $text2 = 'ลิซ่าจำได้แล้วว่า '.$explodeText[1]." คือ ".$answer;
-	    }else{ $text="Cannot teach Lisa";
-		  $text2 = '';
-		 }
+case '#i':
+              $x_tra = str_replace("#i ","", $text);
+              $pieces = explode("|", $x_tra);
+	         
+              $_nationid=$pieces[0];
+              $_name=$pieces[1];
+              $_address=$pieces[2];
+              $_note=$pieces[3];
             
-          
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($text,$text2,$picFullSize);
-            break;
+              //Post New Data
+
+              $newData = json_encode(array('nationid' => $_nationid,'name'=> $_name,'address'=> $_address,'note'=> $_note) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue)$text = 'เพิ่มคนสำเร็จแล้ว';
+              else $text="ไม่สามารถเพิ่มคนได้";
+              $bot->replyText($reply_token, $text);
+              break;
+
 		      // ---------------------------------------------------------------------------//
 
  case 'แปล':
