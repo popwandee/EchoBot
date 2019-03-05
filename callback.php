@@ -185,6 +185,47 @@ case '#i':
               $bot->replyText($reply_token, $text);
               break;
 
+case '$':
+		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
+              $data = json_decode($json);
+              $isData=sizeof($data);
+              if($isData >0){
+		   $text="";
+		   $count=1;
+                foreach($data as $rec){
+                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
+                  $count++;
+                }//end for each
+	      }else{
+		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
+	      }
+                  $bot->replyText($reply_token, $text);
+                   break;
+ case '$i':
+              $x_tra = str_replace("$i ","", $text);
+              $pieces = explode("|", $x_tra);
+              $_licence_plate=$pieces[0];
+              $_brand=$pieces[1];
+              $_model=$pieces[2];
+              $_color=$pieces[3];
+              $_owner=$pieces[4];
+              $_user=$pieces[5];
+              $_note=$pieces[6];
+              //Post New Data
+              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
+              $opts = array('http' => array( 'method' => "POST",
+                                            'header' => "Content-type: application/json",
+                                            'content' => $newData
+                                             )
+                                          );
+              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
+              $context = stream_context_create($opts);
+              $returnValue = file_get_contents($url,false,$context);
+              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
+              else $text="ไม่สามารถเพิ่มรถได้";
+              $bot->replyText($reply_token, $text);
+
+              break;
 		      // ---------------------------------------------------------------------------//
 
  case 'แปล':
@@ -197,6 +238,8 @@ case '#i':
 			case 'cn': $target = 'zh-CN' ;$text_parameter = str_replace("cn","", $text_parameter); break;
 			case 'ko': $target = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
 			case 'de': $target = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
+			case 'ms': $target = 'ms' ;$text_parameter = str_replace("ms","", $text_parameter); break;
+			case 'id': $target = 'id' ;$text_parameter = str_replace("id","", $text_parameter); break;
 			default: $target = 'en'; break;
 		   }// end switch
 	   }// end if
@@ -210,20 +253,6 @@ case '#i':
                      $replyData = $flexData->get($question,$answer,$picFullSize);
              
                 break;
-case 'tran':
-            $text_parameter = str_replace("tran ","", $text);
-            $text_parameter = str_replace("tran ","", $text_parameter);
-            $source = 'en';
-            $target = 'th';
-            $trans = new GoogleTranslate();
-            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
-           $question = $text_parameter;
-		      $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
-                               break;
 case '#tran':
 		      
             $text_parameter = str_replace("#tran ","", $text);  
@@ -232,6 +261,8 @@ case '#tran':
 			case 'cn': $source = 'zh-CN' ;$text_parameter = str_replace("cn","", $text_parameter); break;
 			case 'ko': $source = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
 			case 'de': $source = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
+			case 'ms': $source = 'ms' ;$text_parameter = str_replace("ms","", $text_parameter); break;
+			case 'id': $source = 'id' ;$text_parameter = str_replace("id","", $text_parameter); break;
 			default: $source = 'en'; break;
 		   }// end switch
 	   }// end if
@@ -246,104 +277,10 @@ case '#tran':
                      $replyData = $flexData->get($question,$answer,$picFullSize);
                                break;
 
-case 'Stock':
-case 'stock':
-            $symbol=$explodeText[1];
-            $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-            $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey='.ALPHAVANTAGE_API_KEY;
-            $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
-            $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-            $keepdate = true;
-            $countm= 0;
-            while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                $KeepMainkey = $key; //เก็บคีย์หลัก
-                $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
-                $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                while (list($key) = each($getarr1)) {
-                    if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
-                        $text= $text.' '.$key.' '.$getarr1[$key].' ';
-                        }
-                        $countm++;
-                    if ($KeepMainkey!="Meta Data" && $keepdate ) {
-                        $keepdate = false;
-                        $getarrayday = $getarr1[$key];
-                        while (list($key) = each($getarrayday)) {
-                            $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
-                            }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
-                          }
-                    }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-                } //สิ้นสุดการลิสต์คีย์ชั้นแรก
-              $bot->replyText($replyToken, $text);
-break;
-case 'News':
-case 'news':
-                               $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey='.NEWSAPI_API_KEY ;
-                               $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                               $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                               $text='';
-                                 while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                                   if($key=='articles'){
-                                    $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                                    while (list($key) = each($json_arr1)) {
-                                         $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-                                       }
-                                   }
-                                 }
-                                 $bot->replyText($replyToken, $text);
-                                  break;
 
-
-                                     case 'Weather':
-                                     case 'weather':
-                                     if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-                                    $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
-                                     $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                                     $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                                       $text= "รายงานสภาพอากาศ ".$json_arr[name];
-                                       $date = date("F j, Y, g:i a",$json_arr[dt]);
-                                       $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
-                                       $text=$text." อุณหภูมิ ".$json_arr[main][temp]."Celsius, อุณหภูมิสูงสุด ".$json_arr[main][temp_max]."Celsius, อุณหภูมิต่ำสุด ".$json_arr[main][temp_min]."Celsius";
-                                       $sunrise = date("F j, Y, g:i a",$json_arr[sys][sunrise]);
-                                       $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
-                                       $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
-                                       $text=$text." พระอาทิตย์ตก ".$sunset;
-                                       $bot->replyText($replyToken, $text);
-                                        break;
-	      case '@51':
-		      $question = $text_parameter;
-		      $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-	             $videoUrl = "https://www.facebook.com/ExquisiteKawaiiMagazine/videos/384726295595053/";
-                     $replyData = $flexData->get($question,$answer,$videoUrl);
-		      break;
           default:
 
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-		  $text='';
-              if($isData >0){
-                foreach($data as $rec){
-                  $text= $text.$rec->answer."\n";
-                  //-----------------------
-                }//end for each
-              }else{
-                  $text='';
-		      break;
-                  //$text= $explodeText[0];
-                  //$bot->replyText($reply_token, $text);
-              }//end no data from server
-
-
-                $textReplyMessage= $text;		          
-		     
-		//$picFullSize = "https://www.hooq.info/RTA/$image.jpg";
-                      $question = $explodeText[0];
-		      $answer = $text;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
+             $replyData='';
 		break;
             }//end switch
 
@@ -492,47 +429,7 @@ function pushMsg($arrayHeader,$arrayPostData){
 		 */
 
   /*
-	 case '$เพิ่มรถ':
-              $x_tra = str_replace("#เพิ่มรถ ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_licence_plate=$pieces[0];
-              $_brand=$pieces[1];
-              $_model=$pieces[2];
-              $_color=$pieces[3];
-              $_owner=$pieces[4];
-              $_user=$pieces[5];
-              $_note=$pieces[6];
-              //Post New Data
-              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มรถได้";
-              $bot->replyText($reply_token, $text);
-
-              break;
-	 case '$ทะเบียน':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
+	
           case '$เพิ่มคน':
               $x_tra = str_replace("#เพิ่มคน ","", $text);
               $pieces = explode("|", $x_tra);
