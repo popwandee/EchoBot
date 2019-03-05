@@ -67,8 +67,8 @@ use LINE\LINEBot\QuickReplyBuilder\QuickReplyMessageBuilder;
 $logger = new Logger('LineBot');
 $logger->pushHandler(new StreamHandler('php://stderr', Logger::DEBUG));
 define("MLAB_API_KEY", '6QxfLc4uRn3vWrlgzsWtzTXBW7CYVsQv');
-define("LINE_MESSAGING_API_CHANNEL_SECRET", '82d7948950b54381bcbd0345be0d4a2c');
-define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'BYnvAcR40qJk4fLopvVtVozF00iUqfUjoD33tIPcnjMoXEyG3fzYSE24XRKB5lnttxPePUIHPWdylLdkROwbOESi4rQE3+oSG3njcFj7yoQuaqU27effhhF4lz6lbOfhPjD9mLvHWYZlSbeigV4ETAdB04t89/1O/w1cDnyilFU=');
+define("LINE_MESSAGING_API_CHANNEL_SECRET", 'eb6cf532359c17403e5e20339b389466');
+define("LINE_MESSAGING_API_CHANNEL_TOKEN", 'yf5kpt5rDBiNTVwoI/tkKWlCXvD2fJBq9dDKfqxcuu7qIwf+auxo5hs3wGJsj0Shq5UCfkhGf8gLrcB4PluHJ4ViBppUh5/6PllJ4xi7z+dMUTaNwLa3FXC+FwgVqSvbn7WGnUASUMtkgsh/9dhl9AdB04t89/1O/w1cDnyilFU=');
 $bot = new \LINE\LINEBot(
     new \LINE\LINEBot\HTTPClient\CurlHTTPClient(LINE_MESSAGING_API_CHANNEL_TOKEN),
     ['channelSecret' => LINE_MESSAGING_API_CHANNEL_SECRET]
@@ -110,33 +110,10 @@ foreach ($events as $event) {
         $explodeText=explode(" ",$text);
 	$textReplyMessage="";
         $multiMessage =     new MultiMessageBuilder;
-	    /*
-	$groupId='';$roomId='';$userId=''; $userDisplayName='';// default value
-	    // ส่วนตรวจสอบผู้ใช้
-		$userId=$event->getUserId();
-	   // if((!is_null($userId)){
-		$response = $bot->getProfile($userId);
-                if ($response->isSucceeded()) {// ดึงค่าโดยแปลจาก JSON String .ให้อยู่ใรูปแบบโครงสร้าง ตัวแปร array
-                   $userData = $response->getJSONDecodedBody(); // return array
-                            // $userData['userId'] // $userData['displayName'] // $userData['pictureUrl']                            // $userData['statusMessage']
-                   $userDisplayName = $userData['displayName'];
-		   //$bot->replyText($replyToken, $userDisplayName); ใช้ตรวจสอบว่าผู้ถาม ชื่อ อะไร
-		}else{
-		 //$bot->replyText($replyToken, $userId);  ใช้ตรวจสอบว่าผู้ถาม ID อะไร
-			$userDisplayName = $userId;
-		}// end get profile
-	   // }//end is_null($userId);
-	     $textReplyMessage = 'ตอบคุณ '.$userDisplayName.' User id : '.$userId;
-                    $textMessage = new TextMessageBuilder($textReplyMessage);
-		    $multiMessage->add($textMessage);
-		// จบส่วนการตรวจสอบผู้ใช้
-		*/
+	  
       switch ($explodeText[0]) {
 	case '#i':
-		 //$picFullSize = $userData['pictureUrl';
-                          // $picThumbnail = $userData['pictureUrl';
-			  // $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  // $multiMessage->add($imageMessage);
+		 
 		/* ส่วนดึงข้อมูลจากฐานข้อมูล */
 		if (!is_null($explodeText[1])){
 		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
@@ -158,22 +135,14 @@ foreach ($events as $event) {
                            //$picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
                            $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
 			   $multiMessage->add($imageMessage);
-			    //$arrayPostData['to']=$replyId;
-			    //$arrayPostData['messages'][0]['type']="text";
-			    //$arrayPostData['messages'][0]['text']="hello";
-			    //pushMsg($arrayHeader,$arrayPostData);
+			   
                            }//end for each
 	            $replyData = $multiMessage;
 		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
 		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,407);
-			 // $picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
-			  //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
-                         // $picThumbnail = "https://www.hooq.info/photos/thumbnails/tn_$ranNumber.jpg";
-			  //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			 // $multiMessage->add($imageMessage);
+			  
 			  $replyData = $multiMessage;
 			 // กรณีจะตอบเฉพาะข้อความ
 		      //$bot->replyText($replyToken, $textMessage);
@@ -252,32 +221,7 @@ foreach ($events as $event) {
 	      }
                      
                    break;
-case '!':
-		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
-			  $textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-		          $image=rand(1,407);
-			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image2=$image+1;
-			  $picFullSize = "https://www.hooq.info/photos/$image2.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image2.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image3=$image+2;
-			  $picFullSize = "https://www.hooq.info/photos/$image3.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image3.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		      
-			  $originalContentUrl = "https://www.facebook.com/watch/?v=384726295595053";
-                          $previewImageUrl = "https://scontent.fbkk5-1.fna.fbcdn.net/v/t1.0-9/51654938_2088631114715709_563114124251234304_n.jpg?_nc_cat=109&_nc_ht=scontent.fbkk5-1.fna&oh=c5eacfede9a2e52acd9452cd90658d5d&oe=5CF83498";
-                          $videoMessage = new VideoMessageBuilder($originalContentUrl, $previewImageUrl,);
-			  $multiMessage->add($videoMessage);
-			  $replyData = $multiMessage;
-		break; //break case $
+
   case '$lisa':
             //Post New Data
 		    $indexCount=1;$answer='';
