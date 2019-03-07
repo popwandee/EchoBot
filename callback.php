@@ -90,8 +90,8 @@ foreach ($events as $event) {
 $replyToken = $event->getReplyToken();	
         $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
-        $userid=$event->getUserId();
-	$res = $bot->getProfile($userid);
+        $userId=$event->getUserId();
+	$res = $bot->getProfile($userId);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
               $displayName = $profile['displayName'];
@@ -103,7 +103,7 @@ $replyToken = $event->getReplyToken();
 		
               }
 	if(!is_null($userid)){
-	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
+	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
             $isData=sizeof($data);
 		if($isData >0){
@@ -136,6 +136,8 @@ $replyToken = $event->getReplyToken();
 	    }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
 		 
 		 }
+			$textMessage = new TextMessageBuilder($text);
+			   $multiMessage->add($textMessage);
 		}
 	 
 	}
