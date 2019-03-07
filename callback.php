@@ -90,48 +90,57 @@ foreach ($events as $event) {
 	$replyToken = $event->getReplyToken();	
         $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
-        $userid=$event->getUserId();
-	if(!is_null($userid)){
-	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
-            $data = json_decode($json);
-            $isData=sizeof($data);
-		if($isData >0){
-                    foreach($data as $rec){
-                           $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-			     }//end for each
-	            $replyData = $multiMessage;
-
-		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-		          $textReplyMessage= "ไม่พบ ".$userid."  ในฐานข้อมูลของหน่วย";
-			  $textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-			 
-		        } // end $isData>0
-	 $res = $bot->getProfile($userid);
+        $userId=$event->getUserId();
+	$res = $bot->getProfile($userId);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
-              $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
+              $pictureUrl = $profile['pictureUrl']; 
+	      $textReplyMessage= "คุณ ".$displayName;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
+		
               }
-	}else{ //no userId;
-              $textReplyMessage= "ไม่มีข้อมูล UserId";
-	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);
-			}
-			 /*
-		  {
-    "displayName": "popwandee",
-    "userId": "os51Servic",
-    "dateTime": "ok",
-      "note":"ok"
-  }
-  */
+	if(!is_null($userId)){
+	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
+            $data = json_decode($json);
+            $isData=sizeof($data);
+		if($isData >0){
+                    foreach($data as $rec){
+                           $textReplyMessage= $rec->displayName;
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			     }//end for each
+	           
+		   }else{
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ต่อไปจะไม่สามารถเข้าถึงฐานข้อมูลได้แล้วนะคะ";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			   $tz_object = new DateTimeZone('Asia/Bangkok');
+                           $datetime = new DateTime();
+                           $datetime->setTimezone($tz_object);
+                           $dateTimeNow = $datetime->format('Y\-m\-d\ h:i:s');
+			   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow) );
+                           $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newUserData
+                                           )
+                                        );
+            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
+            $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $context = stream_context_create($opts);
+            $returnValue = file_get_contents($url,false,$context);
+            if($returnValue){
+		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
+	    }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
+		 
+		 }
+			$textMessage = new TextMessageBuilder($text);
+			   $multiMessage->add($textMessage);
+		}
+	 
+	}
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
