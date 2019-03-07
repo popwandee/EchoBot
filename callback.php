@@ -131,8 +131,8 @@ $replyToken = $event->getReplyToken();
             $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
-            if($returnValue){
-		    $text =  'บันทึกการเข้าถึงข้อมูลแล้วค่ะ';
+             if($returnValue){
+		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
 	    }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
 		 
 		 }
@@ -260,7 +260,7 @@ $replyToken = $event->getReplyToken();
               $data = json_decode($json);
               $isData=sizeof($data);
               if($isData >0){
-		   $result = "";
+		   $result = "คุณ".$displayName;
 		   $count = 1;
 		   $hasImageUrlStatus = false;
 		      // default image for flex message
