@@ -92,21 +92,50 @@ foreach ($events as $event) {
 	$replyData='No Data';
         $userid=$event->getUserId();
 	if(!is_null($userid)){
+	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
+            $data = json_decode($json);
+            $isData=sizeof($data);
+		if($isData >0){
+                    foreach($data as $rec){
+                           $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			   $pictureUrl = $rec->pictureUrl;
+                           $picThumbnail = $rec->pictureUrl;
+			    $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+			   $multiMessage->add($imageMessage);
+			     }//end for each
+	            $replyData = $multiMessage;
+
+		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+		          $textReplyMessage= "ไม่พบ ".$userid."  ในฐานข้อมูลของหน่วย";
+			  $textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			 
+		        } // end $isData>0
 	 $res = $bot->getProfile($userid);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "ข้อมูลของคุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);
+	      $multiMessage->add($textMessage);  
               }
 	}else{ //no userId;
               $textReplyMessage= "ไม่มีข้อมูล UserId";
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);
 			}
+			 /*
+		  {
+    "displayName": "popwandee",
+    "userId": "os51Servic",
+    "dateTime": "ok",
+      "note":"ok"
+  }
+  */
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
