@@ -100,10 +100,6 @@ foreach ($events as $event) {
                            $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
-			   $pictureUrl = $rec->pictureUrl;
-                           $picThumbnail = $rec->pictureUrl;
-			    $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			   $multiMessage->add($imageMessage);
 			     }//end for each
 	            $replyData = $multiMessage;
 
