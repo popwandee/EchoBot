@@ -139,7 +139,7 @@ foreach ($events as $event) {
 			   case '#':
 				if (!is_null($explodeText[1])){
 			          $textReplyMessage= "ขอข้อมูลบุคคล".$explodeText[1];	
-				  $replyData = getPeopleBlacklist($explodeText[1]);
+				  $replyData = getPeopleBlacklist($multiMessage,$explodeText[1]);
 				}else{ // no $explodeText[1]
 			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
 			          $textMessage = new TextMessageBuilder($textReplyMessage);
@@ -197,9 +197,9 @@ foreach ($events as $event) {
 }// end foreach event
 
 
-function getPeopleBlacklist($nationId)
+function getPeopleBlacklist($multiMessage,$nationId)
 {
-  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"$nationId":"'.$explodeText[1].'"}');
+  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$nationId.'"}');
   $data = json_decode($json);
   $isData=sizeof($data);
   if($isData >0){
@@ -213,8 +213,7 @@ function getPeopleBlacklist($nationId)
         $textMessage = new TextMessageBuilder($textReplyMessage);
 	$multiMessage->add($textMessage);
 	$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
-        $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
-	$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+	$imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	$multiMessage->add($imageMessage);
      }//end for each
     }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
