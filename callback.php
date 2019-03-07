@@ -146,9 +146,9 @@ foreach ($events as $event) {
 		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			 $userid=$bot->getUserId();
+			 $userid=$event->getUserId();
 			if(!is_null($userid)){
-			   $res = $bot->getProfile('$userid');
+			   $res = $bot->getProfile($userid);
                            if ($res->isSucceeded()) {
                                $profile = $res->getJSONDecodedBody();
                                $displayName = $profile['displayName'];
