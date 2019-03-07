@@ -101,7 +101,7 @@ $replyToken = $event->getReplyToken();
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
-	            $replyData = $multiMessage;
+	           
 		   }
 	 $res = $bot->getProfile($userid);
          if ($res->isSucceeded()) {
@@ -109,13 +109,13 @@ $replyToken = $event->getReplyToken();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textReplyMessage= "คุณ".$displayName.$statusMessage;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
 		
               }
 	}
-  
+
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
@@ -273,32 +273,6 @@ $replyToken = $event->getReplyToken();
 
 
 case '!':
-		    $textReplyMessage= "ไม่เอาไม่พูด ,".$explodeText[1].",\n  ดูภาพแก้เซ็งดีกว่าค่ะ ";
-			  $textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-		          $image=rand(1,407);
-
-			  $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image2=$image+1;
-
-			  $picFullSize = "https://www.hooq.info/photos/$image2.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image2.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		          $image3=$image+2;
-
-			  $picFullSize = "https://www.hooq.info/photos/$image3.jpg";
-                          $picThumbnail = "https://www.hooq.info/photos/$image3.jpg";
-                          $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  $multiMessage->add($imageMessage);
-		      
-			  $originalContentUrl = "https://www.facebook.com/watch/?v=384726295595053";
-                          $previewImageUrl = "https://scontent.fbkk5-1.fna.fbcdn.net/v/t1.0-9/51654938_2088631114715709_563114124251234304_n.jpg?_nc_cat=109&_nc_ht=scontent.fbkk5-1.fna&oh=c5eacfede9a2e52acd9452cd90658d5d&oe=5CF83498";
-                          $videoMessage = new VideoMessageBuilder($originalContentUrl, $previewImageUrl,);
-			  $multiMessage->add($videoMessage);
 
 			  $replyData = $multiMessage;
 		break; //break case $
@@ -461,13 +435,7 @@ case 'news':
                                        $text=$text." พระอาทิตย์ตก ".$sunset;
                                        $bot->replyText($replyToken, $text);
                                         break;
-	      case '@51':
-		      $question = $text_parameter;
-		      $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-	             $videoUrl = "https://www.facebook.com/ExquisiteKawaiiMagazine/videos/384726295595053/";
-                     $replyData = $flexData->get($question,$answer,$videoUrl);
-		      break;
+	 
           default:
 
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
