@@ -150,9 +150,24 @@ foreach ($events as $event) {
 			 
 		        } // end $isData>0
 		   }else{ // no $explodeText[1]
-	                $textReplyMessage= "คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ";
+	                
+			$userid=$bot->getUserId();
+			if(!is_null($userid)){
+			   $res = $bot->getProfile('$userid');
+                           if ($res->isSucceeded()) {
+                               $profile = $res->getJSONDecodedBody();
+                               $displayName = $profile['displayName'];
+                               $statusMessage = $profile['statusMessage'];
+                               $pictureUrl = $profile['pictureUrl'];
+				   $textReplyMessage= "ข้อมูลของคุณคือ".$displayName.$statusMessage.$pictureUrl;
 			$textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
+}
+			}else{ //no userId;
+                              $textReplyMessage= "ไม่มีข้อมูล UserId";
+			      $textMessage = new TextMessageBuilder($textReplyMessage);
+			      $multiMessage->add($textMessage);
+			}
 			  $replyData = $multiMessage;
 			 
 		   }// end !is_null($explodeText[1])
