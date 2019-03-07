@@ -87,52 +87,36 @@ try {
 }
 
 foreach ($events as $event) {
-		$replyToken = $event->getReplyToken();	
+$replyToken = $event->getReplyToken();	
         $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
-        $userId=$event->getUserId();
+        $userid=$event->getUserId();
 	if(!is_null($userid)){
-		/*----------- ตรวจสอบข้อมูลผู้ใช้จากฐานข้อมูล -------------------*/
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
             $data = json_decode($json);
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $rec->displayName;
-			    //"\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
+                           $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
 	            $replyData = $multiMessage;
 		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-			ไม่ให้ตรวจสอบข้อมูล
-		          $textReplyMessage= "ไม่พบ ".$userId."  ในฐานข้อมูลของหน่วย";
+		          $textReplyMessage= "ไม่พบ ".$userid."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
 			 
 		        } // end $isData>0
-		/*-------------- ตรวจสอบข้อมูลผู้ใช้จากโทรศัพท์มือถือ -------------------*/
-	 $res = $bot->getProfile($userId);
+	 $res = $bot->getProfile($userid);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "คุณ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
-		 /*-----สร้าง บันทึกการเช้าใช้งานในฐานข้อมูล ----*/
-		 $dateTime=date("Y-m-d H:i:s");
-		
-		  $newData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTime) );
-    $opts = array('http' => array( 'method' => "POST",
-                                  'header' => "Content-type: application/json",
-                                  'content' => $newData
-                                   )
-                                );
-    $url = 'https://api.mlab.com/api/1/databases/crma51/collections/user_log?apiKey='.MLAB_API_KEY;
-    $context = stream_context_create($opts);
-    $returnValue = file_get_contents($url,false,$context);
               }
 	}else{ //no userId;
               $textReplyMessage= "ไม่มีข้อมูล UserId";
