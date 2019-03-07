@@ -128,7 +128,7 @@ $replyToken = $event->getReplyToken();
                                            )
                                         );
             // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
             if($returnValue){
