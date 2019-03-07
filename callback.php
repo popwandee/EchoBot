@@ -117,6 +117,25 @@ $replyToken = $event->getReplyToken();
 		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ต่อไปจะไม่สามารถเข้าถึงฐานข้อมูลได้แล้วนะคะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
+			   $tz_object = new DateTimeZone('Asia/Bangkok');
+                           $datetime = new DateTime();
+                           $datetime->setTimezone($tz_object);
+                           $dateTimeNow = $datetime->format('Y\-m\-d\ h:i:s');
+			   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow) );
+                           $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newUserData
+                                           )
+                                        );
+            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $context = stream_context_create($opts);
+            $returnValue = file_get_contents($url,false,$context);
+            if($returnValue){
+		    $text =  'บันทึกการเข้าถึงข้อมูลแล้วค่ะ';
+	    }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
+		 
+		 }
 		}
 	 
 	}
