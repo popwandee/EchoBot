@@ -87,7 +87,8 @@ try {
 }
 
 foreach ($events as $event) {
-	$replyToken = $event->getReplyToken();
+	$replyToken = $event->getReplyToken();	
+        $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
         $userid=$event->getUserId();
 	if(!is_null($userid)){
@@ -129,7 +130,6 @@ foreach ($events as $event) {
         $explodeText=explode(" ",$text);
 	$textReplyMessage="";
 
-        $multiMessage =     new MultiMessageBuilder;
 	    
       switch ($explodeText[0]) {
 
