@@ -102,7 +102,7 @@ $replyToken = $event->getReplyToken();
 	      $multiMessage->add($textMessage);  
 		
               }
-	if(!is_null($userid)){
+	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
             $isData=sizeof($data);
