@@ -103,11 +103,11 @@ $replyToken = $event->getReplyToken();
 			     }//end for each
 	            $replyData = $multiMessage;
 		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-			/*
+			
 		          $textReplyMessage= "ไม่พบ ".$userid."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			 */
+			 
 		        } // end $isData>0
 	 $res = $bot->getProfile($userid);
          if ($res->isSucceeded()) {
@@ -120,11 +120,11 @@ $replyToken = $event->getReplyToken();
 	      $multiMessage->add($textMessage);  
               }
 	}else{ //no userId;
-		/*
+		
               $textReplyMessage= "ไม่มีข้อมูล UserId";
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);
-	      */
+	     
 			}
  $response = $bot->replyMessage($replyToken,$replyData);
   // Postback Event
