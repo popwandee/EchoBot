@@ -102,7 +102,7 @@ foreach ($events as $event) {
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= "คุณ ".$displayName;
+	      $textReplyMessage= "คุณ ".$displayName." นฝต. กำลังเร่งพัฒนานกฮูกให้ใช้งานได้อย่างสมบูรณ์โดยเร็วนะคะ";
 	      $log_note=$log_note.$textReplyMessage;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
