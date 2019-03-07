@@ -89,7 +89,23 @@ try {
 foreach ($events as $event) {
 	$replyToken = $event->getReplyToken();
 	$replyData='No Data';
-
+        $userid=$event->getUserId();
+	if(!is_null($userid)){
+	 $res = $bot->getProfile($userid);
+         if ($res->isSucceeded()) {
+              $profile = $res->getJSONDecodedBody();
+              $displayName = $profile['displayName'];
+              $statusMessage = $profile['statusMessage'];
+              $pictureUrl = $profile['pictureUrl'];
+	      $textReplyMessage= "ข้อมูลของคุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);
+              }
+	}else{ //no userId;
+              $textReplyMessage= "ไม่มีข้อมูล UserId";
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);
+			}
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
@@ -146,45 +162,15 @@ foreach ($events as $event) {
 		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
-			 $userid=$event->getUserId();
-			if(!is_null($userid)){
-			   $res = $bot->getProfile($userid);
-                           if ($res->isSucceeded()) {
-                               $profile = $res->getJSONDecodedBody();
-                               $displayName = $profile['displayName'];
-                               $statusMessage = $profile['statusMessage'];
-                               $pictureUrl = $profile['pictureUrl'];
-				   $textReplyMessage= "ข้อมูลของคุณคือ".$displayName.$statusMessage.$pictureUrl;
-			$textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-}
-			}else{ //no userId;
-                              $textReplyMessage= "ไม่มีข้อมูล UserId";
-			      $textMessage = new TextMessageBuilder($textReplyMessage);
-			      $multiMessage->add($textMessage);
-			}
+			
 			   $replyData = $multiMessage;
 			 
 		        } // end $isData>0
 		   }else{ // no $explodeText[1]
 	                
-			$userid=$bot->getUserId();
-			if(!is_null($userid)){
-			   $res = $bot->getProfile('$userid');
-                           if ($res->isSucceeded()) {
-                               $profile = $res->getJSONDecodedBody();
-                               $displayName = $profile['displayName'];
-                               $statusMessage = $profile['statusMessage'];
-                               $pictureUrl = $profile['pictureUrl'];
-				   $textReplyMessage= "ข้อมูลของคุณคือ".$displayName.$statusMessage.$pictureUrl;
-			$textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-}
-			}else{ //no userId;
-                              $textReplyMessage= "ไม่มีข้อมูล UserId";
+			$textReplyMessage= "คุณให้ข้อมูลไม่ครบค่ะ";
 			      $textMessage = new TextMessageBuilder($textReplyMessage);
 			      $multiMessage->add($textMessage);
-			}
 			  $replyData = $multiMessage;
 			 
 		   }// end !is_null($explodeText[1])
