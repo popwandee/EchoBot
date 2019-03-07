@@ -137,7 +137,17 @@ foreach ($events as $event) {
                        $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 			switch ($explodeText[0]) { 
 			   case '#':
-				$log_note=$log_note."\n User select # ".$textReplyMessage;break;
+				if (!is_null($explodeText[1])){
+			          $textReplyMessage= "ขอข้อมูลบุคคล".$explodeText[1];	
+				  $replyData = getPeopleBlacklist($explodeText[1]);
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select # ".$textReplyMessage;
+			        break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
                                 if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
@@ -145,7 +155,7 @@ foreach ($events as $event) {
                                 $result=tranlateLang($source,$target,$text_parameter);
 				$flexData = new ReplyTranslateMessage;
                                 $replyData = $flexData->get($text_parameter,$result);
-				$log_note=$log_note."\n User select #tran ".$text_parameter.$result;break;
+				$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
 			   default: $replyData='';break;
                         }//end switch 
@@ -158,14 +168,14 @@ foreach ($events as $event) {
 	              }
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
-		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow) );
+		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,'log_note'=>$log_note) );
                            $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
                                           'content' => $newUserData
                                            )
                                         );
             // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-            $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
             if($returnValue){
@@ -175,6 +185,7 @@ foreach ($events as $event) {
 		        }
 			$textMessage = new TextMessageBuilder($text);
 			   $multiMessage->add($textMessage);
+                  $replyData = $multiMessage;
 		} // end of !is_null($userId)
             // ส่งกลับข้อมูล
 	    // ส่วนส่งกลับข้อมูลให้ LINE
@@ -184,6 +195,36 @@ foreach ($events as $event) {
              $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody(); echo $statusMessage;
              $bot->replyText($replyToken, $statusMessage);
 }// end foreach event
+
+
+function getPeopleBlacklist($nationId)
+{
+  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"$nationId":"'.$explodeText[1].'"}');
+  $data = json_decode($json);
+  $isData=sizeof($data);
+  if($isData >0){
+    $count=1;
+    foreach($data as $rec){
+	$count++;
+        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+        $textMessage = new TextMessageBuilder($textReplyMessage);
+	$multiMessage->add($textMessage);
+	$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
+        $textMessage = new TextMessageBuilder($textReplyMessage);
+	$multiMessage->add($textMessage);
+	$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+        $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
+	$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
+	$multiMessage->add($imageMessage);
+     }//end for each
+    }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+         $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	 $textMessage = new TextMessageBuilder($textReplyMessage);
+	 $multiMessage->add($textMessage);
+         } // end $isData>0
+		 
+return $multiMessage;
+} // end function getPeopleBlacklist
 
 function tranlateLang($source, $target, $text_parameter)
 {
