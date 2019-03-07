@@ -97,7 +97,7 @@ $replyToken = $event->getReplyToken();
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
+                           $textReplyMessage= "\ndisplayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
@@ -123,7 +123,7 @@ $replyToken = $event->getReplyToken();
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);
 			}
- $response = $bot->replyMessage($replyToken,$replyData);
+
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
