@@ -115,7 +115,7 @@ $replyToken = $event->getReplyToken();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textReplyMessage= $displayName;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
               }
@@ -126,7 +126,7 @@ $replyToken = $event->getReplyToken();
 	      $multiMessage->add($textMessage);
 	      */
 			}
-
+ $response = $bot->replyMessage($replyToken,$replyData);
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
 		$logger->info('Postback message has come');
