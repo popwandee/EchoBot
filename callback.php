@@ -138,8 +138,28 @@ foreach ($events as $event) {
 			switch ($explodeText[0]) { 
 			   case '#':
 				if (!is_null($explodeText[1])){
-			          $textReplyMessage= "ขอข้อมูลบุคคล".$explodeText[1];	
-				  $replyData = getPeopleBlacklist($multiMessage,$explodeText[1]);
+			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$nationId.'"}');
+  $data = json_decode($json);
+  $isData=sizeof($data);
+  if($isData >0){
+    $count=1;
+    foreach($data as $rec){
+	$count++;
+        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+        $textMessage = new TextMessageBuilder($textReplyMessage);
+	$multiMessage->add($textMessage);
+	$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
+        $textMessage = new TextMessageBuilder($textReplyMessage);
+	$multiMessage->add($textMessage);
+	$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+	$imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	$multiMessage->add($imageMessage);
+     }//end for each
+    }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+         $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	 $textMessage = new TextMessageBuilder($textReplyMessage);
+	 $multiMessage->add($textMessage);
+         } // end $isData>0
 				}else{ // no $explodeText[1]
 			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
 			          $textMessage = new TextMessageBuilder($textReplyMessage);
@@ -199,28 +219,7 @@ foreach ($events as $event) {
 
 function getPeopleBlacklist($multiMessage,$nationId)
 {
-  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$nationId.'"}');
-  $data = json_decode($json);
-  $isData=sizeof($data);
-  if($isData >0){
-    $count=1;
-    foreach($data as $rec){
-	$count++;
-        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
-        $textMessage = new TextMessageBuilder($textReplyMessage);
-	$multiMessage->add($textMessage);
-	$textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
-        $textMessage = new TextMessageBuilder($textReplyMessage);
-	$multiMessage->add($textMessage);
-	$picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
-	$imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
-	$multiMessage->add($imageMessage);
-     }//end for each
-    }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-         $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-	 $textMessage = new TextMessageBuilder($textReplyMessage);
-	 $multiMessage->add($textMessage);
-         } // end $isData>0
+ 
 		 
 return $multiMessage;
 } // end function getPeopleBlacklist
