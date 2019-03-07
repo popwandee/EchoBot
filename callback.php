@@ -117,6 +117,9 @@ $replyToken = $event->getReplyToken();
 	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
+		  $replyData = $multiMessage;
+	        $response = $bot->replyMessage($replyToken,$replyData);
+		continue;
               }
 	}else{ //no userId;
               $textReplyMessage= "ไม่มีข้อมูล UserId";
