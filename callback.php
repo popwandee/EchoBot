@@ -97,13 +97,12 @@ $replyToken = $event->getReplyToken();
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $rec->displayName;
+                           $textReplyMessage= "\displayName ".$rec->displayName."\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
 	            $replyData = $multiMessage;
 		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-			
 		          $textReplyMessage= "ไม่พบ ".$userid."  ในฐานข้อมูลของหน่วย";
 			  $textMessage = new TextMessageBuilder($textReplyMessage);
 			  $multiMessage->add($textMessage);
@@ -115,16 +114,14 @@ $replyToken = $event->getReplyToken();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= $displayName;
+	      $textReplyMessage= "ข้อมูลจากโทรศัพท์ คุณคือ".$userid.$displayName.$statusMessage.$pictureUrl;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
               }
 	}else{ //no userId;
-		
               $textReplyMessage= "ไม่มีข้อมูล UserId";
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);
-	     
 			}
  $response = $bot->replyMessage($replyToken,$replyData);
   // Postback Event
