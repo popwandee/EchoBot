@@ -87,8 +87,58 @@ try {
 }
 
 foreach ($events as $event) {
-	$replyToken = $event->getReplyToken();
+		$replyToken = $event->getReplyToken();	
+        $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
+        $userId=$event->getUserId();
+	if(!is_null($userid)){
+		/*----------- ตรวจสอบข้อมูลผู้ใช้จากฐานข้อมูล -------------------*/
+	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
+            $data = json_decode($json);
+            $isData=sizeof($data);
+		if($isData >0){
+                    foreach($data as $rec){
+                           $textReplyMessage= $rec->displayName;
+			    //"\nuserId".$rec->userId."\nstatusMessage".$rec->statusMessage."\npictureUrl".$rec->pictureUrl;
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+			     }//end for each
+	            $replyData = $multiMessage;
+		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+			ไม่ให้ตรวจสอบข้อมูล
+		          $textReplyMessage= "ไม่พบ ".$userId."  ในฐานข้อมูลของหน่วย";
+			  $textMessage = new TextMessageBuilder($textReplyMessage);
+			  $multiMessage->add($textMessage);
+			 
+		        } // end $isData>0
+		/*-------------- ตรวจสอบข้อมูลผู้ใช้จากโทรศัพท์มือถือ -------------------*/
+	 $res = $bot->getProfile($userId);
+         if ($res->isSucceeded()) {
+              $profile = $res->getJSONDecodedBody();
+              $displayName = $profile['displayName'];
+              $statusMessage = $profile['statusMessage'];
+              $pictureUrl = $profile['pictureUrl'];
+	      $textReplyMessage= "คุณ".$userid.$displayName.$statusMessage.$pictureUrl;
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);  
+		 /*-----สร้าง บันทึกการเช้าใช้งานในฐานข้อมูล ----*/
+		 $dateTime=date("Y-m-d H:i:s");
+		
+		  $newData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTime) );
+    $opts = array('http' => array( 'method' => "POST",
+                                  'header' => "Content-type: application/json",
+                                  'content' => $newData
+                                   )
+                                );
+    $url = 'https://api.mlab.com/api/1/databases/crma51/collections/user_log?apiKey='.MLAB_API_KEY;
+    $context = stream_context_create($opts);
+    $returnValue = file_get_contents($url,false,$context);
+              }
+	}else{ //no userId;
+              $textReplyMessage= "ไม่มีข้อมูล UserId";
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);
+			}
 
   // Postback Event
     if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
@@ -98,7 +148,6 @@ foreach ($events as $event) {
 	// Location Event
     if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
 		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
-	        $multiMessage =     new MultiMessageBuilder;
 	        $textReplyMessage= "location -> ".$event->getLatitude().",".$event->getLongitude();
                 $textMessage = new TextMessageBuilder($textReplyMessage);
 		$multiMessage->add($textMessage);
@@ -112,30 +161,6 @@ foreach ($events as $event) {
         $text = strtolower($text);
         $explodeText=explode(" ",$text);
 	$textReplyMessage="";
-
-        $multiMessage =     new MultiMessageBuilder;
-	    /*
-	$groupId='';$roomId='';$userId=''; $userDisplayName='';// default value
-
-	    // ส่วนตรวจสอบผู้ใช้
-		$userId=$event->getUserId();
-	   // if((!is_null($userId)){
-		$response = $bot->getProfile($userId);
-                if ($response->isSucceeded()) {// ดึงค่าโดยแปลจาก JSON String .ให้อยู่ใรูปแบบโครงสร้าง ตัวแปร array
-                   $userData = $response->getJSONDecodedBody(); // return array
-                            // $userData['userId'] // $userData['displayName'] // $userData['pictureUrl']                            // $userData['statusMessage']
-                   $userDisplayName = $userData['displayName'];
-		   //$bot->replyText($replyToken, $userDisplayName); ใช้ตรวจสอบว่าผู้ถาม ชื่อ อะไร
-		}else{
-		 //$bot->replyText($replyToken, $userId);  ใช้ตรวจสอบว่าผู้ถาม ID อะไร
-			$userDisplayName = $userId;
-		}// end get profile
-	   // }//end is_null($userId);
-	     $textReplyMessage = 'ตอบคุณ '.$userDisplayName.' User id : '.$userId;
-                    $textMessage = new TextMessageBuilder($textReplyMessage);
-		    $multiMessage->add($textMessage);
-		// จบส่วนการตรวจสอบผู้ใช้
-		*/
 
       switch ($explodeText[0]) {
 
