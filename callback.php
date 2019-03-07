@@ -120,7 +120,7 @@ $replyToken = $event->getReplyToken();
 			   $tz_object = new DateTimeZone('Asia/Bangkok');
                            $datetime = new DateTime();
                            $datetime->setTimezone($tz_object);
-                           $dateTimeNow = $datetime->format('Y\-m\-d\ h:i:s');
+                           $dateTimeNow = $datetime->format('Y\-m\-d\ H:i:s');
 			   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow) );
                            $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
