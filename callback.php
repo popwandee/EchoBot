@@ -91,6 +91,17 @@ $replyToken = $event->getReplyToken();
         $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
         $userid=$event->getUserId();
+	$res = $bot->getProfile($userid);
+         if ($res->isSucceeded()) {
+              $profile = $res->getJSONDecodedBody();
+              $displayName = $profile['displayName'];
+              $statusMessage = $profile['statusMessage'];
+              $pictureUrl = $profile['pictureUrl']; 
+	      $textReplyMessage= "คุณ ".$displayName;
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);  
+		
+              }
 	if(!is_null($userid)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userid.'"}');
             $data = json_decode($json);
@@ -102,18 +113,12 @@ $replyToken = $event->getReplyToken();
 			   $multiMessage->add($textMessage);
 			     }//end for each
 	           
-		   }
-	 $res = $bot->getProfile($userid);
-         if ($res->isSucceeded()) {
-              $profile = $res->getJSONDecodedBody();
-              $displayName = $profile['displayName'];
-              $statusMessage = $profile['statusMessage'];
-              $pictureUrl = $profile['pictureUrl'];
-	      $textReplyMessage= "คุณ".$displayName.$statusMessage;
-	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);  
-		
-              }
+		   }else{
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ต่อไปจะไม่สามารถเข้าถึงฐานข้อมูลได้แล้วนะคะ";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+		}
+	 
 	}
 
   // Postback Event
@@ -142,11 +147,6 @@ $replyToken = $event->getReplyToken();
 
 	case '#i':
 
-
-		 //$picFullSize = $userData['pictureUrl';
-                          // $picThumbnail = $userData['pictureUrl';
-			  // $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  // $multiMessage->add($imageMessage);
 		/* ส่วนดึงข้อมูลจากฐานข้อมูล */
 		if (!is_null($explodeText[1])){
 		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
@@ -441,7 +441,7 @@ case 'news':
               $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
               $data = json_decode($json);
               $isData=sizeof($data);
-		  $text='';
+		  $text=$displayName;
               if($isData >0){
                 foreach($data as $rec){
                   $text= $text.$rec->answer."\n";
