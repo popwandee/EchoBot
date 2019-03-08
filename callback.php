@@ -90,7 +90,7 @@ foreach ($events as $event) {
 		// Message Event
      if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
         $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
-	$log_note=NULL;$textReplyMessage='';
+	$log_note='';$textReplyMessage='';
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
          $datetime->setTimezone($tz_object);
