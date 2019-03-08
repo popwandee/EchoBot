@@ -137,7 +137,7 @@ foreach ($events as $event) {
                    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
                        $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 			switch ($explodeText[0]) { 
-			   case '#':
+			   case '#p':
 				if (!is_null($explodeText[1])){
 			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
                                   $data = json_decode($json);
@@ -168,7 +168,40 @@ foreach ($events as $event) {
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
 		                }// end !is_null($explodeText[1])
-				$log_note=$log_note."\n User select # ".$textReplyMessage;
+				$log_note=$log_note."\n User select #p ".$textReplyMessage;
+			        break;
+			    case '#c':
+				if (!is_null($explodeText[1])){
+			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+                                  $data = json_decode($json);
+                                  $isData=sizeof($data);
+                                 if($isData >0){
+                                    $count=1;
+                                    foreach($data as $rec){
+	                               $count++; 
+                                       $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
+                                       $textMessage = new TextMessageBuilder($textReplyMessage);
+	                               $multiMessage->add($textMessage);
+	                              if (!is_null($rec->license_plate)){
+	                               $picFullSize = "https://www.hooq.info/img_car/$rec->license_plate.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+			               $replyData = $multiMessage;
+				      }
+                                    }//end for each
+                                 }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+                                   $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
+			           $replyData = $multiMessage;
+                                   } // end $isData>0
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select #c ".$textReplyMessage;
 			        break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
@@ -184,7 +217,7 @@ foreach ($events as $event) {
 	             }//end if event is textMessage
 			
 		   }else{ // No userId registered
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งต่อหมายเลข ID ".$userId."นี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
                            $replyData = $multiMessage;
