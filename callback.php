@@ -121,10 +121,13 @@ foreach ($events as $event) {
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
-		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID ".$userId." สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);		                           
+					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
-					   $textReplyMessage= $textReplyMessage."พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+					   $textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
 			 	           
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
@@ -158,7 +161,7 @@ foreach ($events as $event) {
 					    foreach($documentId as $key => $value){
 						    if($key === '$oid'){
 							    $updateId=$value;
-					                    $textReplyMessage=$explodeText[1]."_id is ".$updateId."Registered Id ".$rec->userId;
+					                    $textReplyMessage="Prove Registered Id ".$rec->userId." Passed";
 					                    }
 					             } // end for each $key=>$value
 					    }//end for each
@@ -189,7 +192,7 @@ foreach ($events as $event) {
 
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
 
-			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
