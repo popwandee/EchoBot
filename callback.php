@@ -153,8 +153,8 @@ foreach ($events as $event) {
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
-			               $replyData = $multiMessage;
 				      }
+			               $replyData = $multiMessage;
                                     }//end for each
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
@@ -186,8 +186,8 @@ foreach ($events as $event) {
 	                               $picFullSize = "https://www.hooq.info/img_car/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
-			               $replyData = $multiMessage;
 				      }
+			               $replyData = $multiMessage;
                                     }//end for each
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
