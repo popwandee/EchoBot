@@ -149,7 +149,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (!is_null($rec->picUrl)){
+	                              if (!isset($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
@@ -182,7 +182,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (!is_null($rec->picUrl)){
+	                              if (!isset($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img_car/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
