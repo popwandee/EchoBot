@@ -121,7 +121,7 @@ foreach ($events as $event) {
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
-		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID ".$userId." สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
 					   $textReplyMessage= $textReplyMessage."พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
