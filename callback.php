@@ -317,6 +317,19 @@ foreach ($events as $event) {
                      
                    break;
 			   case '#lisa':
+				if(!isset($explodeText[2])){ // just question, 
+					$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
+                                $data = json_decode($json);
+                                $isData=sizeof($data);
+                                if($isData >0){
+                                   foreach($data as $rec){
+                                           $textReplyMessage= $textReplyMessage."\n".$explodeText[1]." คือ\n".$rec->answer."\n";
+                                           }//end for each
+				    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+                                    }
+				}else{// no answer
                                 //Post New Data
 		                $indexCount=1;$answer='';
 	                        foreach($explodeText as $rec){
@@ -342,6 +355,7 @@ foreach ($events as $event) {
 				    $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
 		                    $replyData = $multiMessage;
+				}// end no answer, just question only
                                  break;
 
 			   case '#tran':
@@ -355,19 +369,7 @@ foreach ($events as $event) {
 		                break;
 			
 			   default: 
-				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
-                                $data = json_decode($json);
-                                $isData=sizeof($data);
-                                if($isData >0){
-                                   foreach($data as $rec){
-                                           $textReplyMessage= $textReplyMessage."\n".$explodeText[1]." คือ\n".$rec->answer."\n";
-                                           }//end for each
-                                    }else{
-                                         $textReplyMessage='';
-                                         }//end no data from server
-                                    $textMessage = new TextMessageBuilder($textReplyMessage);
-		                    $multiMessage->add($textMessage);
-		                    $replyData = $multiMessage;
+				$replyData ="";
 				break;
                         }//end switch 
 			
