@@ -148,7 +148,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (!$rec->nationid)){
+	                              if (!is_null($rec->nationid)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
