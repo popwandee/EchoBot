@@ -87,7 +87,7 @@ try {
 }
 
 foreach ($events as $event) {
-	$log_note='';
+	$log_note='';$textReplyMessage='';
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
          $datetime->setTimezone($tz_object);
@@ -102,10 +102,12 @@ foreach ($events as $event) {
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= "คุณ ".$displayName." นฝต. กำลังเร่งพัฒนานกฮูกให้ใช้งานได้อย่างสมบูรณ์โดยเร็วนะคะ";
+	      $textReplyMessage= $textReplyMessage."สวัสดีค่ะคุณ ".$displayName." นฝต.ขกท.สน.จชต. ได้พัฒนา นกฮูก ให้ใช้งานได้โดยจำกัดเฉพาะ จนท. ที่เกี่ยวข้องเท่านั้นนะคะ";
+	      $textReplyMessage= $textReplyMessage."\n\nค้นหาบุคคล พิมพ์ #p เว้นวรรค ตามด้วยหมายเลข 13 หลัก";
+	      $textReplyMessage= $textReplyMessage."\n\nค้นหารถ พิมพ์ #c เว้นวรรค ตามด้วยเลขทะเบียนรถ (กก1234ยะลา) ไม่เว้นวรรค ไม่มีเลข 0 ข้างหน้า";
 	      $log_note=$log_note.$textReplyMessage;
-	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);  
+	      //$textMessage = new TextMessageBuilder($textReplyMessage);
+	      //$multiMessage->add($textMessage);  
 		
               }
 	if(!is_null($userId)){
@@ -114,7 +116,7 @@ foreach ($events as $event) {
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $textReplyMessage= $textReplyMessage.."\nFrom phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
@@ -125,7 +127,7 @@ foreach ($events as $event) {
                    if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
 		        $logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
 	                $multiMessage =     new MultiMessageBuilder;
-	                $textReplyMessage= "location -> ".$event->getLatitude().",".$event->getLongitude();
+	                $textReplyMessage= $textReplyMessage."\n location -> ".$event->getLatitude().",".$event->getLongitude();
 			$log_note=$log_note."user sent location ".$textReplyMessage;
                         $textMessage = new TextMessageBuilder($textReplyMessage);
 		        $multiMessage->add($textMessage);
@@ -146,7 +148,7 @@ foreach ($events as $event) {
                                     $count=1;
                                     foreach($data as $rec){
 	                               $count++;
-                                       $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                                       $textReplyMessage= $textReplyMessage."\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
 	                              if (isset($rec->picUrl)){
@@ -157,13 +159,13 @@ foreach ($events as $event) {
 			               $replyData = $multiMessage;
                                     }//end for each
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-                                   $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+                                   $textReplyMessage= $textReplyMessage."\nไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
-			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
+			          $textReplyMessage= $textReplyMessage."\nคุณให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
 			          $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
@@ -179,7 +181,7 @@ foreach ($events as $event) {
                                     $count=1;
                                     foreach($data as $rec){
 	                               $count++; 
-                                       $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
+                                       $textReplyMessage= $textReplyMessage."\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
 	                              if (isset($rec->picUrl)){
@@ -190,13 +192,13 @@ foreach ($events as $event) {
 			               $replyData = $multiMessage;
                                     }//end for each
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-                                   $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+                                   $textReplyMessage= $textReplyMessage."\nไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
-			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
+			          $textReplyMessage= $textReplyMessage."\nให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
 			          $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
@@ -217,7 +219,7 @@ foreach ($events as $event) {
 	             }//end if event is textMessage
 			
 		   }else{ // No userId registered
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
+		           $textReplyMessage= $textReplyMessage."\nคุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
                            $replyData = $multiMessage;
