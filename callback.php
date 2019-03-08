@@ -361,7 +361,6 @@ foreach ($events as $event) {
                                 if($isData >0){
                                    foreach($data as $rec){
                                            $textReplyMessage= $textReplyMessage."\n".$explodeText[1]." คือ\n".$rec->answer."\n";
-                                            //-----------------------
                                            }//end for each
                                     }else{
                                          $textReplyMessage='';
@@ -369,8 +368,7 @@ foreach ($events as $event) {
                                     $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
 		                    $replyData = $multiMessage;
-
-				;break;
+				break;
                         }//end switch 
 			
 			}// end check user status == 1
