@@ -149,8 +149,8 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (!is_null($rec->nationid)){
-	                               $picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
+	                              if (!is_null($rec->picUrl)){
+	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 			               $replyData = $multiMessage;
@@ -182,8 +182,8 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (!is_null($rec->license_plate)){
-	                               $picFullSize = "https://www.hooq.info/img_car/$rec->license_plate.png";
+	                              if (!is_null($rec->picUrl)){
+	                               $picFullSize = "https://www.hooq.info/img_car/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 			               $replyData = $multiMessage;
@@ -234,6 +234,7 @@ foreach ($events as $event) {
             $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
+		/*
             if($returnValue){
 		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
 	            }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
@@ -242,6 +243,7 @@ foreach ($events as $event) {
 			$textMessage = new TextMessageBuilder($text);
 			   $multiMessage->add($textMessage);
                        $replyData = $multiMessage;
+		       */
 		} // end of !is_null($userId)
             // ส่งกลับข้อมูล
 	    // ส่วนส่งกลับข้อมูลให้ LINE
