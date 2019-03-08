@@ -318,7 +318,7 @@ foreach ($events as $event) {
                    break;
 			   case '#lisa':
 				if(!isset($explodeText[2])){ // just question, 
-					$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
+					$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[1].'"}');
                                 $data = json_decode($json);
                                 $isData=sizeof($data);
                                 if($isData >0){
