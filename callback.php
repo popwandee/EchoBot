@@ -124,27 +124,24 @@ foreach ($events as $event) {
 		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
-					   $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-			                   $textReplyMessage= "\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-			                   $textReplyMessage= "\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-			                   $textReplyMessage= "\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+					   $textReplyMessage= $textReplyMessage."พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				           $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
 			                   $replyData = $multiMessage;
 			                   $response = $bot->replyMessage($replyToken,$replyData);
-					    $userId = NULL;
+					   $userId = NULL;
 				           }else{
 					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
                                            $replyData = $multiMessage;
-					       $userId = NULL;
+					   $userId = NULL;
 				       }
 		 } // end #register
 		 
@@ -187,15 +184,12 @@ foreach ($events as $event) {
 		 /*--------------------------*/
 		 if($explodeText[0]=='#help'){
 			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 	 $textMessage = new TextMessageBuilder($textReplyMessage);
-			          $multiMessage->add($textMessage);
-			 $textReplyMessage= "\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-			 	 $textMessage = new TextMessageBuilder($textReplyMessage);
-			          $multiMessage->add($textMessage);
-			 $textReplyMessage= "\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			 	 $textMessage = new TextMessageBuilder($textReplyMessage);
-			          $multiMessage->add($textMessage);
-			 $textReplyMessage= "\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
@@ -209,11 +203,12 @@ foreach ($events as $event) {
             $isUserRegister=sizeof($data);
 		if($isUserRegister <=0){
 		           $notRegisterReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนค่ะ";
-                          $log_note = $log_note.$notRegisterReplyMessage;
+                          //$log_note = $log_note.$notRegisterReplyMessage;
 	         }else{ // User registered
                     foreach($data as $rec){
-                           $log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
-                           $log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
+			    $registerUserReplyMessage="From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           //$log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           //$log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
 	if($rec->status==1){ // อนุมัติตัวบุคคลแล้ว
 		switch ($explodeText[0]) { 
