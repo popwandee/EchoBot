@@ -138,7 +138,7 @@ foreach ($events as $event) {
 			switch ($explodeText[0]) { 
 			   case '#':
 				if (!is_null($explodeText[1])){
-			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$nationId.'"}');
+			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
                                   $data = json_decode($json);
                                   $isData=sizeof($data);
                                  if($isData >0){
