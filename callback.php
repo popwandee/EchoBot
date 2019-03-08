@@ -149,7 +149,7 @@ foreach ($events as $event) {
 		 } // end #register
 		 
 		 /*---- prove user by update status from 0 to 1---*/
-		if(($explodeText[0]=='#prove') and ($userId=='Ua300e9b08826b655e221d12b446d34e5')){ 
+		if(($explodeText[0]=='#prove') and ($userId=='U4acff231b87ace2fa827aea5b01baa6a')){ 
 				$toProveUserId = str_replace("#prove ","", $rawText);  
 			// get $_id
 				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$toProveUserId.'"}');
