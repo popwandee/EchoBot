@@ -85,19 +85,15 @@ try {
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
-
 foreach ($events as $event) {
-		// Message Event
-     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-        $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
-	$log_note='';$textReplyMessage='';
+	$log_note='';
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
          $datetime->setTimezone($tz_object);
          $dateTimeNow = $datetime->format('Y\-m\-d\ H:i:s');
 	$replyToken = $event->getReplyToken();	
         $multiMessage =     new MultiMessageBuilder;
-	$replyData=' ';
+	$replyData='No Data';
         $userId=$event->getUserId();
 	$res = $bot->getProfile($userId);
          if ($res->isSucceeded()) {
@@ -105,11 +101,11 @@ foreach ($events as $event) {
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= $textReplyMessage."สวัสดีค่ะคุณ ".$displayName." นฝต.ขกท.สน.จชต. ได้พัฒนา นกฮูก ให้ใช้งานได้โดยจำกัดเฉพาะ จนท. ที่เกี่ยวข้องเท่านั้นนะคะ";
-	      $textReplyMessage= $textReplyMessage."\n\nค้นหาบุคคล พิมพ์ #p เว้นวรรค ตามด้วยหมายเลข 13 หลัก";
-	      $textReplyMessage= $textReplyMessage."\n\nค้นหารถ พิมพ์ #c เว้นวรรค ตามด้วยเลขทะเบียนรถ (กก1234ยะลา) ไม่เว้นวรรค ไม่มีเลข 0 ข้างหน้า";
-              $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);
+	      $textReplyMessage= "คุณ ".$displayName." นฝต. กำลังเร่งพัฒนานกฮูกให้ใช้งานได้อย่างสมบูรณ์โดยเร็วนะคะ";
+	      $log_note=$log_note.$textReplyMessage;
+	      $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);  
+		
               }
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
@@ -117,13 +113,28 @@ foreach ($events as $event) {
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $textReplyMessage."\nFrom phone\n".$displayName."\n".$userId;
-                           $textReplyMessage= $textReplyMessage."\nFrom DB\n".$rec->displayName."\n ".$rec->userId;
+                           $textReplyMessage= "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
-	          
-		
+	           // Postback Event
+                   if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) { $logger->info('Postback message has come');continue; }
+	          // Location Event
+                   if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+		        $logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
+	                $multiMessage =     new MultiMessageBuilder;
+	                $textReplyMessage= "location -> ".$event->getLatitude().",".$event->getLongitude();
+			$log_note=$log_note."user sent location ".$textReplyMessage;
+                        $textMessage = new TextMessageBuilder($textReplyMessage);
+		        $multiMessage->add($textMessage);
+	                $replyData = $multiMessage;
+	                $response = $bot->replyMessage($replyToken,$replyData);
+		        continue;
+	                 }
+			// Message Event
+                   if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+                       $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 			switch ($explodeText[0]) { 
 			   case '#p':
 				if (!is_null($explodeText[1])){
@@ -134,20 +145,29 @@ foreach ($events as $event) {
                                     $count=1;
                                     foreach($data as $rec){
 	                               $count++;
-                                       $textReplyMessage= $textReplyMessage."\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                                       $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (isset($rec->picUrl)){
+	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
+			               $replyData = $multiMessage;
 				      }
                                     }//end for each
-					 
-			               $replyData = $multiMessage;
-				       $log_note=$log_note."\n User select #p ".$textReplyMessage;
-                                 } // end $isData>0
+                                 }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+                                   $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
+			           $replyData = $multiMessage;
+                                   } // end $isData>0
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
 		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
 			    case '#c':
 				if (!is_null($explodeText[1])){
@@ -158,20 +178,29 @@ foreach ($events as $event) {
                                     $count=1;
                                     foreach($data as $rec){
 	                               $count++; 
-                                       $textReplyMessage= $textReplyMessage."\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
+                                       $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-	                              if (isset($rec->picUrl)){
+	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img_car/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
+			               $replyData = $multiMessage;
 				      }
                                     }//end for each
-					 
-			               $replyData = $multiMessage;  
-				       $log_note=$log_note."\n User select #c ".$textReplyMessage;
-                                 } // end isData>0
-				}  // end is_null($explodeText[1]
+                                 }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+                                   $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
+			           $replyData = $multiMessage;
+                                   } // end $isData>0
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select #c ".$textReplyMessage;
 			        break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
@@ -184,27 +213,38 @@ foreach ($events as $event) {
 		                break;
 			   default: $replyData='';break;
                         }//end switch 
-			
-		   }// end no user id from database
 	             }//end if event is textMessage
+			
+		   }else{ // No userId registered
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+                           $replyData = $multiMessage;
+	              }
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
-		if(!is_null($log_note){
 		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,'log_note'=>$log_note) );
                            $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
                                           'content' => $newUserData
                                            )
                                         );
-                 // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-                    $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
-                    $context = stream_context_create($opts);
-                    $returnValue = file_get_contents($url,false,$context);
-		}
-		
-            
+            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $context = stream_context_create($opts);
+            $returnValue = file_get_contents($url,false,$context);
+		/*
+            if($returnValue){
+		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
+	            }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
+		 
+		        }
+			$textMessage = new TextMessageBuilder($text);
+			   $multiMessage->add($textMessage);
+                       $replyData = $multiMessage;
+		       */
 		} // end of !is_null($userId)
-            
+            // ส่งกลับข้อมูล
 	    // ส่วนส่งกลับข้อมูลให้ LINE
            $response = $bot->replyMessage($replyToken,$replyData);
            if ($response->isSucceeded()) { echo 'Succeeded!'; return;}
@@ -212,10 +252,6 @@ foreach ($events as $event) {
              $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody(); echo $statusMessage;
              $bot->replyText($replyToken, $statusMessage);
 }// end foreach event
-
-
-
-
 function tranlateLang($source, $target, $text_parameter)
 {
     $text = str_replace($source,"", $text_parameter);
@@ -291,7 +327,6 @@ class ReplyTranslateMessage
             ->setFlex(0)
             ->setContents([$websiteButton, $spacer]);
     }
-
 } 
 class ReplyCarRegisterMessage
 {
@@ -403,5 +438,4 @@ class ReplyCarRegisterMessage
             ->setFlex(0)
             ->setContents([$websiteButton, $spacer]);
     }
-
 } 
