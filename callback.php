@@ -87,6 +87,9 @@ try {
 }
 
 foreach ($events as $event) {
+		// Message Event
+     if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+        $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 	$log_note=NULL;$textReplyMessage='';
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
@@ -105,10 +108,8 @@ foreach ($events as $event) {
 	      $textReplyMessage= $textReplyMessage."สวัสดีค่ะคุณ ".$displayName." นฝต.ขกท.สน.จชต. ได้พัฒนา นกฮูก ให้ใช้งานได้โดยจำกัดเฉพาะ จนท. ที่เกี่ยวข้องเท่านั้นนะคะ";
 	      $textReplyMessage= $textReplyMessage."\n\nค้นหาบุคคล พิมพ์ #p เว้นวรรค ตามด้วยหมายเลข 13 หลัก";
 	      $textReplyMessage= $textReplyMessage."\n\nค้นหารถ พิมพ์ #c เว้นวรรค ตามด้วยเลขทะเบียนรถ (กก1234ยะลา) ไม่เว้นวรรค ไม่มีเลข 0 ข้างหน้า";
-	      $log_note=$log_note.$textReplyMessage;
-	      //$textMessage = new TextMessageBuilder($textReplyMessage);
-	      //$multiMessage->add($textMessage);  
-		
+              $textMessage = new TextMessageBuilder($textReplyMessage);
+	      $multiMessage->add($textMessage);
               }
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
@@ -116,28 +117,13 @@ foreach ($events as $event) {
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $textReplyMessage."\nFrom phone \nDisplayname ".$displayName."\n User Id ".$userId;
-                           $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
+                           $textReplyMessage= $textReplyMessage."\nFrom phone\n".$displayName."\n".$userId;
+                           $textReplyMessage= $textReplyMessage."\nFrom DB\n".$rec->displayName."\n ".$rec->userId;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
-	           // Postback Event
-                  // if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) { $logger->info('Postback message has come');continue; }
-	          // Location Event
-                   if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
-		        $logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
-	                $multiMessage =     new MultiMessageBuilder;
-	                $textReplyMessage= $textReplyMessage."\n".$event->getLatitude().",".$event->getLongitude();
-			$log_note=$log_note."user sent location ".$textReplyMessage;
-                        $textMessage = new TextMessageBuilder($textReplyMessage);
-		        $multiMessage->add($textMessage);
-	                $replyData = $multiMessage;
-	                $response = $bot->replyMessage($replyToken,$replyData);
-		        continue;
-	                 }
-			// Message Event
-                   if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-                       $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
+	          
+		
 			switch ($explodeText[0]) { 
 			   case '#p':
 				if (!is_null($explodeText[1])){
@@ -156,9 +142,10 @@ foreach ($events as $event) {
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
+                                    }//end for each
+					 
 			               $replyData = $multiMessage;
 				       $log_note=$log_note."\n User select #p ".$textReplyMessage;
-                                    }//end for each
                                  } // end $isData>0
 		                }// end !is_null($explodeText[1])
 			        break;
@@ -179,9 +166,10 @@ foreach ($events as $event) {
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
+                                    }//end for each
+					 
 			               $replyData = $multiMessage;  
 				       $log_note=$log_note."\n User select #c ".$textReplyMessage;
-                                    }//end for each
                                  } // end isData>0
 				}  // end is_null($explodeText[1]
 			        break;
@@ -196,15 +184,9 @@ foreach ($events as $event) {
 		                break;
 			   default: $replyData='';break;
                         }//end switch 
-	             }//end if event is textMessage
 			
-		   }else{ // No userId registered
-		           //$textReplyMessage= $textReplyMessage."\nคุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
-                           $textReplyMessage= '';
-			   $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-                           $replyData = $multiMessage;
-	              }
+		   }// end no user id from database
+	             }//end if event is textMessage
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
 		if(!is_null($log_note){
