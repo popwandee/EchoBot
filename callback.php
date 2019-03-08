@@ -124,8 +124,21 @@ foreach ($events as $event) {
 		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
-                                           $replyData = $multiMessage;
-					       $userId = NULL;
+					   $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $textReplyMessage= "\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $textReplyMessage= "\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 	           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $textReplyMessage= "\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $replyData = $multiMessage;
+			                   $response = $bot->replyMessage($replyToken,$replyData);
+					    $userId = NULL;
 				           }else{
 					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
