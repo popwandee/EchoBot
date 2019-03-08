@@ -87,7 +87,12 @@ try {
 }
 
 foreach ($events as $event) {
-$replyToken = $event->getReplyToken();	
+	$log_note='';$textReplyMessage='';
+	 $tz_object = new DateTimeZone('Asia/Bangkok');
+         $datetime = new DateTime();
+         $datetime->setTimezone($tz_object);
+         $dateTimeNow = $datetime->format('Y\-m\-d\ H:i:s');
+	$replyToken = $event->getReplyToken();	
         $multiMessage =     new MultiMessageBuilder;
 	$replyData='No Data';
         $userId=$event->getUserId();
@@ -97,9 +102,12 @@ $replyToken = $event->getReplyToken();
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= "คุณ ".$displayName;
-	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);  
+	      $textReplyMessage= $textReplyMessage."สวัสดีค่ะคุณ ".$displayName." นฝต.ขกท.สน.จชต. ได้พัฒนา นกฮูก ให้ใช้งานได้โดยจำกัดเฉพาะ จนท. ที่เกี่ยวข้องเท่านั้นนะคะ";
+	      $textReplyMessage= $textReplyMessage."\n\nค้นหาบุคคล พิมพ์ #p เว้นวรรค ตามด้วยหมายเลข 13 หลัก";
+	      $textReplyMessage= $textReplyMessage."\n\nค้นหารถ พิมพ์ #c เว้นวรรค ตามด้วยเลขทะเบียนรถ (กก1234ยะลา) ไม่เว้นวรรค ไม่มีเลข 0 ข้างหน้า";
+	      $log_note=$log_note.$textReplyMessage;
+	      //$textMessage = new TextMessageBuilder($textReplyMessage);
+	      //$multiMessage->add($textMessage);  
 		
               }
 	if(!is_null($userId)){
@@ -108,402 +116,336 @@ $replyToken = $event->getReplyToken();
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $rec->displayName;
+                           $textReplyMessage= $textReplyMessage."\nFrom phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
-	           
-		   }else{
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ต่อไปจะไม่สามารถเข้าถึงฐานข้อมูลได้แล้วนะคะ";
+	           // Postback Event
+                   if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) { $logger->info('Postback message has come');continue; }
+	          // Location Event
+                   if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
+		        $logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
+	                $multiMessage =     new MultiMessageBuilder;
+	                $textReplyMessage= $textReplyMessage."\n location -> ".$event->getLatitude().",".$event->getLongitude();
+			$log_note=$log_note."user sent location ".$textReplyMessage;
+                        $textMessage = new TextMessageBuilder($textReplyMessage);
+		        $multiMessage->add($textMessage);
+	                $replyData = $multiMessage;
+	                $response = $bot->replyMessage($replyToken,$replyData);
+		        continue;
+	                 }
+			// Message Event
+                   if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+                       $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
+			switch ($explodeText[0]) { 
+			   case '#p':
+				if (!is_null($explodeText[1])){
+			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+                                  $data = json_decode($json);
+                                  $isData=sizeof($data);
+                                 if($isData >0){
+                                    $count=1;
+                                    foreach($data as $rec){
+	                               $count++;
+                                       $textReplyMessage= $textReplyMessage."\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
+                                       $textMessage = new TextMessageBuilder($textReplyMessage);
+	                               $multiMessage->add($textMessage);
+	                              if (isset($rec->picUrl)){
+	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+				      }
+			               $replyData = $multiMessage;
+                                    }//end for each
+                                 }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+                                   $textReplyMessage= $textReplyMessage."\nไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
+			           $replyData = $multiMessage;
+                                   } // end $isData>0
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= $textReplyMessage."\nคุณให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select #p ".$textReplyMessage;
+			        break;
+			    case '#c':
+				if (!is_null($explodeText[1])){
+			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/register_south?apiKey='.MLAB_API_KEY.'&q={"license_plate":"'.$explodeText[1].'"}');
+                                  $data = json_decode($json);
+                                  $isData=sizeof($data);
+                                 if($isData >0){
+                                    $count=1;
+                                    foreach($data as $rec){
+	                               $count++; 
+                                       $textReplyMessage= $textReplyMessage."\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
+                                       $textMessage = new TextMessageBuilder($textReplyMessage);
+	                               $multiMessage->add($textMessage);
+	                              if (isset($rec->picUrl)){
+	                               $picFullSize = "https://www.hooq.info/img_car/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+				      }
+			               $replyData = $multiMessage;
+                                    }//end for each
+                                 }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
+                                   $textReplyMessage= $textReplyMessage."\nไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
+			           $replyData = $multiMessage;
+                                   } // end $isData>0
+				}else{ // no $explodeText[1]
+			          $textReplyMessage= $textReplyMessage."\nให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
+			          $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+		                }// end !is_null($explodeText[1])
+				$log_note=$log_note."\n User select #c ".$textReplyMessage;
+			        break;
+					/*--------------------------------------*/
+		case '#':
+	                  $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
+                          $data = json_decode($json);
+                          $isData=sizeof($data);
+                          if($isData >0){
+		             $textReplyMessage = $textReplyMessage."\nคุณ".$displayName."\n";
+		             $count = 1;
+		             $hasImageUrlStatus = false;
+		             // default image for flex message
+		             $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
+                             foreach($data as $rec){
+                                     $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
+                                     
+				     if(isset($rec->Image) and (!$hasImageUrlStatus) and ($count<5)){
+			                  $imageUrlStatus=true;
+		 	                  $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
+	                                  $imageMessage = new ImageMessageBuilder($imageUrl,$imageUrl);
+	                                  $multiMessage->add($imageMessage);
+		                          }
+			             $count++;
+                                     }//end for each
+		                     $textMessage = new TextMessageBuilder($textReplyMessage);
+		                     $multiMessage->add($textMessage);
+		                     $replyData = $multiMessage;
+				  
+		      /*
+		              $flexData = new ReplyTranslateMessage;
+                              $replyData = $flexData->get($explodeText[1],$textReplyMessage,$imageUrl);
+		     
+		    */
+	                 }else{
+		               $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
+		                $textMessage = new TextMessageBuilder($textReplyMessage);
+		                $multiMessage->add($textMessage);
+		                $replyData = $multiMessage;
+	                       }
+                     
+                   break;
+					/* ------------------------------------*/
+			   case '$เพิ่มชื่อ':
+                                 $x_tra = str_replace('$เพิ่มชื่อ ',"", $text);
+                                 $pieces = explode(" ", $x_tra);
+                                 $rank=$pieces[0];
+                                 $name=$pieces[1];
+                                 $lastname=$pieces[2];
+                                 $nickname=$pieces[3];
+                                 $position=$pieces[4];
+                                 $Tel1=$pieces[5];
+
+                                 //Post New Data
+                                 $newData = json_encode(array('rank' => $rank,'name'=> $name,'lastname'=> $lastname,'nickname'=> $nickname,'position'=> $position,'Tel1'=> $Tel1) );
+                                 $opts = array('http' => array( 'method' => "POST",
+                                  'header' => "Content-type: application/json",
+                                  'content' => $newData
+                                        )
+                                      );
+                                 $url = 'https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY;
+                                 $context = stream_context_create($opts);
+                                 $returnValue = file_get_contents($url,false,$context);
+                                 if($returnValue)$textReplyMessage= $textReplyMessage."\nขอแสดงความยินดีด้วยค่ะ\n ลิซ่าได้เพิ่มชื่อ \n".$rank." ".$name." ".$lastname." ".$Tel1."\n ในรายชื่อเรียบร้อยแล้วค่ะ";
+                                    else $textReplyMessage= $textReplyMessage."\nไม่สามารถเพิ่มชื่อได้";
+                                    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+					break;
+			   case '$lisa':
+                                //Post New Data
+		                $indexCount=1;$answer='';
+	                        foreach($explodeText as $rec){
+		                       $indexCount++;
+		                       if($indexCount>1){
+		                           $answer= $answer." ".$explodeText[$indexCount];
+		                          }
+	                                }
+                                $newData = json_encode(array('question' => $explodeText[1],'answer'=> $answer) );
+                                $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newData
+                                           )
+                                        );
+                                $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
+                                $context = stream_context_create($opts);
+                                $returnValue = file_get_contents($url,false,$context);
+                                       if($returnValue){
+		                          $textReplyMessage= $textReplyMessage."\nขอบคุณที่สอนลิซ่าค่ะ";
+		                          $textReplyMessage= $textReplyMessage."\nลิซ่าจำได้แล้วว่า ".$explodeText[1]." คือ ".$answer;
+	                                      }else{ $textReplyMessage= $textReplyMessage."\nCannot teach Lisa";
+		                                     }
+				    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+                                 break;
+			   case '#tran':
+			        $text_parameter = str_replace("#tran ","", $text);  
+                                if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
+                                if (!is_null($explodeText[2])){ $target =$explodeText[2];}else{$target ='th';}
+                                $result=tranlateLang($source,$target,$text_parameter);
+				$flexData = new ReplyTranslateMessage;
+                                $replyData = $flexData->get($text_parameter,$result);
+				$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
+		                break;
+			   default:
+                                $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
+                                $data = json_decode($json);
+                                $isData=sizeof($data);
+                                if($isData >0){
+                                   foreach($data as $rec){
+                                           $textReplyMessage= $textReplyMessage.$rec->answer."\n";
+                                            //-----------------------
+                                           }//end for each
+                                    }else{
+                                         $textReplyMessage='';
+                                         }//end no data from server
+                                    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+                      
+		               break;
+                        }//end switch 
+	             }//end if event is textMessage
+			
+		   }else{ // No userId registered
+		           $textReplyMessage= $textReplyMessage."\nคุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
-			   $tz_object = new DateTimeZone('Asia/Bangkok');
-                           $datetime = new DateTime();
-                           $datetime->setTimezone($tz_object);
-                           $dateTimeNow = $datetime->format('Y\-m\-d\ H:i:s');
-			   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow) );
+                           $replyData = $multiMessage;
+	              }
+		
+		//-- บันทึกการเข้าใช้งานระบบ ---//
+		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,'log_note'=>$log_note) );
                            $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
                                           'content' => $newUserData
                                            )
                                         );
             // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-            $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
-             if($returnValue){
+		/*
+            if($returnValue){
 		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
-	    }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
+	            }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
 		 
-		 }
+		        }
 			$textMessage = new TextMessageBuilder($text);
 			   $multiMessage->add($textMessage);
-		}
-	 
-	}
-
-  // Postback Event
-    if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) {
-		$logger->info('Postback message has come');
-		continue;
-	}
-	// Location Event
-    if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
-		$logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
-	        $textReplyMessage= "location -> ".$event->getLatitude().",".$event->getLongitude();
-                $textMessage = new TextMessageBuilder($textReplyMessage);
-		$multiMessage->add($textMessage);
-	        $replyData = $multiMessage;
-	        $response = $bot->replyMessage($replyToken,$replyData);
-		continue;
-	}
-    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-
-        $text = $event->getText();
-        $text = strtolower($text);
-        $explodeText=explode(" ",$text);
-	$textReplyMessage="";
-
-      switch ($explodeText[0]) {
-
-	case '#i':
-
-		/* ส่วนดึงข้อมูลจากฐานข้อมูล */
-		if (!is_null($explodeText[1])){
-		   $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
-                   $data = json_decode($json);
-                   $isData=sizeof($data);
-
-                 if($isData >0){
-		    $count=1;
-                    foreach($data as $rec){
-			   $count++;
-                           $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-			   $textReplyMessage= "https://www.hooq.info/img/$rec->nationid.png";
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-			   $picFullSize = "https://www.hooq.info/img/$rec->nationid.png";
-                           $picThumbnail = "https://www.hooq.info/img/$rec->nationid.png";
-			   //$picFullSize = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                           //$picThumbnail = 'https://s.isanook.com/sp/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9zLmlzYW5vb2suY29tL3NwLzAvdWQvMTY2LzgzNDUzOS9sb3ZlcmppbmEuanBn.jpg';
-                           $imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			   $multiMessage->add($imageMessage);
-			    //$arrayPostData['to']=$replyId;
-			    //$arrayPostData['messages'][0]['type']="text";
-			    //$arrayPostData['messages'][0]['text']="hello";
-			    //pushMsg($arrayHeader,$arrayPostData);
-                           }//end for each
-	            $replyData = $multiMessage;
-
-		   }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
-		          $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-			  $textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,407);
-			 // $picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
-			  //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
-                         // $picThumbnail = "https://www.hooq.info/photos/thumbnails/tn_$ranNumber.jpg";
-			  //$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			 // $multiMessage->add($imageMessage);
-			  $replyData = $multiMessage;
-			 // กรณีจะตอบเฉพาะข้อความ
-		      //$bot->replyText($replyToken, $textMessage);
-		        } // end $isData>0
-		   }else{ // no $explodeText[1]
-	                $textReplyMessage= "คุณให้ข้อมูลในการสอบถามไม่ครบถ้วนค่ะ";
-			$textMessage = new TextMessageBuilder($textReplyMessage);
-			  $multiMessage->add($textMessage);
-			  //$ranNumber=rand(1,407);
-			  //$picFullSize = "https://www.hooq.info/photos/$ranNumber.jpg";
-                          //$picThumbnail = "https://www.hooq.info/photos/$ranNumber.jpg";
-			  ////$imageMessage = new ImageMessageBuilder($picFullSize,$picThumbnail);
-			  //$multiMessage->add($imageMessage);
-			  $replyData = $multiMessage;
-			 // กรณีจะตอบเฉพาะข้อความ
-		      //$bot->replyText($replyToken, $textMessage);
-		   }// end !is_null($explodeText[1])
-		/* จบส่วนดึงข้อมูลจากฐานข้อมูล */
-
-
-		break; // break case #i
-    case '$เพิ่มชื่อ':
-    $x_tra = str_replace('$เพิ่มชื่อ ',"", $text);
-    $pieces = explode(" ", $x_tra);
-    $rank=$pieces[0];
-    $name=$pieces[1];
-    $lastname=$pieces[2];
-    $nickname=$pieces[3];
-    $position=$pieces[4];
-    $Tel1=$pieces[5];
-
-    //Post New Data
-    $newData = json_encode(array('rank' => $rank,'name'=> $name,'lastname'=> $lastname,'nickname'=> $nickname,'position'=> $position,'Tel1'=> $Tel1) );
-    $opts = array('http' => array( 'method' => "POST",
-                                  'header' => "Content-type: application/json",
-                                  'content' => $newData
-                                   )
-                                );
-    $url = 'https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY;
-    $context = stream_context_create($opts);
-    $returnValue = file_get_contents($url,false,$context);
-    if($returnValue)$text = "ขอแสดงความยินดีด้วยค่ะ\n ลิซ่าได้เพิ่มชื่อ \n".$rank." ".$name." ".$lastname." ".$Tel1."\n ในรายชื่อเรียบร้อยแล้วค่ะ";
-    else $text="ไม่สามารถเพิ่มชื่อได้";
-    $bot->replyText($replyToken, $text);
-
-
-
-  		break; // break case #i
-	case '#':
-	      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $result = "คุณ".$displayName;
-		   $count = 1;
-		   $hasImageUrlStatus = false;
-		      // default image for flex message
-		   $imageUrl="https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg";
-                foreach($data as $rec){
-                  $result= $result.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                  if(!is_null($rec->Image) and (!$hasImageUrlStatus)){
-			 $imageUrlStatus=true;
-		 	 $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
-		  }
-			$count++;
-                }//end for each
-		    $textReplyMessage= $result;
-		     $flexData = new ReplyTranslateMessage;
-                     $replyData = $flexData->get($explodeText[1],$textReplyMessage,$imageUrl);
-		      /*
-		    $textMessage = new TextMessageBuilder($textReplyMessage);
-		    $multiMessage->add($textMessage);
-		    $replyData = $multiMessage;  
-		    */
-	      }else{
-		  $text= "ลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ , อัพเดตข้อมูลให้ด้วยนะค่ะ ";
-		     $result= $text;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,83);
-	             $picFullSize = "https://www.hooq.info/photos/300.jpg";
-                     $replyData = $flexData->get($explodeText[1],$result,$picFullSize);
-	      }
-                     
-                   break;
-
-
-case '!':
-
-			  $replyData = $multiMessage;
-		break; //break case $
-
-  case '$lisa':
-
-            //Post New Data
-		    $indexCount=1;$answer='';
-	    foreach($explodeText as $rec){
-		    $indexCount++;
-		    if($indexCount>1){
-		    $answer= $answer." ".$explodeText[$indexCount];
-		    }
-	    }
-            $newData = json_encode(array('question' => $explodeText[1],'answer'=> $answer) );
-            $opts = array('http' => array( 'method' => "POST",
-                                          'header' => "Content-type: application/json",
-                                          'content' => $newData
-                                           )
-                                        );
-            // เพิ่มเงื่อนไข ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือยัง
-
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
-            $context = stream_context_create($opts);
-            $returnValue = file_get_contents($url,false,$context);
-            if($returnValue){
-		    $text =  'ขอบคุณที่สอนลิซ่าค่ะ';
-		    $text2 = 'ลิซ่าจำได้แล้วว่า '.$explodeText[1]." คือ ".$answer;
-	    }else{ $text="Cannot teach Lisa";
-		  $text2 = '';
-		 }
-            
-          
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($text,$text2,$picFullSize);
-            break;
-		      // ---------------------------------------------------------------------------//
-
- case 'แปล':
-             //$text_parameter = str_replace("แปล ","", $text);
-             //$text_parameter = str_replace("แปล ","", $text_parameter);
-             $source = 'th';
-           $text_parameter = str_replace("แปล ","", $text);  
-           if (!is_null($explodeText[1])){
-		   switch ($explodeText[1]) {
-			case 'cn': $target = 'zh-CN' ;$text_parameter = str_replace("cn","", $text_parameter); break;
-			case 'ko': $target = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
-			case 'de': $target = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
-			default: $target = 'en'; break;
-		   }// end switch
-	   }// end if
-             $trans = new GoogleTranslate();
-            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
-		       $question = $text_parameter;
-		     $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
-             
-                break;
-case 'tran':
-            $text_parameter = str_replace("tran ","", $text);
-            $text_parameter = str_replace("tran ","", $text_parameter);
-            $source = 'en';
-            $target = 'th';
-            $trans = new GoogleTranslate();
-            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
-           $question = $text_parameter;
-		      $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
-                               break;
-case '#tran':
-		      
-            $text_parameter = str_replace("#tran ","", $text);  
-           if (!is_null($explodeText[1])){
-		   switch ($explodeText[1]) {
-			case 'cn': $source = 'zh-CN' ;$text_parameter = str_replace("cn","", $text_parameter); break;
-			case 'ko': $source = 'ko' ;$text_parameter = str_replace("ko","", $text_parameter); break;
-			case 'de': $source = 'de' ;$text_parameter = str_replace("de","", $text_parameter); break;
-			default: $source = 'en'; break;
-		   }// end switch
-	   }// end if
-            $target = 'th';
-            $trans = new GoogleTranslate();
-            $result = "แปลว่า\n".$trans->translate($source, $target, $text_parameter)."\nค่ะ";
-           $question = $text_parameter;
-		      $answer = $result;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
-                               break;
-
-case 'Stock':
-case 'stock':
-            $symbol=$explodeText[1];
-            $text= 'ราคาหุ้นรายวัน '.$symbol.' ';
-            $url_get_data ='https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='.$symbol.'.bk&apikey='.ALPHAVANTAGE_API_KEY;
-            $content = file_get_contents($url_get_data); // อ่านข้อมูล JSON
-            $jarr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-            $keepdate = true;
-            $countm= 0;
-            while (list($key) = each($jarr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                $KeepMainkey = $key; //เก็บคีย์หลัก
-                $count = count($jarr[$key]); // นับจำนวนแถวที่เก็บไว้ใน Array ใน key นั้นๆ
-                $getarr1 = $jarr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                while (list($key) = each($getarr1)) {
-                    if ($KeepMainkey=="Meta Data") {//&& $countm=='1'
-                        $text= $text.' '.$key.' '.$getarr1[$key].' ';
-                        }
-                        $countm++;
-                    if ($KeepMainkey!="Meta Data" && $keepdate ) {
-                        $keepdate = false;
-                        $getarrayday = $getarr1[$key];
-                        while (list($key) = each($getarrayday)) {
-                            $text= $text.' '.$key.' '.$getarrayday[$key].' ' ; //แสดงคีย์และผลลัพธ์ขอคีย์ของวัน
-                            }//สิ้นสุดการลิสต์คีย์ชั้นลึก (ระดับวัน)
-                          }
-                    }//สิ้นสุดการลิสต์คีย์ชั้นกลาง
-                } //สิ้นสุดการลิสต์คีย์ชั้นแรก
-              $bot->replyText($replyToken, $text);
-break;
-case 'News':
-case 'news':
-                               $news_url='https://newsapi.org/v2/top-headlines?country=th&apiKey='.NEWSAPI_API_KEY ;
-                               $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                               $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                               $text='';
-                                 while (list($key) = each($json_arr)) { // ทำการ list ค่า key ของ Array ทั้งหมดออกมา
-                                   if($key=='articles'){
-                                    $json_arr1 = $json_arr[$key]; //ส่งมอบคุณสมบัติ Array ระดับกลาง
-                                    while (list($key) = each($json_arr1)) {
-                                         $text=$text." ".$json_arr1[$key]['title'].$json_arr1[$key]['description'].$json_arr1[$key]['url'];
-                                       }
-                                   }
-                                 }
-                                 $bot->replyText($replyToken, $text);
-                                  break;
-
-
-                                     case 'Weather':
-                                     case 'weather':
-                                     if(is_Null($explodeText[1]))$explodeText[1]="Bangkok";
-                                    $news_url="http://api.openweathermap.org/data/2.5/weather?q=".$explodeText[1].",th&units=metric&appid=".OPENWEATHERMAP_API_KEY ;
-                                     $content = file_get_contents($news_url); // อ่านข้อมูล JSON
-                                     $json_arr = json_decode($content, true); // แปลงข้อมูล JSON ให้อยู่ในรูปแบบ Array
-                                       $text= "รายงานสภาพอากาศ ".$json_arr[name];
-                                       $date = date("F j, Y, g:i a",$json_arr[dt]);
-                                       $text=$text." เมื่อ ".$date." มีลักษณะอากาศ ".$json_arr[weather][0][main]." ".$json_arr[weather][0][description]." ความกดอากาศ ".$json_arr[main][pressure]."hPa, ความชื้นสัมพัทธ์ ".$json_arr[main][humidity]."%";
-                                       $text=$text." อุณหภูมิ ".$json_arr[main][temp]."Celsius, อุณหภูมิสูงสุด ".$json_arr[main][temp_max]."Celsius, อุณหภูมิต่ำสุด ".$json_arr[main][temp_min]."Celsius";
-                                       $sunrise = date("F j, Y, g:i a",$json_arr[sys][sunrise]);
-                                       $text=$text." พระอาทิตย์ขึ้น ".$sunrise;
-                                       $sunset = date("F j, Y, g:i a",$json_arr[sys][sunset]);
-                                       $text=$text." พระอาทิตย์ตก ".$sunset;
-                                       $bot->replyText($replyToken, $text);
-                                        break;
-	 
-          default:
-
-              $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-		  $text=$displayName;
-              if($isData >0){
-                foreach($data as $rec){
-                  $text= $text.$rec->answer."\n";
-                  //-----------------------
-                }//end for each
-              }else{
-                  $text='';
-		      break;
-                  //$text= $explodeText[0];
-                  //$bot->replyText($reply_token, $text);
-              }//end no data from server
-
-
-                $textReplyMessage= $text;		          
-		     
-		//$picFullSize = "https://www.hooq.info/RTA/$image.jpg";
-                      $question = $explodeText[0];
-		      $answer = $text;
-		     $flexData = new ReplyTranslateMessage;
-		     $image=rand(1,409);
-	             $picFullSize = "https://www.hooq.info/photos/$image.jpg";
-                     $replyData = $flexData->get($question,$answer,$picFullSize);
-		break;
-            }//end switch
-
-	   // ส่วนส่งกลับข้อมูลให้ LINE
+                       $replyData = $multiMessage;
+		       */
+		} // end of !is_null($userId)
+            // ส่งกลับข้อมูล
+	    // ส่วนส่งกลับข้อมูลให้ LINE
            $response = $bot->replyMessage($replyToken,$replyData);
-           if ($response->isSucceeded()) {
-              echo 'Succeeded!';
-              return;
-              }
-
+           if ($response->isSucceeded()) { echo 'Succeeded!'; return;}
               // Failed ส่งข้อความไม่สำเร็จ
-             $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody();
-             echo $statusMessage;
+             $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody(); echo $statusMessage;
              $bot->replyText($replyToken, $statusMessage);
-         }//end if event is textMessage
 }// end foreach event
+function tranlateLang($source, $target, $text_parameter)
+{
+    $text = str_replace($source,"", $text_parameter);
+    $text = str_replace($target,"", $text);  
+    $trans = new GoogleTranslate();
+    $result = $trans->translate($source, $target, $text);	    
+    return $result;
+}
+
+
+		      // ---------------------------------------------------------------------------//
 
 
 class ReplyTranslateMessage
+{
+    /**
+     * Create  flex message
+     *
+     * @return \LINE\LINEBot\MessageBuilder\FlexMessageBuilder
+     */
+    public static function get($question,$answer)
+    {
+        return FlexMessageBuilder::builder()
+            ->setAltText('Lisa')
+            ->setContents(
+                BubbleContainerBuilder::builder()
+                    ->setHero(self::createHeroBlock())
+                    ->setBody(self::createBodyBlock($question,$answer))
+                    ->setFooter(self::createFooterBlock())
+            );
+    }
+    private static function createHeroBlock()
+    {
+	   
+        return ImageComponentBuilder::builder()
+            ->setUrl('https://www.hooq.info/wp-content/uploads/2019/02/Connect-with-precision.jpg')
+            ->setSize(ComponentImageSize::FULL)
+            ->setAspectRatio(ComponentImageAspectRatio::R20TO13)
+            ->setAspectMode(ComponentImageAspectMode::FIT)
+            ->setAction(new UriTemplateActionBuilder(null, 'https://www.hooq.info'));
+    }
+    private static function createBodyBlock($question,$answer)
+    {
+        $title = TextComponentBuilder::builder()
+            ->setText($question)
+            ->setWeight(ComponentFontWeight::BOLD)
+	    ->setwrap(true)
+            ->setSize(ComponentFontSize::SM);
+        
+        $textDetail = TextComponentBuilder::builder()
+            ->setText($answer)
+            ->setSize(ComponentFontSize::LG)
+            ->setColor('#000000')
+            ->setMargin(ComponentMargin::MD)
+	    ->setwrap(true)
+            ->setFlex(2);
+        $review = BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setMargin(ComponentMargin::LG)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setContents([$title,$textDetail]);
+        return BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setContents([$review]);
+    }
+    private static function createFooterBlock()
+    {
+        
+        $websiteButton = ButtonComponentBuilder::builder()
+            ->setStyle(ComponentButtonStyle::LINK)
+            ->setHeight(ComponentButtonHeight::SM)
+            ->setFlex(0)
+            ->setAction(new UriTemplateActionBuilder('เพิ่มเติม','https://www.hooq.info'));
+        $spacer = new SpacerComponentBuilder(ComponentSpaceSize::SM);
+        return BoxComponentBuilder::builder()
+            ->setLayout(ComponentLayout::VERTICAL)
+            ->setSpacing(ComponentSpacing::SM)
+            ->setFlex(0)
+            ->setContents([$websiteButton, $spacer]);
+    }
+} 
+class ReplyCarRegisterMessage
 {
     /**
      * Create  flex message
@@ -613,93 +555,4 @@ class ReplyTranslateMessage
             ->setFlex(0)
             ->setContents([$websiteButton, $spacer]);
     }
-
-} 
-
-/*
-function pushMsg($arrayHeader,$arrayPostData){
-		 $strUrl ="https://api.line.me/v2/bot/message/push";
-		 $ch=curl_init();
-		 curl_setopt($ch,CURLOPT_URL,$strUrl);
-		 curl_setopt($ch,CURLOPT_HEADER,false);
-		 curl_setopt($ch,CURLOPT_POST,true);
-		 curl_setopt($ch,CURLOPT_HTTPHEADER,$arrayHeader);
-		 curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode($arrayPostData));
-		 curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-		 curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
-		 $result=curl_exec($ch);
-		 curl_close($ch);
-		 }
-		 */
-
-  /*
-	 case '$เพิ่มรถ':
-              $x_tra = str_replace("#เพิ่มรถ ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_licence_plate=$pieces[0];
-              $_brand=$pieces[1];
-              $_model=$pieces[2];
-              $_color=$pieces[3];
-              $_owner=$pieces[4];
-              $_user=$pieces[5];
-              $_note=$pieces[6];
-              //Post New Data
-              $newData = json_encode(array('licence_plate' => $_licence_plate,'brand'=> $_brand,'model'=> $_model,'color'=> $_color,'owner'=> $_owner,'user'=> $_user,'note'=> $_note) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มรถสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มรถได้";
-              $bot->replyText($reply_token, $text);
-
-              break;
-	 case '$ทะเบียน':
-		  $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/carregister?apiKey='.MLAB_API_KEY.'&q={"licence_plate":"'.$explodeText[1].'"}');
-              $data = json_decode($json);
-              $isData=sizeof($data);
-              if($isData >0){
-		   $text="";
-		   $count=1;
-                foreach($data as $rec){
-                  $text= $text.$count.' '.$rec->licence_plate.' '.$rec->brand.' '.$rec->model.' '.$rec->color."\n ผู้ถือกรรมสิทธิ์ ".$rec->owner."\n ผู้ครอบครอง ".$rec->user."\n หมายเหตุ/ประวัติ ".$rec->note."\n\n";
-                  $count++;
-                }//end for each
-	      }else{
-		  $text= "ไม่พบข้อมูลทะเบียนรถ ".$explodeText[1];
-	      }
-                  $bot->replyText($reply_token, $text);
-                   break;
-          case '$เพิ่มคน':
-              $x_tra = str_replace("#เพิ่มคน ","", $text);
-              $pieces = explode("|", $x_tra);
-              $_name=$pieces[0];
-              $_surname=$pieces[1];
-              $_nickname=$pieces[2];
-              $_nickname2=$pieces[3];
-              $_telephone=$pieces[4];
-              $_jobposition=$pieces[5];
-              $_address=$pieces[6];
-              //Post New Data
-
-              $newData = json_encode(array('name' => $_name,'surname'=> $_surname,'nickname'=> $_nickname,'nickname2'=> $_nickname2,'telephone'=> $_telephone,'jobposition'=> $_jobposition,'address'=> $_address) );
-              $opts = array('http' => array( 'method' => "POST",
-                                            'header' => "Content-type: application/json",
-                                            'content' => $newData
-                                             )
-                                          );
-              $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/intelphonebook?apiKey='.MLAB_API_KEY;
-              $context = stream_context_create($opts);
-              $returnValue = file_get_contents($url,false,$context);
-              if($returnValue)$text = 'เพิ่มคนสำเร็จแล้ว';
-              else $text="ไม่สามารถเพิ่มคนได้";
-              $bot->replyText($reply_token, $text);
-
-              break;
-
-
-      */
+}
