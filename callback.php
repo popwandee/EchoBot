@@ -89,7 +89,7 @@ foreach ($events as $event) {
 	// Message Event
  if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
   $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
-	$log_note='';
+	$log_note=$text;
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
          $datetime->setTimezone($tz_object);
@@ -105,7 +105,6 @@ foreach ($events as $event) {
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
 	      $textReplyMessage= "คุณ ".$displayName." คะ";
-	      $log_note=$log_note.$textReplyMessage;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
 		 
@@ -148,7 +147,7 @@ foreach ($events as $event) {
                            $replyData = $multiMessage;
 	         }else{ // User registered
                     foreach($data as $rec){
-                           $log_note = "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            $log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
 	if($rec->status==1){ // อนุมัติตัวบุคคลแล้ว
@@ -165,7 +164,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-				       $log_note= $log_note.$textReplyMessage;
+				       //$log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
@@ -185,7 +184,7 @@ foreach ($events as $event) {
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
 		                }// end !is_null($explodeText[1])
-				$log_note=$log_note."\n User select #p ".$textReplyMessage;
+				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
                                                                     					
 			    case '#c':
@@ -200,7 +199,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
-				       $log_note= $log_note.$textReplyMessage;
+				       //$log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
@@ -229,8 +228,9 @@ foreach ($events as $event) {
                                 $result=tranlateLang($source,$target,$text_parameter);
 				$flexData = new ReplyTranslateMessage;
                                 $replyData = $flexData->get($text_parameter,$result);
-				$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
+				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
+				/*
 			case '#prove':
 
 			  $updateUserData = '{ "$set" : { "status" : 1 } }';
@@ -240,10 +240,11 @@ foreach ($events as $event) {
                                            )
                                         );
            
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
-            $context = stream_context_create($opts);
-            $returnValue = file_get_contents($url,false,$context);
+                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
+                                  $context = stream_context_create($opts);
+                                  $returnValue = file_get_contents($url,false,$context);
 				break;
+				*/
 			   default: $replyData='';break;
                         }//end switch 
 			
