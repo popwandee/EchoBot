@@ -112,16 +112,6 @@ foreach ($events as $event) {
             $data = json_decode($json);
             $isUserRegister=sizeof($data);
 		if($isUserRegister <=0){
-			$newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'statusMessage'=> $statusMessage,'pictureUrl'=>$pictureUrl) );
-                           $opts = array('http' => array( 'method' => "POST",
-                                          'header' => "Content-type: application/json",
-                                          'content' => $newUserData
-                                           )
-                                        );
-           
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
-            $context = stream_context_create($opts);
-            $returnValue = file_get_contents($url,false,$context);
 		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
@@ -151,6 +141,30 @@ foreach ($events as $event) {
                    if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
                        $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 			switch ($explodeText[0]) { 
+				case '#register': // เก็บข้อมูลผู้สมัคร แต่ยังคงให้ status =0
+			                $text_parameter = str_replace("#register ","", $text); 
+					$newUserData = json_encode(array('userName' => $text_parameter,'displayName' => $displayName,
+									 'userId'=> $userId,'statusMessage'=> $statusMessage,
+									 'pictureUrl'=>$pictureUrl,'status'=>0) );
+                                        $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newUserData ) );
+           
+                                       $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
+                                       $context = stream_context_create($opts);
+                                       $returnValue = file_get_contents($url,false,$context);
+			               if($returnValue){
+		                           $textReplyMessage= "คุณ".$displayName." ลงทะเบียน ID ".$userId." แล้วนะคะ\n รอตรวจสอบ ID \n".$userId."\nสักครู่ค่ะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+                                           $replyData = $multiMessage;
+				           }else{
+					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้นะคะ\n กรุณาลองใหม่อีกครั้งค่ะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+                                           $replyData = $multiMessage;
+				       }
+					break;
 			   case '#p':
 				if (!is_null($explodeText[1])){
 			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
