@@ -148,18 +148,12 @@ foreach ($events as $event) {
                            $replyData = $multiMessage;
 	         }else{ // User registered
                     foreach($data as $rec){
-                           $textReplyMessage= "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
-                           $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
+                           $log_note = "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
-			if($rec->status==1){
-				
-	          
-			
-			switch ($explodeText[0]) { 
-				
-			   case '#p':
+	if($rec->status==1){ // อนุมัติตัวบุคคลแล้ว
+		switch ($explodeText[0]) { 
+			case '#p':
 				if (!is_null($explodeText[1])){
 			          $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
                                   $data = json_decode($json);
@@ -171,6 +165,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\nหมายเลข ปชช. ".$rec->nationid."\nชื่อ".$rec->name."\nที่อยู่".$rec->address."\nหมายเหตุ".$rec->note;
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
+				       $log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
@@ -205,6 +200,7 @@ foreach ($events as $event) {
                                        $textReplyMessage= "\n ทะเบียน ".$rec->license_plate."\nยี่ห้อ".$rec->brand."\nรุ่น".$rec->model."\nสี".$rec->color."\nผู้ครอบครอง ".$rec->user."\nประวัติ".$rec->note."\nหากข้อมูลรถไม่เป็นไปตามนี้ให้สงสัยว่าทะเบียนปลอม";
                                        $textMessage = new TextMessageBuilder($textReplyMessage);
 	                               $multiMessage->add($textMessage);
+				       $log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
 	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
