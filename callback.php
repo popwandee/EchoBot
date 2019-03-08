@@ -219,7 +219,7 @@ foreach ($events as $event) {
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
 		                }// end !is_null($explodeText[1])
-				$log_note=$log_note."\n User select #p ".$textReplyMessage;
+				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
@@ -230,10 +230,10 @@ foreach ($events as $event) {
                                 $replyData = $flexData->get($text_parameter,$result);
 				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
-				/*
+			
 			case '#prove':
 
-			  $updateUserData = '{ "$set" : { "status" : 1 } }';
+			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
 			  $opts = array('http' => array( 'method' => "PUT",
                                           'header' => "Content-type: application/json",
                                           'content' => $updateUserData
@@ -244,7 +244,7 @@ foreach ($events as $event) {
                                   $context = stream_context_create($opts);
                                   $returnValue = file_get_contents($url,false,$context);
 				break;
-				*/
+				
 			   default: $replyData='';break;
                         }//end switch 
 			
