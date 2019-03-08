@@ -286,6 +286,7 @@ foreach ($events as $event) {
 				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
 			   case'#f': 
+				/*
 				 $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
                           $data = json_decode($json);
                           $isData=sizeof($data);
@@ -313,7 +314,7 @@ foreach ($events as $event) {
 		                $multiMessage->add($textMessage);
 		                $replyData = $multiMessage;
 	                       }
-
+*/
 				break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
