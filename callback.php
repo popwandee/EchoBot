@@ -123,6 +123,8 @@ foreach ($events as $event) {
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
 			     }//end for each
+			if($rec->status==1){
+				
 	           // Postback Event
                    if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) { $logger->info('Postback message has come');continue; }
 	          // Location Event
@@ -245,6 +247,7 @@ foreach ($events as $event) {
                         }//end switch 
 	             }//end if event is textMessage
 			
+			}// end check user status == 1
 		   
 	              }// end User Registered 
 		
