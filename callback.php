@@ -88,7 +88,7 @@ try {
 foreach ($events as $event) {
 	// Message Event
  if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-  $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
+  $rawText = $event->getText();$text = strtolower($rawText);$explodeText=explode(" ",$text);$textReplyMessage="";
 	$log_note=$text;
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
@@ -134,7 +134,44 @@ foreach ($events as $event) {
 					       $userId = NULL;
 				       }
 		 } // end #register
-		
+		 
+		 /*---- prove user by update status from 0 to 1---*/
+		if(($explodeText[0]=='#prove') and ($userId=='Ua300e9b08826b655e221d12b446d34e5')){ 
+				$toProveUserId = str_replace("#prove ","", $rawText);  
+			// get $_id
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$toProveUserId.'"}');
+                                  $data = json_decode($json);
+                                  $isGet_id=sizeof($data);
+                                 if($isGet_id >0){
+                                    foreach($data as &$rec){
+                                       $documentId= $rec->_id;
+					    foreach($documentId as $key => $value){
+						    if($key === '$oid'){
+							    $updateId=$value;
+					                    $textReplyMessage=$explodeText[1]."_id is ".$updateId."Registered Id ".$rec->userId;
+					                    }
+					             } // end for each $key=>$value
+					    }//end for each
+
+			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
+			  $opts = array('http' => array( 'method' => "PUT",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $updateUserData
+                                           )
+                                        );
+           
+                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$updateId.'?apiKey='.MLAB_API_KEY;
+                                  $context = stream_context_create($opts);
+                                  $returnValue = file_get_contents($url,false,$context);
+				 }else{// end isGet_id
+					$textReplyMessage=$explodeText[1]." No User ID";
+				 }// end isGet_id
+				 $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+			 } // end #prove
+		 
+		 
               } // end get displayName succeed
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
@@ -230,40 +267,6 @@ foreach ($events as $event) {
                                 $replyData = $flexData->get($text_parameter,$result);
 				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
-			
-			case '#prove':
-				// get $_id
-				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
-                                  $data = json_decode($json);
-                                  $isGet_id=sizeof($data);
-                                 if($isGet_id >0){
-                                    foreach($data as &$rec){
-                                       $documentId= $rec->_id;
-					    foreach($documentId as $key => $value){
-						    if($key === '$oid'){
-							    $updateId=$value;
-					                    $textReplyMessage=$explodeText[1]."_id is ".$updateId."Registered Id ".$rec->userId;
-					                    }
-					             } // end for each $key=>$value
-					    }//end for each
-
-			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
-			  $opts = array('http' => array( 'method' => "PUT",
-                                          'header' => "Content-type: application/json",
-                                          'content' => $updateUserData
-                                           )
-                                        );
-           
-                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$updateId.'?apiKey='.MLAB_API_KEY;
-                                  $context = stream_context_create($opts);
-                                  $returnValue = file_get_contents($url,false,$context);
-				 }else{// end isGet_id
-					$textReplyMessage=$explodeText[1]." No User ID";
-				 }// end isGet_id
-				 $textMessage = new TextMessageBuilder($textReplyMessage);
-			          $multiMessage->add($textMessage);
-			          $replyData = $multiMessage;
-				break;
 				
 			   default: $replyData='';break;
                         }//end switch 
