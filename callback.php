@@ -117,7 +117,7 @@ foreach ($events as $event) {
                                           'header' => "Content-type: application/json",
                                           'content' => $newUserData ) );
            
-                                       $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
+                                       $url = 'https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'';
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
@@ -152,7 +152,7 @@ foreach ($events as $event) {
 		if(($explodeText[0]=='#prove') and ($userId=='U4acff231b87ace2fa827aea5b01baa6a')){ 
 				$toProveUserId = str_replace("#prove ","", $rawText);  
 			// get $_id
-				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$toProveUserId.'"}');
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$toProveUserId.'"}');
                                   $data = json_decode($json);
                                   $isGet_id=sizeof($data);
                                  if($isGet_id >0){
@@ -172,7 +172,7 @@ foreach ($events as $event) {
                                            )
                                         );
            
-                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$updateId.'?apiKey='.MLAB_API_KEY;
+                                  $url = 'https://api.mlab.com/api/1/databases/crma51/collections/user_register/'.$updateId.'?apiKey='.MLAB_API_KEY;
                                   $context = stream_context_create($opts);
                                   $returnValue = file_get_contents($url,false,$context);
 				 }else{// end isGet_id
@@ -188,6 +188,7 @@ foreach ($events as $event) {
 			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
@@ -197,7 +198,7 @@ foreach ($events as $event) {
 		 
               } // end get displayName succeed
 	if(!is_null($userId)){
-	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
+	    $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
             $isUserRegister=sizeof($data);
 		if($isUserRegister <=0){
@@ -310,6 +311,33 @@ foreach ($events as $event) {
 	                       }
                      
                    break;
+			   case '$lisa':
+                                //Post New Data
+		                $indexCount=1;$answer='';
+	                        foreach($explodeText as $rec){
+		                       $indexCount++;
+		                       if($indexCount>1){
+		                           $answer= $answer." ".$explodeText[$indexCount];
+		                          }
+	                                }
+                                $newData = json_encode(array('question' => $explodeText[1],'answer'=> $answer) );
+                                $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newData
+                                           )
+                                        );
+                                $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'';
+                                $context = stream_context_create($opts);
+                                $returnValue = file_get_contents($url,false,$context);
+                                       if($returnValue){
+		                          $textReplyMessage= $textReplyMessage."\nขอบคุณที่สอนลิซ่าค่ะ";
+		                          $textReplyMessage= $textReplyMessage."\nลิซ่าจำได้แล้วว่า ".$explodeText[1]." คือ ".$answer;
+	                                      }else{ $textReplyMessage= $textReplyMessage."\nCannot teach Lisa";
+		                                     }
+				    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+                                 break;
 
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
@@ -321,7 +349,23 @@ foreach ($events as $event) {
 				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
 			
-			   default: $replyData='';break;
+			   default: 
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[0].'"}');
+                                $data = json_decode($json);
+                                $isData=sizeof($data);
+                                if($isData >0){
+                                   foreach($data as $rec){
+                                           $textReplyMessage= $textReplyMessage.$rec->answer."\n";
+                                            //-----------------------
+                                           }//end for each
+                                    }else{
+                                         $textReplyMessage='';
+                                         }//end no data from server
+                                    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+
+				;break;
                         }//end switch 
 			
 			}// end check user status == 1
@@ -337,7 +381,7 @@ foreach ($events as $event) {
                                            )
                                         );
            
-            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
+            $url = 'https://api.mlab.com/api/1/databases/crma51/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
 		
