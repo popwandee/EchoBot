@@ -86,6 +86,9 @@ try {
 	error_log('parseEventRequest failed. InvalidEventRequestException => '.var_export($e, true));
 }
 foreach ($events as $event) {
+	// Message Event
+ if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
+  $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
 	$log_note='';
 	 $tz_object = new DateTimeZone('Asia/Bangkok');
          $datetime = new DateTime();
@@ -152,23 +155,8 @@ foreach ($events as $event) {
 			     }//end for each
 			if($rec->status==1){
 				
-	           // Postback Event
-                   if (($event instanceof \LINE\LINEBot\Event\PostbackEvent)) { $logger->info('Postback message has come');continue; }
-	          // Location Event
-                   if  ($event instanceof LINE\LINEBot\Event\MessageEvent\LocationMessage) {
-		        $logger->info("location -> ".$event->getLatitude().",".$event->getLongitude());
-	                $multiMessage =     new MultiMessageBuilder;
-	                $textReplyMessage= "location -> ".$event->getLatitude().",".$event->getLongitude();
-			$log_note=$log_note."user sent location ".$textReplyMessage;
-                        $textMessage = new TextMessageBuilder($textReplyMessage);
-		        $multiMessage->add($textMessage);
-	                $replyData = $multiMessage;
-	                $response = $bot->replyMessage($replyToken,$replyData);
-		        continue;
-	                 }
-			// Message Event
-                   if ($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage) {
-                       $text = $event->getText();$text = strtolower($text);$explodeText=explode(" ",$text);$textReplyMessage="";
+	          
+			
 			switch ($explodeText[0]) { 
 				
 			   case '#p':
@@ -249,7 +237,6 @@ foreach ($events as $event) {
 		                break;
 			   default: $replyData='';break;
                         }//end switch 
-	             }//end if event is textMessage
 			
 			}// end check user status == 1
 		   
@@ -277,7 +264,8 @@ foreach ($events as $event) {
            if ($response->isSucceeded()) { echo 'Succeeded!'; return;}
               // Failed ส่งข้อความไม่สำเร็จ
              $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody(); echo $statusMessage;
-             $bot->replyText($replyToken, $statusMessage);
+             $bot->replyText($replyToken, $statusMessage);   
+	}//end if event is textMessage
 }// end foreach event
 function tranlateLang($source, $target, $text_parameter)
 {
