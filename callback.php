@@ -237,10 +237,15 @@ foreach ($events as $event) {
                                   $data = json_decode($json);
                                   $isGet_id=sizeof($data);
                                  if($isGet_id >0){
-                                    foreach($data as $rec){
+                                    foreach($data as &$rec){
                                        $documentId= $rec->_id;
-					    $textReplyMessage=$explodeText[1]."_id is ".$documentId."Registered Id ".$rec->userId;
-                                    }//end for each
+					    foreach($documentId as $key => $value){
+						    if($key === '$oid'){
+							    $updateId=$value;
+					                    $textReplyMessage=$explodeText[1]."_id is ".$updateId."Registered Id ".$rec->userId;
+					                    }
+					             } // end for each $key=>$value
+					    }//end for each
 
 			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
 			  $opts = array('http' => array( 'method' => "PUT",
@@ -249,12 +254,15 @@ foreach ($events as $event) {
                                            )
                                         );
            
-                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$documentId.'?apiKey='.MLAB_API_KEY;
+                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$updateId.'?apiKey='.MLAB_API_KEY;
                                   $context = stream_context_create($opts);
                                   $returnValue = file_get_contents($url,false,$context);
 				 }else{// end isGet_id
 					$textReplyMessage=$explodeText[1]." No User ID";
-				 }
+				 }// end isGet_id
+				 $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
 				break;
 				
 			   default: $replyData='';break;
