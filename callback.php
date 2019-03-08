@@ -104,9 +104,9 @@ foreach ($events as $event) {
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= "คุณ ".$displayName." คะ";
-	      $textMessage = new TextMessageBuilder($textReplyMessage);
-	      $multiMessage->add($textMessage);  
+	      $textReplyMessage= "คุณ ".$displayName;
+	      //$textMessage = new TextMessageBuilder($textReplyMessage);
+	      //$multiMessage->add($textMessage);  
 		 
 		 if(($explodeText[0]=='#register') and (isset($explodeText[1]))){ // เก็บข้อมูลผู้สมัคร แต่ยังคงให้ status =0
 			                $text_parameter = str_replace("#register ","", $text); 
@@ -171,7 +171,17 @@ foreach ($events as $event) {
 			          $replyData = $multiMessage;
 			           $response = $bot->replyMessage($replyToken,$replyData);
 			 } // end #prove
-		 
+		 /*--------------------------*/
+		 if($explodeText[0]=='#help'){
+			 $textReplyMessage= "คุณ".$displayName."\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งาน";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบลงทะเบียนรถ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th merdeka แปลคำว่า merdeka จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				 $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+			           $response = $bot->replyMessage($replyToken,$replyData);
+		 }// end of help
 		 
               } // end get displayName succeed
 	if(!is_null($userId)){
@@ -179,10 +189,8 @@ foreach ($events as $event) {
             $data = json_decode($json);
             $isUserRegister=sizeof($data);
 		if($isUserRegister <=0){
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนค่ะ";
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-                           $replyData = $multiMessage;
+		           $notRegisterReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนค่ะ";
+                          $log_note = $log_note.$notRegisterReplyMessage;
 	         }else{ // User registered
                     foreach($data as $rec){
                            $log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
@@ -268,7 +276,7 @@ foreach ($events as $event) {
                                 $replyData = $flexData->get($text_parameter,$result);
 				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
-				
+			
 			   default: $replyData='';break;
                         }//end switch 
 			
