@@ -233,7 +233,7 @@ foreach ($events as $event) {
 		                break;
 			case '#prove':
 
-			  $updateUserData = json_encode('{ "$set" : { "status" : 1 } }';
+			  $updateUserData = json_encode('{ "$set" : { "status" : 1 } }');
 			  $opts = array('http' => array( 'method' => "PUT",
                                           'header' => "Content-type: application/json",
                                           'content' => $updateUserData
