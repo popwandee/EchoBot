@@ -116,7 +116,7 @@ foreach ($events as $event) {
             $isData=sizeof($data);
 		if($isData >0){
                     foreach($data as $rec){
-                           $textReplyMessage= $textReplyMessage.."\nFrom phone \nDisplayname ".$displayName."\n User Id ".$userId;
+                           $textReplyMessage= $textReplyMessage."\nFrom phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
