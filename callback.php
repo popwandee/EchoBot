@@ -101,7 +101,7 @@ foreach ($events as $event) {
               $displayName = $profile['displayName'];
               $statusMessage = $profile['statusMessage'];
               $pictureUrl = $profile['pictureUrl']; 
-	      $textReplyMessage= "คุณ ".$displayName." นฝต. กำลังเร่งพัฒนานกฮูกให้ใช้งานได้อย่างสมบูรณ์โดยเร็วนะคะ";
+	      $textReplyMessage= "คุณ ".$displayName." คะ";
 	      $log_note=$log_note.$textReplyMessage;
 	      $textMessage = new TextMessageBuilder($textReplyMessage);
 	      $multiMessage->add($textMessage);  
@@ -110,8 +110,13 @@ foreach ($events as $event) {
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
-            $isData=sizeof($data);
-		if($isData >0){
+            $isUserRegister=sizeof($data);
+		if($isUserRegister <0){
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
+                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			   $multiMessage->add($textMessage);
+                           $replyData = $multiMessage;
+	         }else{ // User registered
                     foreach($data as $rec){
                            $textReplyMessage= "From phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            $textReplyMessage= $textReplyMessage."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
@@ -216,12 +221,8 @@ foreach ($events as $event) {
                         }//end switch 
 	             }//end if event is textMessage
 			
-		   }else{ // No userId registered
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งหมายเลข ID \n".$userId."\nนี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
-                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			   $multiMessage->add($textMessage);
-                           $replyData = $multiMessage;
-	              }
+		   
+	              }// end User Registered 
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
 		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,'log_note'=>$log_note) );
@@ -234,17 +235,11 @@ foreach ($events as $event) {
             $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/use_log?apiKey='.MLAB_API_KEY.'';
             $context = stream_context_create($opts);
             $returnValue = file_get_contents($url,false,$context);
-		/*
-            if($returnValue){
-		    $text =  'บันทึกการเข้าถึงข้อมูล '.$userId.' แล้วค่ะ';
-	            }else{ $text="ไม่สามารถบันทึกการเข้าถึงข้อมูลได้";
-		 
-		        }
-			$textMessage = new TextMessageBuilder($text);
-			   $multiMessage->add($textMessage);
-                       $replyData = $multiMessage;
-		       */
-		} // end of !is_null($userId)
+		
+	} // end of !is_null($userId)
+	
+	
+	
             // ส่งกลับข้อมูล
 	    // ส่วนส่งกลับข้อมูลให้ LINE
            $response = $bot->replyMessage($replyToken,$replyData);
