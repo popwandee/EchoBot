@@ -316,7 +316,7 @@ foreach ($events as $event) {
 	                       }
                      
                    break;
-			   case '$lisa':
+			   case '#lisa':
                                 //Post New Data
 		                $indexCount=1;$answer='';
 	                        foreach($explodeText as $rec){
@@ -360,7 +360,7 @@ foreach ($events as $event) {
                                 $isData=sizeof($data);
                                 if($isData >0){
                                    foreach($data as $rec){
-                                           $textReplyMessage= $textReplyMessage.$rec->answer."\n";
+                                           $textReplyMessage= $textReplyMessage."\n".$explodeText[1]." คือ\n".$rec->answer."\n";
                                             //-----------------------
                                            }//end for each
                                     }else{
