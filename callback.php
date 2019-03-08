@@ -184,7 +184,7 @@ foreach ($events as $event) {
 	             }//end if event is textMessage
 			
 		   }else{ // No userId registered
-		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ต่อไปจะไม่สามารถเข้าถึงฐานข้อมูลได้แล้วนะคะ";
+		           $textReplyMessage= "คุณ".$displayName." ยังไม่ได้ลงทะเบียน ID ".$userId." ไม่สามารถเข้าถึงฐานข้อมูลได้นะคะ\n กรุณาส่งต่อหมายเลข ID ".$userId."นี้พร้อมแจ้งยศ ชื่อ นามสกุล สังกัด หมายเลขโทรศัพท์ ให้\n นฝต.ขกท.สน.จชต.(ศูนย์ CCTV นฝต.ฯ) เพื่อลงทะเบียนค่ะ";
                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			   $multiMessage->add($textMessage);
                            $replyData = $multiMessage;
