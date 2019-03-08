@@ -231,6 +231,19 @@ foreach ($events as $event) {
                                 $replyData = $flexData->get($text_parameter,$result);
 				$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
+			case '#prove':
+
+			  $updateUserData = json_encode('{ "$set" : { "status" : 1 } }';
+			  $opts = array('http' => array( 'method' => "PUT",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $updateUserData
+                                           )
+                                        );
+           
+            $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
+            $context = stream_context_create($opts);
+            $returnValue = file_get_contents($url,false,$context);
+				break;
 			   default: $replyData='';break;
                         }//end switch 
 			
@@ -239,7 +252,8 @@ foreach ($events as $event) {
 	              }// end User Registered 
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
-		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,'log_note'=>$log_note) );
+		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,
+						    'log_note'=>$log_note,'pictureUrl'=>$pictureUrl) );
                            $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
                                           'content' => $newUserData
