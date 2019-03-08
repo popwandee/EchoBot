@@ -196,7 +196,7 @@ foreach ($events as $event) {
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
-			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบบุคคลไม่ครบค่ะ";
+			          $textReplyMessage= "ให้ข้อมูลสำหรับการตรวจสอบยานพาหนะไม่ครบค่ะ";
 			          $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
