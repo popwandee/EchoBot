@@ -232,6 +232,14 @@ foreach ($events as $event) {
 		                break;
 			
 			case '#prove':
+				// get $_id
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
+                                  $data = json_decode($json);
+                                  $isGet_id=sizeof($data);
+                                 if($isGet_id >0){
+                                    foreach($data as $rec){
+                                       $documentId= $rec->_id;
+                                    }//end for each
 
 			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
 			  $opts = array('http' => array( 'method' => "PUT",
@@ -240,9 +248,10 @@ foreach ($events as $event) {
                                            )
                                         );
            
-                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$explodeText[1].'"}');
+                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$documentId.'?apiKey='.MLAB_API_KEY;
                                   $context = stream_context_create($opts);
                                   $returnValue = file_get_contents($url,false,$context);
+				 }// end isGet_id
 				break;
 				
 			   default: $replyData='';break;
