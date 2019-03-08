@@ -239,6 +239,7 @@ foreach ($events as $event) {
                                  if($isGet_id >0){
                                     foreach($data as $rec){
                                        $documentId= $rec->_id;
+					    $textReplyMessage=$explodeText[1]."_id is ".$documentId."Registered Id ".$rec->userId;
                                     }//end for each
 
 			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
@@ -251,7 +252,9 @@ foreach ($events as $event) {
                                   $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register/'.$documentId.'?apiKey='.MLAB_API_KEY;
                                   $context = stream_context_create($opts);
                                   $returnValue = file_get_contents($url,false,$context);
-				 }// end isGet_id
+				 }else{// end isGet_id
+					$textReplyMessage=$explodeText[1]." No User ID";
+				 }
 				break;
 				
 			   default: $replyData='';break;
