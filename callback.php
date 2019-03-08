@@ -280,6 +280,37 @@ foreach ($events as $event) {
 		                }// end !is_null($explodeText[1])
 				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
+				case '#f':
+	                  $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
+                          $data = json_decode($json);
+                          $isData=sizeof($data);
+                          if($isData >0){
+		             $textReplyMessage = "คุณ".$displayName."\n";
+		             $count = 1;
+		             $hasImageUrlStatus = false;
+                             foreach($data as $rec){
+                                     $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
+                                     
+				     if(isset($rec->Image) and (!$hasImageUrlStatus) and ($count<5)){
+			                  $imageUrlStatus=true;
+		 	                  $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
+	                                  $imageMessage = new ImageMessageBuilder($imageUrl,$imageUrl);
+	                                  $multiMessage->add($imageMessage);
+		                          }
+			             $count++;
+                                     }//end for each
+		                     $textMessage = new TextMessageBuilder($textReplyMessage);
+		                     $multiMessage->add($textMessage);
+		                     $replyData = $multiMessage;
+	                 }else{
+		               $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
+		                $textMessage = new TextMessageBuilder($textReplyMessage);
+		                $multiMessage->add($textMessage);
+		                $replyData = $multiMessage;
+	                       }
+                     
+                   break;
+
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
                                 if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
