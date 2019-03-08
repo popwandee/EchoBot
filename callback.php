@@ -249,7 +249,7 @@ foreach ($events as $event) {
 		} // end of !is_null($userId)
             // ส่งกลับข้อมูล
 	    // ส่วนส่งกลับข้อมูลให้ LINE
-           $response = $bot->replyMessage($replyToken,$replyData);
+          // $response = $bot->replyMessage($replyToken,$replyData);
            if ($response->isSucceeded()) { echo 'Succeeded!'; return;}
               // Failed ส่งข้อความไม่สำเร็จ
              $statusMessage = $response->getHTTPStatus() . ' ' . $response->getRawBody(); echo $statusMessage;
