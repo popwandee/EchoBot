@@ -377,6 +377,18 @@ foreach ($events as $event) {
                                            }//end for each
 				    $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
+					$picUrl=rand(1,400);
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+					$picUrl=$picUrl+1;
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+					$picUrl=$picUrl+2;
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
 		                    $replyData = $multiMessage;
                                     }
 				}else{// no answer
@@ -405,6 +417,14 @@ foreach ($events as $event) {
 				    $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
 					$picUrl=rand(1,400);
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+					$picUrl=$picUrl+1;
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+					$picUrl=$picUrl+2;
 					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
