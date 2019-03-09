@@ -377,17 +377,17 @@ foreach ($events as $event) {
                                            }//end for each
 				    $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
-					$picUrl=rand(1,400);
+					$picUrl=rand(1,400);$picUrl=strval( $picUrl );
 					$picFullSize = 'https://www.hooq.info/photos/'.$rec->picUrl.'.png';
 					$textReplyMessage=$picFullSize;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
-					$picUrl=$picUrl+1;
+					$picUrl=$picUrl+1;$picUrl=strval( $picUrl );
 					$picFullSize = 'https://www.hooq.info/photos/'.$rec->picUrl.'.png';
 					$textReplyMessage=$textReplyMessage." ".$picFullSize;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
-					$picUrl=$picUrl+1;
+					$picUrl=$picUrl+1;$picUrl=strval( $picUrl );
 					$picFullSize = 'https://www.hooq.info/photos/'.$rec->picUrl.'.png';
 					$textReplyMessage="Random picUrl is ".$textReplyMessage." ".$picFullSize ;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
