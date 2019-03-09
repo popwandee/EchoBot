@@ -429,13 +429,14 @@ foreach ($events as $event) {
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
 		
-              if(!is_null($profile['displayName'])){
-		      $displayName =$profile['displayName'];
+              if(!is_null($displayName)){
+		      $displayName =$displayName;
 	      }elseif(isset($userName)){
 		      $displayName =$userName;
 		 }else{
 		      $displayName = ' ';
 	      }
+              if(is_null($pictureUrl)){$pictureUrl ='';}
 		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,
 						    'log_note'=>$log_note,'pictureUrl'=>$pictureUrl) );
                            $opts = array('http' => array( 'method' => "POST",
