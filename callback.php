@@ -404,6 +404,10 @@ foreach ($events as $event) {
 		                                     }
 				    $textMessage = new TextMessageBuilder($textReplyMessage);
 		                    $multiMessage->add($textMessage);
+					$picUrl=rand(1,400);
+					$picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
 		                    $replyData = $multiMessage;
 				}// end no answer, just question only
                                  break;
