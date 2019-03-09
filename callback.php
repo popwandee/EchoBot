@@ -101,9 +101,9 @@ foreach ($events as $event) {
 	$res = $bot->getProfile($userId);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
-              $displayName = $profile['displayName'];
-              $statusMessage = $profile['statusMessage'];
-              $pictureUrl = $profile['pictureUrl']; 
+              if(!is_null($profile['displayName'])){$displayName = $profile['displayName'];}else{$displayName ='';}
+              if(!is_null($profile['statusMessage'])){$statusMessage = $profile['statusMessage'];}else{$statusMessage ='';}
+              if(!is_null($profile['pictureUrl'])){$pictureUrl = $profile['pictureUrl'];}else{$pictureUrl ='';}
 	      $textReplyMessage= "คุณ ".$displayName;
 	      //$textMessage = new TextMessageBuilder($textReplyMessage);
 	      //$multiMessage->add($textMessage);  
@@ -201,7 +201,56 @@ foreach ($events as $event) {
 			          $response = $bot->replyMessage($replyToken,$replyData);
 		 }// end of help
 		 
-              } // end get displayName succeed
+              }else{ // end get displayName succeed
+		 /*-----------------  register by no data --*/
+		  if(($explodeText[0]=='#register') and (isset($explodeText[1]))){ // เก็บข้อมูลผู้สมัคร แต่ยังคงให้ status =0
+			  
+			                $text_parameter = str_replace("#register ","", $text); 
+			               $displayName ='';
+                                       $statusMessage ='';
+                                       $pictureUrl ='';
+			                $text_parameter = str_replace("#register ","", $text); 
+					$newUserData = json_encode(array('userName' => $text_parameter,'displayName' => $displayName,
+									 'userId'=> $userId,'statusMessage'=> $statusMessage,
+									 'pictureUrl'=>$pictureUrl,'status'=>0) );
+                                        $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newUserData ) );
+           
+                                       $url = 'https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'';
+                                       $context = stream_context_create($opts);
+                                       $returnValue = file_get_contents($url,false,$context);
+			               if($returnValue){
+		                           $textReplyMessage= "คุณ ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);		                           
+					   $textReplyMessage= $userId;
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+					   $textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $replyData = $multiMessage;
+			                   $response = $bot->replyMessage($replyToken,$replyData);
+					   $userId = NULL;
+				           }else{
+					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+                                           $replyData = $multiMessage;
+					   $userId = NULL;
+				       }
+		 } // can not get displayName and //end of #register by userId 
+	 }// end can not get displayName
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
