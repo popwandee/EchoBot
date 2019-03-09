@@ -231,7 +231,7 @@ foreach ($events as $event) {
 	                               $multiMessage->add($textMessage);
 				       //$log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
-	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/$rec->picUrl";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
