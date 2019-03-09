@@ -379,21 +379,16 @@ foreach ($events as $event) {
 		                    $multiMessage->add($textMessage);
 					$randNumber=rand(1,400);$picUrl=strval($randNumber);
 					$picFullSize = 'https://www.hooq.info/photos/'.$picUrl.'.jpg';
-					$textReplyMessage=$picFullSize;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 					$randNumber=$randNumber+1;$picUrl=strval($randNumber);
 					$picFullSize = 'https://www.hooq.info/photos/'.$picUrl.'.jpg';
-					$textReplyMessage=$textReplyMessage." ".$picFullSize;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 					$randNumber=$randNumber+1;$picUrl=strval($randNumber);
 					$picFullSize = 'https://www.hooq.info/photos/'.$picUrl.'.jpg';
-					$textReplyMessage="Random picUrl is ".$textReplyMessage." ".$picFullSize ;
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
-				    $textMessage = new TextMessageBuilder($textReplyMessage);
-		                    $multiMessage->add($textMessage);
 		                    $replyData = $multiMessage;
                                     }
 				}else{// no answer
