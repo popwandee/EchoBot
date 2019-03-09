@@ -261,6 +261,7 @@ foreach ($events as $event) {
 	         }else{ // User registered
                     foreach($data as $rec){
 			    $registerUserReplyMessage="From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+			    $userName=$rec->userName;
                            //$log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            //$log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
@@ -427,6 +428,14 @@ foreach ($events as $event) {
 	              }// end User Registered 
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
+		
+              if(!is_null($profile['displayName'])){
+		      $displayName =$profile['displayName'];
+	      }elseif(isset($userName)){
+		      $displayName =$userName;
+		 }else{
+		      $displayName = ' ';
+	      }
 		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,
 						    'log_note'=>$log_note,'pictureUrl'=>$pictureUrl) );
                            $opts = array('http' => array( 'method' => "POST",
