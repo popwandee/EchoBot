@@ -299,10 +299,10 @@ foreach ($events as $event) {
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
 					 if($check_url_jpg){
-					    $imageMessage = new ImageMessageBuilder($check_url_jpg,$check_url_jpg);
+					    $imageMessage = new ImageMessageBuilder($path_url_jpg,$path_url_jpg);
 	                                    $multiMessage->add($imageMessage); 
 					 }elseif($check_url_png){
-					    $imageMessage = new ImageMessageBuilder($check_url_png,$check_url_png);
+					    $imageMessage = new ImageMessageBuilder($path_url_png,$path_url_png);
 	                                    $multiMessage->add($imageMessage); 
 					 }else{
 					    $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_person.png?alt=media&token=0e0da7f2-ecbd-4751-9a97-2fe9f52fe663";
