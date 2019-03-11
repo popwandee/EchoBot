@@ -293,14 +293,23 @@ foreach ($events as $event) {
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
 					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
-			           $path_url="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
-				   $check_url=is_url_exist($path_url);
-                                   $textReplyMessage= $path_url;
+			           $path_url_jpg="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".jpg";
+				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
+				   $check_url_jpg=is_url_exist($path_url_jpg);
+				   $check_url_png=is_url_exist($path_url_png);
+                                   $textReplyMessage= $path_url_jpg;
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
-					 if($check_url){
-					    $imageMessage = new ImageMessageBuilder($check_url,$check_url);
-	                                     $multiMessage->add($imageMessage); 
+					 if($check_url_jpg){
+					    $imageMessage = new ImageMessageBuilder($check_url_jpg,$check_url_jpg);
+	                                    $multiMessage->add($imageMessage); 
+					 }elseif($check_url_png){
+					    $imageMessage = new ImageMessageBuilder($check_url_png,$check_url_png);
+	                                    $multiMessage->add($imageMessage); 
+					 }else{
+					    $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_person.png?alt=media&token=0e0da7f2-ecbd-4751-9a97-2fe9f52fe663";
+	                                    $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                                    $multiMessage->add($imageMessage); 
 					 }
 			           $replyData = $multiMessage;
                                    } // end $isData>0
