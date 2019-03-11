@@ -430,10 +430,10 @@ function is_url_exist($url){
    $data = json_decode($json);
 	//foreach($data as $rec){
 	                             
-	                      if(isset($data['name'])){
-	$result="OK";
+	                      if(isset($data->name)){
+	$result=$data->name;
 }else{
-	$result="NO";
+	$result=$data->name;
 }       
 				     // }
 
