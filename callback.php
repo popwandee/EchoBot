@@ -292,34 +292,7 @@ foreach ($events as $event) {
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
-					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
-			           $path_url_jpg="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".jpg?alt=media";
-				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png?alt=media";
-				   $check_url_jpg=is_url_exist($path_url_jpg);
-				   $check_url_png=is_url_exist($path_url_png);
-					 
-	                           $textMessage = new TextMessageBuilder($check_url_jpg);
-	                           $multiMessage->add($textMessage);
-	                           $textMessage = new TextMessageBuilder($check_url_png);
-	                           $multiMessage->add($textMessage);
-					 /*
-					 if($check_url_jpg){
-					    $imageMessage = new ImageMessageBuilder($path_url_jpg,$path_url_jpg);
-	                                    $multiMessage->add($imageMessage); 
-                                   $textReplyMessage= $path_url_jpg;
-						 
-					 }elseif($check_url_png){
-                                   $textReplyMessage= $path_url_png;
-	                           $textMessage = new TextMessageBuilder($textReplyMessage);
-	                           $multiMessage->add($textMessage);
-					    $imageMessage = new ImageMessageBuilder($path_url_png,$path_url_png);
-	                                    $multiMessage->add($imageMessage); 
-					 }else{
-					    $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_person.png?alt=media&token=0e0da7f2-ecbd-4751-9a97-2fe9f52fe663";
-	                                    $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
-	                                    $multiMessage->add($imageMessage); 
-					 }
-					 */
+
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
@@ -425,20 +398,7 @@ foreach ($events as $event) {
 	}//end if event is textMessage
 }// end foreach event
 
-function is_url_exist($url){
-   $json = file_get_contents($url);
-   $data = json_decode($json);
-	//foreach($data as $rec){
-	                             
-	                      if(isset($data->name)){
-	$result=$data->name;
-}else{
-	$result=$data->name;
-}       
-				     // }
 
-   return $result;
-}
 
 function tranlateLang($source, $target, $text_parameter)
 {
