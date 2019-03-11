@@ -342,7 +342,40 @@ foreach ($events as $event) {
 		                }// end !is_null($explodeText[1])
 				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
-				
+			case '#update':
+				$toProveUserId = str_replace("#update ","", $rawText);  
+			// get $_id
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'&q={"nationid":"'.$explodeText[1].'"}');
+                                  $data = json_decode($json);
+                                  $isGet_id=sizeof($data);
+                                 if($isGet_id >0){
+                                    foreach($data as &$rec){
+                                       $documentId= $rec->_id;
+					    foreach($documentId as $key => $value){
+						    if($key === '$oid'){
+							    $updateId=$value;
+					                    $textReplyMessage="Update Id ".$rec->nationid;
+					                    }
+					             } // end for each $key=>$value
+					    }//end for each
+			  $updateData = json_encode(array('$set' => array('$explodeText[1]' => '$explodeText[2]')));
+			  $opts = array('http' => array( 'method' => "PUT",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $updateData
+                                           )
+                                        );
+           
+                                  $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people/'.$updateId.'?apiKey='.MLAB_API_KEY;
+                                  $context = stream_context_create($opts);
+                                  $returnValue = file_get_contents($url,false,$context);
+				 }else{// end isGet_id
+					$textReplyMessage=$explodeText[1]." No national ID";
+				 }// end isGet_id
+				 $textMessage = new TextMessageBuilder($textReplyMessage);
+			          $multiMessage->add($textMessage);
+			          $replyData = $multiMessage;
+			           $response = $bot->replyMessage($replyToken,$replyData);
+				break;
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
                                 if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
