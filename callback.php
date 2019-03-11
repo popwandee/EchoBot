@@ -293,8 +293,11 @@ foreach ($events as $event) {
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
 					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
-			           $check_url="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
-				   $check_url=is_url_exist($check_url);
+			           $path_url="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
+				   $check_url=is_url_exist($path_url);
+                                   $textReplyMessage= $path_url;
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
 					 if($check_url){
 					    $imageMessage = new ImageMessageBuilder($check_url,$check_url);
 	                                     $multiMessage->add($imageMessage); 
