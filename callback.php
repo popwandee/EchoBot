@@ -428,8 +428,12 @@ foreach ($events as $event) {
 function is_url_exist($url){
    $json = file_get_contents($url);
    $data = json_decode($json);
-
-   return  $data;
+if(isset($data->name)){
+	$result="OK";
+}else{
+	$result="NO";
+}
+   return $result;
 }
 
 function tranlateLang($source, $target, $text_parameter)
