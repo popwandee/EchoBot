@@ -290,11 +290,9 @@ foreach ($events as $event) {
 
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
-	                           $textMessage = new TextMessageBuilder($textReplyMessage);
-	                           $multiMessage->add($textMessage);
 					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
-			           $path_url_jpg="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".jpg";
-				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
+			           $path_url_jpg="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".jpg?alt=media";
+				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png?alt=media";
 				   $check_url_jpg=is_url_exist($path_url_jpg);
 				   $check_url_png=is_url_exist($path_url_png);
                                    $textReplyMessage= $path_url_jpg;
