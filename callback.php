@@ -423,7 +423,7 @@ function is_url_exist($url){
     curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    if($code == 200){
+    if($code != 404){
        $status = true;
     }else{
       $status = false;
