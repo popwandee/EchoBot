@@ -280,6 +280,10 @@ foreach ($events as $event) {
 	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/$rec->picUrl";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
+				      }else{ 
+	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_people.png";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
 				      }
 			               $replyData = $multiMessage;
                                     }//end for each
@@ -312,7 +316,11 @@ foreach ($events as $event) {
 	                               $multiMessage->add($textMessage);
 				       //$log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
-	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/lisa-77436.appspot.com/o/$rec->picUrl";
+	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
+	                               $multiMessage->add($imageMessage);
+				      }else{
+				       $picFullSize = "https://firebasestorage.googleapis.com/v0/b/lisa-77436.appspot.com/o/demo_car.png";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
