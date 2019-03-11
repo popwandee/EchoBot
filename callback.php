@@ -428,14 +428,14 @@ foreach ($events as $event) {
 function is_url_exist($url){
    $json = file_get_contents($url);
    $data = json_decode($json);
-	foreach($data as $rec){
+	//foreach($data as $rec){
 	                             
-	                      if(isset($rec->name)){
+	                      if(isset($data['name'])){
 	$result="OK";
 }else{
 	$result="NO";
 }       
-				      }
+				     // }
 
    return $result;
 }
