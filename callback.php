@@ -101,9 +101,9 @@ foreach ($events as $event) {
 	$res = $bot->getProfile($userId);
          if ($res->isSucceeded()) {
               $profile = $res->getJSONDecodedBody();
-              $displayName = $profile['displayName'];
-              $statusMessage = $profile['statusMessage'];
-              $pictureUrl = $profile['pictureUrl']; 
+              if(!is_null($profile['displayName'])){$displayName = $profile['displayName'];}else{$displayName ='';}
+              if(!is_null($profile['statusMessage'])){$statusMessage = $profile['statusMessage'];}else{$statusMessage ='';}
+              if(!is_null($profile['pictureUrl'])){$pictureUrl = $profile['pictureUrl'];}else{$pictureUrl ='';}
 	      $textReplyMessage= "คุณ ".$displayName;
 	      //$textMessage = new TextMessageBuilder($textReplyMessage);
 	      //$multiMessage->add($textMessage);  
@@ -127,11 +127,14 @@ foreach ($events as $event) {
 					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
-					   $textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+					   $textReplyMessage= "คำแนะนำในการใช้ \n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
 			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 	           
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				           $textMessage = new TextMessageBuilder($textReplyMessage);
@@ -147,6 +150,8 @@ foreach ($events as $event) {
 					   $userId = NULL;
 				       }
 		 } // end #register
+		 
+		 /*---- prove user by update status from 0 to 1---*/
 		 
 		 /*---- prove user by update status from 0 to 1---*/
 		if(($explodeText[0]=='#prove') and ($userId=='Ua300e9b08826b655e221d12b446d34e5')){ 
@@ -165,7 +170,6 @@ foreach ($events as $event) {
 					                    }
 					             } // end for each $key=>$value
 					    }//end for each
-
 			  $updateUserData = json_encode(array('$set' => array('status' => '1')));
 			  $opts = array('http' => array( 'method' => "PUT",
                                           'header' => "Content-type: application/json",
@@ -187,11 +191,11 @@ foreach ($events as $event) {
 		 /*--------------------------*/
 		 if($explodeText[0]=='#help'){
 			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
@@ -199,7 +203,56 @@ foreach ($events as $event) {
 			          $response = $bot->replyMessage($replyToken,$replyData);
 		 }// end of help
 		 
-              } // end get displayName succeed
+              }else{ // end get displayName succeed
+		 /*-----------------  register by no data --*/
+		  if(($explodeText[0]=='#register') and (isset($explodeText[1]))){ // เก็บข้อมูลผู้สมัคร แต่ยังคงให้ status =0
+			  
+			                $text_parameter = str_replace("#register ","", $text); 
+			               $displayName ='';
+                                       $statusMessage ='';
+                                       $pictureUrl ='';
+			                $text_parameter = str_replace("#register ","", $text); 
+					$newUserData = json_encode(array('userName' => $text_parameter,'displayName' => $displayName,
+									 'userId'=> $userId,'statusMessage'=> $statusMessage,
+									 'pictureUrl'=>$pictureUrl,'status'=>0) );
+                                        $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newUserData ) );
+           
+                                       $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
+                                       $context = stream_context_create($opts);
+                                       $returnValue = file_get_contents($url,false,$context);
+			               if($returnValue){
+		                           $textReplyMessage= "คุณ ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);		                           
+					   $textReplyMessage= $userId;
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+					   $textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+			                   $replyData = $multiMessage;
+			                   $response = $bot->replyMessage($replyToken,$replyData);
+					   $userId = NULL;
+				           }else{
+					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
+                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+			                   $multiMessage->add($textMessage);
+                                           $replyData = $multiMessage;
+					   $userId = NULL;
+				       }
+		 } // can not get displayName and //end of #register by userId 
+	 }// end can not get displayName
 	if(!is_null($userId)){
 	    $json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userId":"'.$userId.'"}');
             $data = json_decode($json);
@@ -210,6 +263,7 @@ foreach ($events as $event) {
 	         }else{ // User registered
                     foreach($data as $rec){
 			    $registerUserReplyMessage="From phone \nDisplayname ".$displayName."\n User Id ".$userId;
+			    $userName=$rec->userName;
                            //$log_note = $log_note."From phone \nDisplayname ".$displayName."\n User Id ".$userId;
                            //$log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
@@ -229,7 +283,7 @@ foreach ($events as $event) {
 	                               $multiMessage->add($textMessage);
 				       //$log_note= $log_note.$textReplyMessage;
 	                              if (!is_null($rec->picUrl)){
-	                               $picFullSize = "https://www.hooq.info/img/$rec->picUrl.png";
+	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/$rec->picUrl";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
@@ -284,6 +338,7 @@ foreach ($events as $event) {
 		                }// end !is_null($explodeText[1])
 				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
+				
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
                                 if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
@@ -294,7 +349,9 @@ foreach ($events as $event) {
 				//$log_note=$log_note."\n User select #tran ".$text_parameter.$result;
 		                break;
 			
-			   default: $replyData='';break;
+			   default: 
+				$replyData ="";
+				break;
                         }//end switch 
 			
 			}// end check user status == 1
@@ -302,6 +359,15 @@ foreach ($events as $event) {
 	              }// end User Registered 
 		
 		//-- บันทึกการเข้าใช้งานระบบ ---//
+		
+              if(!is_null($displayName)){
+		      $displayName =$displayName;
+	      }elseif(isset($userName)){
+		      $displayName =$userName;
+		 }else{
+		      $displayName = ' ';
+	      }
+              if(is_null($pictureUrl)){$pictureUrl ='';}
 		   $newUserData = json_encode(array('displayName' => $displayName,'userId'=> $userId,'dateTime'=> $dateTimeNow,
 						    'log_note'=>$log_note,'pictureUrl'=>$pictureUrl) );
                            $opts = array('http' => array( 'method' => "POST",
