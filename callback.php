@@ -281,7 +281,7 @@ foreach ($events as $event) {
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }else{ 
-	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_people.png";
+	                               $picFullSize = "https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/demo_person.png?alt=media&token=0e0da7f2-ecbd-4751-9a97-2fe9f52fe663";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
@@ -320,7 +320,7 @@ foreach ($events as $event) {
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }else{
-				       $picFullSize = "https://firebasestorage.googleapis.com/v0/b/lisa-77436.appspot.com/o/demo_car.png";
+				       $picFullSize = "https://firebasestorage.googleapis.com/v0/b/lisa-77436.appspot.com/o/carsImage%2Fdemo_car.png?alt=media&token=e183745a-5fa0-41b7-89b4-d863c572adc3";
 	                               $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                               $multiMessage->add($imageMessage);
 				      }
