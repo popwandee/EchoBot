@@ -290,17 +290,24 @@ foreach ($events as $event) {
 
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
 					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
 			           $path_url_jpg="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".jpg?alt=media";
 				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png?alt=media";
 				   $check_url_jpg=is_url_exist($path_url_jpg);
 				   $check_url_png=is_url_exist($path_url_png);
+					 
+	                           $textMessage = new TextMessageBuilder($check_url_jpg);
+	                           $multiMessage->add($textMessage);
+	                           $textMessage = new TextMessageBuilder($check_url_png);
+	                           $multiMessage->add($textMessage);
+					 /*
 					 if($check_url_jpg){
 					    $imageMessage = new ImageMessageBuilder($path_url_jpg,$path_url_jpg);
 	                                    $multiMessage->add($imageMessage); 
                                    $textReplyMessage= $path_url_jpg;
-	                           $textMessage = new TextMessageBuilder($textReplyMessage);
-	                           $multiMessage->add($textMessage);
+						 
 					 }elseif($check_url_png){
                                    $textReplyMessage= $path_url_png;
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
@@ -312,6 +319,7 @@ foreach ($events as $event) {
 	                                    $imageMessage = new ImageMessageBuilder($picFullSize,$picFullSize);
 	                                    $multiMessage->add($imageMessage); 
 					 }
+					 */
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
@@ -423,13 +431,13 @@ function is_url_exist($url){
     curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    if($code != 404){
+    if($code == 200){
        $status = true;
     }else{
       $status = false;
     }
     curl_close($ch);
-   return $status;
+   return $code;
 }
 
 function tranlateLang($source, $target, $text_parameter)
