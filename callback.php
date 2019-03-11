@@ -287,10 +287,18 @@ foreach ($events as $event) {
 				      }
 			               $replyData = $multiMessage;
                                     }//end for each
+
                                  }else{ //$isData <0  ไม่พบข้อมูลที่ค้นหา
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
+					 /* กรณีมีรูปภาพ แต่ยังไม่ได้อัพเดตฐานข้อมูล */
+			           $check_url="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png";
+				   $check_url=is_url_exist($check_url);
+					 if($check_url){
+					    $imageMessage = new ImageMessageBuilder($check_url,$check_url);
+	                                     $multiMessage->add($imageMessage); 
+					 }
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
@@ -395,6 +403,22 @@ foreach ($events as $event) {
              $bot->replyText($replyToken, $statusMessage);   
 	}//end if event is textMessage
 }// end foreach event
+
+function is_url_exist($url){
+    $ch = curl_init($url);    
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if($code == 200){
+       $status = true;
+    }else{
+      $status = false;
+    }
+    curl_close($ch);
+   return $status;
+}
+
 function tranlateLang($source, $target, $text_parameter)
 {
     $text = str_replace($source,"", $text_parameter);
