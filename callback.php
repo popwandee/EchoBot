@@ -426,18 +426,10 @@ foreach ($events as $event) {
 }// end foreach event
 
 function is_url_exist($url){
-    $ch = curl_init($url);    
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+   $json = file_get_contents($url);
+   $data = json_decode($json);
 
-    if($code == 200){
-       $status = true;
-    }else{
-      $status = false;
-    }
-    curl_close($ch);
-   return $code;
+   return  $data;
 }
 
 function tranlateLang($source, $target, $text_parameter)
