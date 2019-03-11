@@ -295,13 +295,16 @@ foreach ($events as $event) {
 				   $path_url_png="https://firebasestorage.googleapis.com/v0/b/carlicenseplate.appspot.com/o/".$explodeText[1].".png?alt=media";
 				   $check_url_jpg=is_url_exist($path_url_jpg);
 				   $check_url_png=is_url_exist($path_url_png);
-                                   $textReplyMessage= $path_url_jpg;
-	                           $textMessage = new TextMessageBuilder($textReplyMessage);
-	                           $multiMessage->add($textMessage);
 					 if($check_url_jpg){
 					    $imageMessage = new ImageMessageBuilder($path_url_jpg,$path_url_jpg);
 	                                    $multiMessage->add($imageMessage); 
+                                   $textReplyMessage= $path_url_jpg;
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
 					 }elseif($check_url_png){
+                                   $textReplyMessage= $path_url_png;
+	                           $textMessage = new TextMessageBuilder($textReplyMessage);
+	                           $multiMessage->add($textMessage);
 					    $imageMessage = new ImageMessageBuilder($path_url_png,$path_url_png);
 	                                    $multiMessage->add($imageMessage); 
 					 }else{
