@@ -133,9 +133,7 @@ foreach ($events as $event) {
 			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
 			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
-			 	           
+			                   
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				           $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
@@ -194,8 +192,6 @@ foreach ($events as $event) {
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
@@ -235,9 +231,7 @@ foreach ($events as $event) {
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
-			 	           
+			                    
 			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				           $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
