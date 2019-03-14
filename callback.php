@@ -380,7 +380,7 @@ foreach ($events as $event) {
 		                         $textReplyMessage2 = "ตรวจสอบในฐานข้อมูล register ใหม่\n";
 		                         $hasImageUrlStatus = false;
                                          foreach($data2 as $rec2){
-                                            $textReplyMessage2= $textReplyMessage2.$count.' '.$rec2->userName;                                  	   
+                                            $textReplyMessage2= $textReplyMessage2.$count.'. '.$rec2->userName."\n\n";                                  	   
 			                    $count++;
                                              }//end for each
 		                         $textMessage2 = new TextMessageBuilder($textReplyMessage2);
