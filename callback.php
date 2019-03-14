@@ -390,7 +390,6 @@ foreach ($events as $event) {
 				         $founduser2=NULL;
 					 $textReplyMessage2="\nไม่พบข้อมูลใน Register\n";
 				         }
-				
 		               if((is_null($founduser)) and (is_null($founduser2))) {
 				$textReplyMessage2= $textReplyMessage.$textReplyMessage2."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ".$founduser.$founduser2;
 		                $textMessage2 = new TextMessageBuilder($textReplyMessage2);
