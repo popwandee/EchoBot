@@ -190,8 +190,8 @@ foreach ($events as $event) {
 		 if($explodeText[0]=='#help'){
 			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
@@ -341,6 +341,7 @@ foreach ($events as $event) {
                           $data = json_decode($json);
                           $isData=sizeof($data);
                           if($isData >0){
+				
 		             $textReplyMessage = "คุณ".$displayName."\n";
 		             $count = 1;
 		             $hasImageUrlStatus = false;
@@ -359,35 +360,29 @@ foreach ($events as $event) {
 		                     $multiMessage->add($textMessage);
 		                     $replyData = $multiMessage;
 	                 }else{
-		               $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
-		                $textMessage = new TextMessageBuilder($textReplyMessage);
-		                $multiMessage->add($textMessage);
-		                $replyData = $multiMessage;
+		               $founduser= null;
 	                       }
 				
-                     $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
-                          $data = json_decode($json);
+                     $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":"'.$explodeText[1].'"}');
+				$data = json_decode($json);
                           $isData=sizeof($data);
                           if($isData >0){
 		             $textReplyMessage = "คุณ".$displayName."\n";
 		             $count = 1;
 		             $hasImageUrlStatus = false;
                              foreach($data as $rec){
-                                     $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-                                     
-				     if(isset($rec->Image) and (!$hasImageUrlStatus) and ($count<5)){
-			                  $imageUrlStatus=true;
-		 	                  $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
-	                                  $imageMessage = new ImageMessageBuilder($imageUrl,$imageUrl);
-	                                  $multiMessage->add($imageMessage);
-		                          }
+                                    $textReplyMessage= $textReplyMessage.$count.' '.$rec->userName;                                  	   
 			             $count++;
                                      }//end for each
 		                     $textMessage = new TextMessageBuilder($textReplyMessage);
 		                     $multiMessage->add($textMessage);
 		                     $replyData = $multiMessage;
 	                 }else{
-		               $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
+				  $founduser=null;
+				  }
+				
+		               if($founduser==null){
+				       $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
 		                $textMessage = new TextMessageBuilder($textReplyMessage);
 		                $multiMessage->add($textMessage);
 		                $replyData = $multiMessage;
