@@ -351,10 +351,9 @@ foreach ($events as $event) {
 	                  $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
                           $data = json_decode($json);
                           $isData=sizeof($data);
+			  $count = 1;
                           if($isData >0){
-				
 		             $textReplyMessage = "คุณ".$displayName."\n";
-		             $count = 1;
 		             $hasImageUrlStatus = false;
                              foreach($data as $rec){
                                      $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
@@ -380,7 +379,6 @@ foreach ($events as $event) {
                           $isData2=sizeof($data2);
                           if($isData2 >0){
 		             $textReplyMessage2 = "ตรวจสอบในฐานข้อมูล register ใหม่\n";
-		             $count = 1;
 		             $hasImageUrlStatus = false;
                              foreach($data2 as $rec2){
                                     $textReplyMessage2= $textReplyMessage2.$count.' '.$rec2->userName;                                  	   
