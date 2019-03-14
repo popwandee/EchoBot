@@ -348,54 +348,54 @@ foreach ($events as $event) {
 				//$log_note=$log_note."\n User select #p ".$textReplyMessage;
 			        break;
 				case '#f':
-	                  $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
-                          $data = json_decode($json);
-                          $isData=sizeof($data);
-			  $count = 1;
-                          if($isData >0){
-		             $textReplyMessage = "คุณ".$displayName."\n";
-		             $hasImageUrlStatus = false;
-                             foreach($data as $rec){
-                                     $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
-				     if(isset($rec->Image) and (!$hasImageUrlStatus) and ($count<5)){
+	                             $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/phonebook?apiKey='.MLAB_API_KEY.'&q={"$or":[{"name":{"$regex":"'.$explodeText[1].'"}},{"lastname":{"$regex":"'.$explodeText[1].'"}},{"nickname":{"$regex":"'.$explodeText[1].'"}},{"nickname2":{"$regex":"'.$explodeText[1].'"}},{"position":{"$regex":"'.$explodeText[1].'"}}]}');
+                                     $data = json_decode($json);
+                                     $isData=sizeof($data);
+			             $count = 1;
+                                     if($isData >0){
+		                       $textReplyMessage = "คุณ".$displayName."\n";
+		                       $hasImageUrlStatus = false;
+                                       foreach($data as $rec){
+                                         $textReplyMessage= $textReplyMessage.$count.' '.$rec->rank.$rec->name.' '.$rec->lastname.' ('.$rec->position.' '.$rec->deploy_position.') '.$rec->Email.' โทร '.$rec->Tel1." ค่ะ\n\n";
+				         if(isset($rec->Image) and (!$hasImageUrlStatus) and ($count<5)){
 			                  $imageUrlStatus=true;
 		 	                  $imageUrl="https://www.hooq.info/wp-content/uploads/".$rec->Image;
 	                                  $imageMessage = new ImageMessageBuilder($imageUrl,$imageUrl);
 	                                  $multiMessage->add($imageMessage);
-		                          }
-			             $count++;
-                                     }//end for each
-		                     $textMessage = new TextMessageBuilder($textReplyMessage);
-		                     $multiMessage->add($textMessage);
-		               $founduser= 1;
-	                 }else{
-		               $founduser= NULL;
-			       $textReplyMessage="\nไม่พบข้อมูลใน ฐานข้อมูลบุคคล\n";
-	                       }
+		                            }
+			                  $count++;
+                                         }//end for each
+		                         $textMessage = new TextMessageBuilder($textReplyMessage);
+		                         $multiMessage->add($textMessage);
+		                         $founduser= 1;
+	                              }else{
+		                       $founduser= NULL;
+			               $textReplyMessage="\nไม่พบข้อมูลใน ฐานข้อมูลบุคคล\n";
+	                               }
 				
-                          $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":{"$regex":"'.$explodeText[1].'"}');
-			  $data2 = json_decode($json2);
-                          $isData2=sizeof($data2);
-                          if($isData2 >0){
-		             $textReplyMessage2 = "ตรวจสอบในฐานข้อมูล register ใหม่\n";
-		             $hasImageUrlStatus = false;
-                             foreach($data2 as $rec2){
-                                    $textReplyMessage2= $textReplyMessage2.$count.' '.$rec2->userName;                                  	   
-			             $count++;
-                                     }//end for each
-		                     $textMessage2 = new TextMessageBuilder($textReplyMessage2);
-		                     $multiMessage->add($textMessage2);
-		               $founduser2= 1;
-	                 }else{//don't found data
-				  $founduser2=NULL;$textReplyMessage2="\nไม่พบข้อมูลใน Register\n";
-				  }
+                                       $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":{"$regex":"'.$explodeText[1].'"}}');
+			               $data2 = json_decode($json2);
+                                       $isData2=sizeof($data2);
+                                       if($isData2 >0){
+		                         $textReplyMessage2 = "ตรวจสอบในฐานข้อมูล register ใหม่\n";
+		                         $hasImageUrlStatus = false;
+                                         foreach($data2 as $rec2){
+                                            $textReplyMessage2= $textReplyMessage2.$count.' '.$rec2->userName;                                  	   
+			                    $count++;
+                                             }//end for each
+		                         $textMessage2 = new TextMessageBuilder($textReplyMessage2);
+		                         $multiMessage->add($textMessage2);
+		                         $founduser2= 1;
+	                              }else{//don't found data
+				         $founduser2=NULL;
+					 $textReplyMessage2="\nไม่พบข้อมูลใน Register\n";
+				         }
 				
 		               if((is_null($founduser)) and (is_null($founduser2))) {
 				$textReplyMessage2= $textReplyMessage.$textReplyMessage2."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ".$founduser.$founduser2;
 		                $textMessage2 = new TextMessageBuilder($textReplyMessage2);
 		                $multiMessage->add($textMessage2);
 	                       }
-				
 		                $replyData = $multiMessage;
                    break;
 			   case '#lisa':
