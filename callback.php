@@ -122,9 +122,9 @@ foreach ($events as $event) {
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
 		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID และรออนุมัติ สักครู่นะคะ แล้วเข้ามาตรวจสอบข้อมูลใหม่นะค่ะ";
-			 	           
 			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+                                            $textReplyMessage= $textReplyMessage."\n\n รหัสของคุณคือ ".$userId."\n\n รหัสของคุณจะใช้ได้จนกว่าคุณจะสมัคร LINE ใหม่ หรือเปลี่ยนเครื่อง \n\n ";
+			                  $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);		                           
 					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
@@ -189,14 +189,16 @@ foreach ($events as $event) {
 			 } // end #prove
 		 /*--------------------------*/
 		 if($explodeText[0]=='#help'){
-			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
+			 $textReplyMessage= "คุณ".$displayName."\n\n เพื่อป้องกันการเข้ามาใช้งานโดยไม่ได้รับอนุญาต และปกป้องข้อมูลส่วนตัวของเพื่อนๆ ซึ่งเป็นเรื่องที่สำคัญ \n\n ผู้ใช้จำเป็นต้องลงทะเบียน เมื่อท่านพิมพ์ #register และข้อมูลส่วนตัวของท่าน แสดงว่าท่านยินยอมให้ลิซ่าเก็บรหัสของ LINE กับอุปกรณ์ที่ท่านใช้งาน เพื่อยืนยันตัวบุคคลก่อน";
+			 $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ หรือข้อมูลอื่นๆ ที่ท่านต้องการ เพื่อลงทะเบียนขอใช้งานระบบ หลังจากนั้นรอผู้ดูแลลิซ่า อนุมัติ ท่านจะใช้งานได้ค่ะ ปกติก็ใช้เวลาไม่นานนะคะ ถ้าไม่ลืม คริคริ";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ"; 
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม  (เช่น #lisa ชื่ออะไร ) เพื่อสอบถามข้อมูลจากลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+			 $textReplyMessage= $textReplyMessage."\n\n th ไทย ms มาเลเซีย id อินโดนีเซีย zh-CN จีน en อังกฤษ";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
@@ -223,8 +225,9 @@ foreach ($events as $event) {
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
-		                           $textReplyMessage= "คุณ ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+		                           $textReplyMessage= "คุณได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID และรออนุมัติ สักครู่นะคะ แล้วเข้ามาตรวจสอบข้อมูลใหม่นะค่ะ";
                                             $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+                                            $textReplyMessage= $textReplyMessage."\n\n รหัสของคุณคือ ".$userId."\n\n รหัสของคุณจะใช้ได้จนกว่าคุณจะสมัคร LINE ใหม่ หรือเปลี่ยนเครื่อง ";
 			                  $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);		                           
 					   $textReplyMessage= $userId;
