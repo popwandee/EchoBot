@@ -190,15 +190,21 @@ foreach ($events as $event) {
 		 /*--------------------------*/
 		 if($explodeText[0]=='#help'){
 			 $textReplyMessage= "คุณ".$displayName."\n\n เพื่อป้องกันการเข้ามาใช้งานโดยไม่ได้รับอนุญาต และปกป้องข้อมูลส่วนตัวของเพื่อนๆ ซึ่งเป็นเรื่องที่สำคัญ \n\n ผู้ใช้จำเป็นต้องลงทะเบียน เมื่อท่านพิมพ์ #register และข้อมูลส่วนตัวของท่าน แสดงว่าท่านยินยอมให้ลิซ่าเก็บรหัสของ LINE กับอุปกรณ์ที่ท่านใช้งาน เพื่อยืนยันตัวบุคคลก่อน";
-			 $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ หรือข้อมูลอื่นๆ ที่ท่านต้องการ เพื่อลงทะเบียนขอใช้งานระบบ หลังจากนั้นรอผู้ดูแลลิซ่า อนุมัติ ท่านจะใช้งานได้ค่ะ ปกติก็ใช้เวลาไม่นานนะคะ ถ้าไม่ลืม คริคริ";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			 $textReplyMessage= $textReplyMessage."\n\n#register พ.ท.วิชญ์วิสิทธ์ เทียมจิตร บชร.2 0831098844 ชื่อเล่นบอม ฉายาหม่ำพันล้าน เลี้ยงงานอดิเรก KGB แทนเมีย";
+			 $textReplyMessage= $textReplyMessage."\nพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ หรือข้อมูลอื่นๆ ที่ท่านต้องการ เพื่อลงทะเบียนขอใช้งานระบบ หลังจากนั้นรอผู้ดูแลลิซ่า อนุมัติ ท่านจะใช้งานได้ค่ะ ปกติก็ใช้เวลาไม่นานนะคะ ถ้าไม่ลืม คริคริ";
+			 $textReplyMessage= $textReplyMessage."\n\n#help ";
+			 /$textReplyMessage= $textReplyMessage."\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ"; 
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม  (เช่น #lisa ชื่ออะไร ) เพื่อสอบถามข้อมูลจากลิซ่า";
+			 $textReplyMessage= $textReplyMessage."\n\n#f บอม";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #f ชื่อ/นามสกุล/ตำแหน่ง/สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			 $textReplyMessage= $textReplyMessage."\n\n#lisa พี่บอม หม่ำไง";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			 $textReplyMessage= $textReplyMessage."\n\n#lisa พี่บอม ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #lisa คำถาม  (เช่น #lisa ชื่ออะไร ) เพื่อสอบถามข้อมูลจากลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
-			 $textReplyMessage= $textReplyMessage."\n\n th ไทย ms มาเลเซีย id อินโดนีเซีย zh-CN จีน en อังกฤษ";
+			 $textReplyMessage= $textReplyMessage."\n\n th ไทย ms มาเลเซีย id อินโดนีเซีย zh-CN จีน en อังกฤษ";			 
+			 $textReplyMessage= $textReplyMessage."\n\n อาจจะยุ่งยากนิดนึงนะคะ แต่เพื่อป้องกันไม่ให้ลิซ่าตอบเองโดยไม่ตั้งใจถาม จะเป็นการรบกวนพี่ๆ นะคะ ลิซ่าเกรงจายยยยยยยย";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
