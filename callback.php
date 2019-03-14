@@ -193,7 +193,7 @@ foreach ($events as $event) {
 			 $textReplyMessage= $textReplyMessage."\n\n#register พ.ท.วิชญ์วิสิทธ์ เทียมจิตร บชร.2 0831098844 ชื่อเล่นบอม ฉายาหม่ำพันล้าน เลี้ยงงานอดิเรก KGB แทนเมีย";
 			 $textReplyMessage= $textReplyMessage."\nพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ หรือข้อมูลอื่นๆ ที่ท่านต้องการ เพื่อลงทะเบียนขอใช้งานระบบ หลังจากนั้นรอผู้ดูแลลิซ่า อนุมัติ ท่านจะใช้งานได้ค่ะ ปกติก็ใช้เวลาไม่นานนะคะ ถ้าไม่ลืม คริคริ";
 			 $textReplyMessage= $textReplyMessage."\n\n#help ";
-			 /$textReplyMessage= $textReplyMessage."\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ"; 
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
 			 $textReplyMessage= $textReplyMessage."\n\n#f บอม";
