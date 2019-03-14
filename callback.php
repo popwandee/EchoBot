@@ -121,24 +121,25 @@ foreach ($events as $event) {
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
-		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
+		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID และรออนุมัติ สักครู่นะคะ แล้วเข้ามาตรวจสอบข้อมูลใหม่นะค่ะ";
+			 	           
+			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);		                           
 					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
 					   //$textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 	           
-			                   $textReplyMessage= "\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			                   //$textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
 			                  // $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
-			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
-				           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
+			                  // $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			                   //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			 	           //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม (เช่น #lisa ชื่ออะไร) เพื่อสอบถามข้อมูลจากลิซ่า";
+			 	          
+			                   //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				           //$textMessage = new TextMessageBuilder($textReplyMessage);
+			                   //$multiMessage->add($textMessage);
 			                   $replyData = $multiMessage;
 			                   $response = $bot->replyMessage($replyToken,$replyData);
 					   $userId = NULL;
@@ -164,7 +165,7 @@ foreach ($events as $event) {
 					    foreach($documentId as $key => $value){
 						    if($key === '$oid'){
 							    $updateId=$value;
-					                    $textReplyMessage="Prove Registered Id ".$rec->userId." Passed";
+					                    $textReplyMessage="อนุมัติ Id ".$rec->userId." แล้วค่ะ";
 					                    }
 					             } // end for each $key=>$value
 					    }//end for each
@@ -194,6 +195,7 @@ foreach ($events as $event) {
 			 //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม  (เช่น #lisa ชื่ออะไร ) เพื่อสอบถามข้อมูลจากลิซ่า";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
@@ -222,23 +224,24 @@ foreach ($events as $event) {
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
 		                           $textReplyMessage= "คุณ ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+                                            $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			                  $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);		                           
 					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
 					   //$textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
 			 	           
-			                   $textReplyMessage= "\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
+			                   //$textReplyMessage= "\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
 			                   //$textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
 			 	           
 			                   //$textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
+			                   //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #f ชื่อ ตำแหน่ง สังกัด (เช่น #f ลิซ่า) เพื่อค้นหาข้อมูลการติดต่อเพื่อน จปร.51";
+			                   //$textReplyMessage= $textReplyMessage."\n\n พิมพ์ #lisa คำถาม คำตอบ (เช่น #lisa ชื่ออะไร ลิซ่าค่ะ) เพื่อสอนคำใหม่ให้ลิซ่า";
 			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
-				           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
+			                   //$textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+				           //$textMessage = new TextMessageBuilder($textReplyMessage);
+			                   //$multiMessage->add($textMessage);
 			                   $replyData = $multiMessage;
 			                   $response = $bot->replyMessage($replyToken,$replyData);
 					   $userId = NULL;
@@ -359,8 +362,9 @@ foreach ($events as $event) {
 		                     $textMessage = new TextMessageBuilder($textReplyMessage);
 		                     $multiMessage->add($textMessage);
 		                     $replyData = $multiMessage;
+		               $founduser= 1;
 	                 }else{
-		               $founduser= null;
+		               $founduser= NULL;
 	                       }
 				
                      $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":"'.$explodeText[1].'"}');
@@ -377,12 +381,13 @@ foreach ($events as $event) {
 		                     $textMessage = new TextMessageBuilder($textReplyMessage);
 		                     $multiMessage->add($textMessage);
 		                     $replyData = $multiMessage;
+		               $founduser= 1;
 	                 }else{
-				  $founduser=null;
+				  $founduser=NULL;
 				  }
 				
-		               if($founduser==null){
-				       $textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
+		               if(is_null($founduser)){
+				$textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
 		                $textMessage = new TextMessageBuilder($textReplyMessage);
 		                $multiMessage->add($textMessage);
 		                $replyData = $multiMessage;
