@@ -375,7 +375,7 @@ foreach ($events as $event) {
 		               $founduser= NULL;
 	                       }
 				
-                     $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":"'.$explodeText[1].'"}');
+                     $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":{"$regex":"'.$explodeText[1].'"}');
 				$data2 = json_decode($json2);
                           $isData2=sizeof($data2);
                           if($isData2 >0){
@@ -390,12 +390,12 @@ foreach ($events as $event) {
 		                     $multiMessage->add($textMessage2);
 		                     $replyData = $multiMessage;
 		               $founduser= 1;
-	                 }else{
+	                 }else{//don't found data
 				  $founduser=NULL;
 				  }
 				
 		               if(is_null($founduser)){
-				$textReplyMessage= $textReplyMessage."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ";
+				$textReplyMessage= "\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ".$founduser;
 		                $textMessage = new TextMessageBuilder($textReplyMessage);
 		                $multiMessage->add($textMessage);
 		                $replyData = $multiMessage;
