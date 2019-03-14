@@ -375,19 +375,19 @@ foreach ($events as $event) {
 		               $founduser= NULL;
 	                       }
 				
-                     $json = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":"'.$explodeText[1].'"}');
-				$data = json_decode($json);
-                          $isData=sizeof($data);
-                          if($isData >0){
-		             $textReplyMessage = "คุณ".$displayName."\n";
+                     $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":"'.$explodeText[1].'"}');
+				$data2 = json_decode($json2);
+                          $isData2=sizeof($data2);
+                          if($isData2 >0){
+		             $textReplyMessage2 = "ตรวจสอบในฐานข้อมูล register ใหม่\n";
 		             $count = 1;
 		             $hasImageUrlStatus = false;
-                             foreach($data as $rec){
-                                    $textReplyMessage= $textReplyMessage.$count.' '.$rec->userName;                                  	   
+                             foreach($data2 as $rec2){
+                                    $textReplyMessage2= $textReplyMessage2.$count.' '.$rec2->userName;                                  	   
 			             $count++;
                                      }//end for each
-		                     $textMessage = new TextMessageBuilder($textReplyMessage);
-		                     $multiMessage->add($textMessage);
+		                     $textMessage2 = new TextMessageBuilder($textReplyMessage2);
+		                     $multiMessage->add($textMessage2);
 		                     $replyData = $multiMessage;
 		               $founduser= 1;
 	                 }else{
@@ -403,7 +403,7 @@ foreach ($events as $event) {
                    break;
 			   case '#lisa':
 				if(!isset($explodeText[2])){ // just question, 
-					$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[1].'"}');
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/hooqbot?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[1].'"}');
                                 $data = json_decode($json);
                                 $isData=sizeof($data);
                                 if($isData >0){
