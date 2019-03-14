@@ -373,6 +373,7 @@ foreach ($events as $event) {
 		               $founduser= 1;
 	                 }else{
 		               $founduser= NULL;
+				  $founduser2=NULL;$textReplyMessage2="\nไม่พบข้อมูลใน ฐานข้อมูลบุคคล\n";
 	                       }
 				
                      $json2 = file_get_contents('https://api.mlab.com/api/1/databases/crma51/collections/user_register?apiKey='.MLAB_API_KEY.'&q={"userName":{"$regex":"'.$explodeText[1].'"}');
@@ -389,13 +390,13 @@ foreach ($events as $event) {
 		                     $textMessage2 = new TextMessageBuilder($textReplyMessage2);
 		                     $multiMessage->add($textMessage2);
 		                     $replyData = $multiMessage;
-		               $founduser= 1;
+		               $founduser2= 1;
 	                 }else{//don't found data
-				  $founduser=NULL;
+				  $founduser2=NULL;$textReplyMessage2="\nไม่พบข้อมูลใน Register\n";
 				  }
 				
-		               if(is_null($founduser)){
-				$textReplyMessage= "\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ".$founduser;
+		               if((is_null($founduser)) and (is_null($founduser2))) {
+				$textReplyMessage= $textReplyMessage.$textReplyMessage2."\nลิซ่า หาชื่อ ".$explodeText[1]." ไม่พบค่ะ".$founduser;
 		                $textMessage = new TextMessageBuilder($textReplyMessage);
 		                $multiMessage->add($textMessage);
 		                $replyData = $multiMessage;
