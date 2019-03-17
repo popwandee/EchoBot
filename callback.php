@@ -280,10 +280,12 @@ foreach ($events as $event) {
                            //$log_note= $log_note."\nFrom DB\nDisplayname ".$rec->displayName."\n Registered Id ".$rec->userId;
 			     }//end for each
 	if($rec->status==1){ // อนุมัติตัวบุคคลแล้ว
-		//------------------------------------------
 		
-		$newPersonData='
- [
+		switch ($explodeText[0]) { 
+			case '#newPersonData':
+				//------------------------------------------
+		
+$newPersonData='[
  {
    "nationid": 1560100019994,
    "name": "นายคอยรูลอานวารีจิ",
@@ -2705,28 +2707,24 @@ foreach ($events as $event) {
    "address": "๓๘/๑ ม.๘ ต.ปะลุรู\nอ.สุไหงปาดี จว.น.ธ.\n",
    "note": "TL/SABOTAS\nตากใบ\n",
    "picUrl": "5961100005628.jpg?alt=media&token=665063f2-864b-4fc9-9f2e-c7a3798ffb25"
- }
-]
-';
+ }]';
 		
 		//-------------------------------------------
-		switch ($explodeText[0]) { 
-			case '#newPersonData':
                                 $opts = array('http' => array( 'method' => "POST",
                                           'header' => "Content-type: application/json",
                                           'content' => $newPersonData
                                            )
                                         );
-				$textMessage =$newPersonData;
+				$textReplyMessage =$newPersonData;
                                 $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY;
                                 $context = stream_context_create($opts);
                                 $returnValue = file_get_contents($url,false,$context);
-				$textMessage =$textMessage.$returnValue;
+				$textMessage =$textReplyMessage.$returnValue;
 				if($returnValue){
-				       $textReplyMessage= $textMessage."OK";
+				       $textReplyMessage= $textReplyMessage."OK";
 				     
 				}else{
-				       $textReplyMessage= $textMessage."NO";
+				       $textReplyMessage= $textReplyMessage."NO";
 				}
 				
 				$textMessage = new TextMessageBuilder($textReplyMessage); 
