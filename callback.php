@@ -283,6 +283,7 @@ foreach ($events as $event) {
 		//------------------------------------------
 		
 		$newPersonData='
+ [
  {
    "nationid": 1560100019994,
    "name": "นายคอยรูลอานวารีจิ",
@@ -2705,7 +2706,7 @@ foreach ($events as $event) {
    "note": "TL/SABOTAS\nตากใบ\n",
    "picUrl": "5961100005628.jpg?alt=media&token=665063f2-864b-4fc9-9f2e-c7a3798ffb25"
  }
-
+]
 ';
 		
 		//-------------------------------------------
