@@ -282,7 +282,7 @@ foreach ($events as $event) {
 	if($rec->status==1){ // อนุมัติตัวบุคคลแล้ว
 		
 		switch ($explodeText[0]) { 
-			case '#newPersonData':
+			case '#newdata':
 				//------------------------------------------
 		
 $newPersonData='[
