@@ -283,7 +283,6 @@ foreach ($events as $event) {
 		//------------------------------------------
 		
 		$newPersonData='
-[
  {
    "nationid": 1560100019994,
    "name": "นายคอยรูลอานวารีจิ",
@@ -2706,7 +2705,7 @@ foreach ($events as $event) {
    "note": "TL/SABOTAS\nตากใบ\n",
    "picUrl": "5961100005628.jpg?alt=media&token=665063f2-864b-4fc9-9f2e-c7a3798ffb25"
  }
-]
+
 ';
 		
 		//-------------------------------------------
@@ -2720,6 +2719,16 @@ foreach ($events as $event) {
                                 $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'';
                                 $context = stream_context_create($opts);
                                 $returnValue = file_get_contents($url,false,$context);
+				if($returnValue){
+				       $textReplyMessage= "OK";
+				     
+				}else{
+				       $textReplyMessage= "NO";
+				}
+				
+                                       $textMessage = new TextMessageBuilder($textReplyMessage);
+	                               $multiMessage->add($textMessage);
+				       $replyData = $multiMessage;
 				break;
 			case '#p':
 				if (!is_null($explodeText[1])){
