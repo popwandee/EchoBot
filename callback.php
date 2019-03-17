@@ -2717,19 +2717,21 @@ foreach ($events as $event) {
                                           'content' => $newPersonData
                                            )
                                         );
-                                $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY.'';
+				$textMessage =$newPersonData;
+                                $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY;
                                 $context = stream_context_create($opts);
                                 $returnValue = file_get_contents($url,false,$context);
+				$textMessage =$textMessage.$returnValue;
 				if($returnValue){
-				       $textReplyMessage= "OK";
+				       $textReplyMessage= $textMessage."OK";
 				     
 				}else{
-				       $textReplyMessage= "NO";
+				       $textReplyMessage= $textMessage."NO";
 				}
 				
-                                       $textMessage = new TextMessageBuilder($textReplyMessage);
-	                               $multiMessage->add($textMessage);
-				       $replyData = $multiMessage;
+				$textMessage = new TextMessageBuilder($textReplyMessage); 
+	                        $multiMessage->add($textMessage);
+				$replyData = $multiMessage;
 				break;
 			case '#p':
 				if (!is_null($explodeText[1])){
