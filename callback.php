@@ -2715,11 +2715,14 @@ $newPersonData='[
                                           'content' => $newPersonData
                                            )
                                         );
-				$textReplyMessage =$newPersonData;
+				//$textReplyMessage =$newPersonData;
                                 $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/people?apiKey='.MLAB_API_KEY;
                                 $context = stream_context_create($opts);
                                 $returnValue = file_get_contents($url,false,$context);
-				$textMessage =$textReplyMessage.$returnValue;
+				$textMessage =$returnValue;
+				$textMessage = new TextMessageBuilder($textReplyMessage); 
+	                        $multiMessage->add($textMessage);
+				$replyData = $multiMessage;
 				if($returnValue){
 				       $textReplyMessage= $textReplyMessage."OK";
 				     
