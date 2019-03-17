@@ -109,44 +109,37 @@ foreach ($events as $event) {
 	      //$multiMessage->add($textMessage);  
 		 
 		 if(($explodeText[0]=='#register') and (isset($explodeText[1]))){ // เก็บข้อมูลผู้สมัคร แต่ยังคงให้ status =0
-			                $text_parameter = str_replace("#register ","", $text); 
-					$newUserData = json_encode(array('userName' => $text_parameter,'displayName' => $displayName,
-									 'userId'=> $userId,'statusMessage'=> $statusMessage,
-									 'pictureUrl'=>$pictureUrl,'status'=>0) );
-                                        $opts = array('http' => array( 'method' => "POST",
-                                          'header' => "Content-type: application/json",
-                                          'content' => $newUserData ) );
+			$text_parameter = str_replace("#register ","", $text); 
+			$newUserData = json_encode(array('userName' => $text_parameter,'displayName' => $displayName,
+					'userId'=> $userId,'statusMessage'=> $statusMessage,
+					'pictureUrl'=>$pictureUrl,'status'=>0) );
+                        $opts = array('http' => array( 'method' => "POST",
+                        'header' => "Content-type: application/json",
+                        'content' => $newUserData ) );
            
-                                       $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
-                                       $context = stream_context_create($opts);
-                                       $returnValue = file_get_contents($url,false,$context);
-			               if($returnValue){
-		                           $textReplyMessage= "คุณ".$displayName." ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);		                           
-					   $textReplyMessage= $userId;
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-					   $textReplyMessage= "คำแนะนำในการใช้ \n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                   
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
-				           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-			                   $replyData = $multiMessage;
-			                   $response = $bot->replyMessage($replyToken,$replyData);
-					   $userId = NULL;
-				           }else{
-					   $textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-                                           $replyData = $multiMessage;
-					   $userId = NULL;
-				       }
+                        $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/user_register?apiKey='.MLAB_API_KEY.'';
+                        $context = stream_context_create($opts);
+                        $returnValue = file_get_contents($url,false,$context);
+			if($returnValue){
+		              $textReplyMessage= "คุณ".$displayName." ได้ส่ง รหัสเครื่องให้นกฮูกแล้วนะคะ\n\n รอการอนุมัติสักครู่นะคะ เพื่อให้การลงทะเบียนสมบูรณ์ (ปกติจะใช้เวลาไม่นานถ้าไม่ลืมนะคะ คริคริ) หลังจากที่ท่านลงทะเบียนแล้วถึงจะสามารถตรวจสอบข้อมูลกับนกฮูกได้นะค่ะ";
+			      $textReplyMessage= $textReplyMessage."\n\n เพื่อป้องกันการเข้ามาใช้งานโดยไม่ได้รับอนุญาต และปกป้องข้อมูลของหน่วย ซึ่งเป็นเรื่องที่สำคัญ \n\n ผู้ใช้จำเป็นต้องลงทะเบียน เมื่อท่านพิมพ์ #register และข้อมูลส่วนตัวของท่าน แสดงว่าท่านยินยอมให้นกฮูกเก็บรหัสของ LINE กับอุปกรณ์ที่ท่านใช้งาน เพื่อยืนยันตัวบุคคลก่อน";
+			      $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้นกฮูกช่วยตอบ";
+                              $textReplyMessage= $textReplyMessage."\n\n รหัสของคุณคือ ".$userId."\n\n รหัสของคุณจะใช้ได้จนกว่าคุณจะสมัคร LINE ใหม่ หรือเปลี่ยนเครื่อง \n\n ";
+			      $textMessage = new TextMessageBuilder($textReplyMessage);
+			      $multiMessage->add($textMessage);		                           
+			      $textReplyMessage= $userId;
+                              $textMessage = new TextMessageBuilder($textReplyMessage);
+			      $multiMessage->add($textMessage);
+			      $replyData = $multiMessage;
+			      $response = $bot->replyMessage($replyToken,$replyData);
+			      $userId = NULL;
+				 }else{
+				$textReplyMessage= "คุณ".$displayName." ไม่สามารถลงทะเบียน ID ".$userId." ได้ค่ะ\n\n กรุณาลองใหม่อีกครั้งค่ะ \n\nหรือแจ้งผู้ดูแลระบบโดยตรงนะคะ";
+                                $textMessage = new TextMessageBuilder($textReplyMessage);
+			        $multiMessage->add($textMessage);
+                                $replyData = $multiMessage;
+				$userId = NULL;
+			}
 		 } // end #register
 		 
 		 /*---- prove user by update status from 0 to 1---*/
@@ -164,7 +157,7 @@ foreach ($events as $event) {
 					    foreach($documentId as $key => $value){
 						    if($key === '$oid'){
 							    $updateId=$value;
-					                    $textReplyMessage="Prove Registered Id ".$rec->userId." Passed";
+					                   $textReplyMessage="อนุมัติ Id ".$rec->userId." แล้วค่ะ";
 					                    }
 					             } // end for each $key=>$value
 					    }//end for each
@@ -188,11 +181,19 @@ foreach ($events as $event) {
 			 } // end #prove
 		 /*--------------------------*/
 		 if($explodeText[0]=='#help'){
-			 $textReplyMessage= "คุณ".$displayName."\n\n พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
+			  $textReplyMessage= "คุณ".$displayName."\n\n เพื่อป้องกันการเข้ามาใช้งานโดยไม่ได้รับอนุญาต และปกป้องข้อมูลของหน่วย ซึ่งเป็นเรื่องที่สำคัญ \n\n ผู้ใช้จำเป็นต้องลงทะเบียน เมื่อท่านพิมพ์ #register และข้อมูลส่วนตัวของท่าน แสดงว่าท่านยินยอมให้นกฮูกเก็บรหัสของ LINE กับอุปกรณ์ที่ท่านใช้งาน เพื่อยืนยันตัวบุคคลก่อน";
+			 $textReplyMessage= $textReplyMessage."\nพิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ หลังจากนั้นรอผู้ดูแล อนุมัติ ท่านจะใช้งานได้ค่ะ ปกติก็ใช้เวลาไม่นานนะคะ ถ้าไม่ลืม คริคริ";
+			 $textReplyMessage= $textReplyMessage."\n\n#help ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้นกฮูกช่วยตอบ";
+			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ"; 
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
+			 $textReplyMessage= $textReplyMessage."\n\n#lisa คำถาม คำตอบ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #lisa เพื่อสอนความรู้ใหม่ให้นกฮูก เช่น #lisa ยะลา จังหวัดหนึ่งในประเทศไทย) ";
+			 $textReplyMessage= $textReplyMessage."\n\n#lisa คำถาม ";
+			 $textReplyMessage= $textReplyMessage."\n พิมพ์ #lisa ค เพื่อสอบถามข้อมูลจากนกฮูก  (เช่น #lisa ยะลา )";
 			 $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
+			 $textReplyMessage= $textReplyMessage."\n\n th ไทย ms มาเลเซีย id อินโดนีเซีย zh-CN จีน en อังกฤษ";			 
+			 $textReplyMessage= $textReplyMessage."\n\n อาจจะยุ่งยากนิดนึงนะคะ แต่เพื่อป้องกันไม่ให้นกฮูกตอบเองโดยไม่ตั้งใจถาม จะเป็นการรบกวนพี่ๆ นะคะ นกฮูกเกรงจายยยยยยยย";
 				 $textMessage = new TextMessageBuilder($textReplyMessage);
 			          $multiMessage->add($textMessage);
 			          $replyData = $multiMessage;
@@ -219,23 +220,16 @@ foreach ($events as $event) {
                                        $context = stream_context_create($opts);
                                        $returnValue = file_get_contents($url,false,$context);
 			               if($returnValue){
-		                           $textReplyMessage= "คุณ ได้ลงทะเบียนแล้วนะคะ\n\n รอตรวจสอบ ID สักครู่ แล้วเข้ามาตรวจสอบใหม่นะค่ะ";
-                                           $textMessage = new TextMessageBuilder($textReplyMessage);
+		                           $textReplyMessage= "คุณ".$displayName." ได้ส่ง รหัสเครื่องให้น้องนกฮูกแล้วนะคะ\n\n รอการอนุมัติสักครู่นะคะ เพื่อให้การลงทะเบียนสมบูรณ์ (ปกติจะใช้เวลาไม่นานถ้าไม่ลืมนะคะ คริคริ) หลังจากที่ท่านลงทะเบียนแล้วถึงจะสามารถตรวจสอบข้อมูลกับน้องนกฮูกได้นะค่ะ";
+			                    $textReplyMessage= $textReplyMessage."\n\n เพื่อป้องกันการเข้ามาใช้งานโดยไม่ได้รับอนุญาต และปกป้องข้อมูลของหน่วย ซึ่งเป็นเรื่องที่สำคัญ \n\n ผู้ใช้จำเป็นต้องลงทะเบียน เมื่อท่านพิมพ์ #register และข้อมูลส่วนตัวของท่าน แสดงว่าท่านยินยอมให้น้องนกฮูกเก็บรหัสของ LINE กับอุปกรณ์ที่ท่านใช้งาน เพื่อยืนยันตัวบุคคลก่อน";
+			                    $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้น้องนกฮูกช่วยตอบ";
+                                            $textReplyMessage= $textReplyMessage."\n\n รหัสของคุณคือ ".$userId."\n\n รหัสของคุณจะใช้ได้จนกว่าคุณจะสมัคร LINE ใหม่ หรือเปลี่ยนเครื่อง ";
+			                   $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);		                           
 					   $textReplyMessage= $userId;
                                            $textMessage = new TextMessageBuilder($textReplyMessage);
 			                   $multiMessage->add($textMessage);
-					   $textReplyMessage= "พิมพ์ #register ยศ ชื่อ นามสกุล ตำแหน่ง สังกัด หมายเลขโทรศัพท์ เพื่อลงทะเบียนขอใช้งานระบบ";
-			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\n พิมพ์ #help เพื่อสอบถามวิธีการตั้งคำถามให้ลิซ่าช่วยตอบ";
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #c ทะเบียนรถ (เช่น #c กก12345ยะลา) เพื่อตรวจสอบทะเบียนรถ";
-			 	           
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #p หมายเลข ปชช. 13 หลัก (เช่น #p 1234567891234) เพื่อตรวจสอบประวัติบุคคลใน ทกร.";
-			                    
-			                   $textReplyMessage= $textReplyMessage."\n\nพิมพ์ #tran รหัสประเทศต้นทาง ปลายทาง คำที่ต้องการแปล (เช่น #tran ms th hello แปลคำว่า hello จากมาเลเซียเป็นไทย) เพื่อแปลภาษา";
-				           $textMessage = new TextMessageBuilder($textReplyMessage);
-			                   $multiMessage->add($textMessage);
-			                   $replyData = $multiMessage;
+					   $replyData = $multiMessage;
 			                   $response = $bot->replyMessage($replyToken,$replyData);
 					   $userId = NULL;
 				           }else{
@@ -292,7 +286,6 @@ foreach ($events as $event) {
                                    $textReplyMessage= "ไม่พบ ".$explodeText[1]."  ในฐานข้อมูลของหน่วย";
 	                           $textMessage = new TextMessageBuilder($textReplyMessage);
 	                           $multiMessage->add($textMessage);
-
 			           $replyData = $multiMessage;
                                    } // end $isData>0
 				}else{ // no $explodeText[1]
@@ -376,6 +369,48 @@ foreach ($events as $event) {
 			          $replyData = $multiMessage;
 			           $response = $bot->replyMessage($replyToken,$replyData);
 				break;
+		case '#lisa':
+				if(!isset($explodeText[2])){ // just question, 
+				$json = file_get_contents('https://api.mlab.com/api/1/databases/hooqline/collections/knowledge?apiKey='.MLAB_API_KEY.'&q={"question":"'.$explodeText[1].'"}');
+                                $data = json_decode($json);
+                                $isData=sizeof($data);
+                                if($isData >0){
+                                   foreach($data as $rec){
+                                           $textReplyMessage= $textReplyMessage."\n".$explodeText[1]." คือ\n".$rec->answer."\n";
+                                           }//end for each
+				    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+                                    }
+				}else{// no answer
+                                //Post New Data
+		                $indexCount=1;$answer='';
+	                        foreach($explodeText as $rec){
+		                       $indexCount++;
+		                       if($indexCount>1){
+		                           $answer= $answer." ".$explodeText[$indexCount];
+		                          }
+	                                }
+                                $newData = json_encode(array('question' => $explodeText[1],'answer'=> $answer) );
+                                $opts = array('http' => array( 'method' => "POST",
+                                          'header' => "Content-type: application/json",
+                                          'content' => $newData
+                                           )
+                                        );
+                                $url = 'https://api.mlab.com/api/1/databases/hooqline/collections/knowledge?apiKey='.MLAB_API_KEY.'';
+                                $context = stream_context_create($opts);
+                                $returnValue = file_get_contents($url,false,$context);
+                                       if($returnValue){
+		                          $textReplyMessage= $textReplyMessage."\nขอบคุณที่สอนน้องนกฮูกค่ะ";
+		                          $textReplyMessage= $textReplyMessage."\nน้องนกฮูกจำได้แล้วว่า ".$explodeText[1]." คือ ".$answer;
+	                                      }else{ $textReplyMessage= $textReplyMessage."\nสอนน้องนกฮูกไม่สำเร็จ";
+		                                     }
+				    $textMessage = new TextMessageBuilder($textReplyMessage);
+		                    $multiMessage->add($textMessage);
+		                    $replyData = $multiMessage;
+				}// end no answer, just question only
+                                 break;
+			   
 			   case '#tran':
 			        $text_parameter = str_replace("#tran ","", $text);  
                                 if (!is_null($explodeText[1])){ $source =$explodeText[1];}else{$source ='en';}
