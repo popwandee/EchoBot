@@ -29,6 +29,7 @@ if ($isUserRegister > 0) {
 		$_SESSION['name'] = $_POST['username'];
 		$_SESSION['id'] = $id;
 		echo 'Welcome ' . $_SESSION['name'] . '!';
+		header('Location: home.php');
 	} else {
 		echo 'Incorrect password!';
 	}
