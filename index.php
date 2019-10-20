@@ -5,9 +5,17 @@
 		<title>Login</title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 		<link href="style.css" rel="stylesheet" type="text/css">
+		<?php
+                     if (isset($_SESSION['message'])) {
+	                 $message=$_SESSION['message'];
+                      }else{
+			 $message='';
+                       }
+                      ?>
 	</head>
 	<body>
 		<div class="login">
+			<h1><?php echo $message;?></h1>
 			<h1>Login</h1>
 			<form action="authenticate.php" method="post">
 				<label for="username">
