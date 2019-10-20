@@ -11,7 +11,7 @@ if ( !isset($_POST['username'], $_POST['password']) ) {
 if ($isUserRegister > 0) {
 	
 	// Account exists, now we verify the password.
-  foreach($data as &$rec){
+  foreach($data as $rec){
       $password= $rec->password;
       }//end foreach
 	// Note: remember to use password_hash in your registration file to store the hashed passwords.
