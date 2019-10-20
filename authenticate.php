@@ -31,8 +31,10 @@ if ($isUserRegister > 0) {
 		echo 'Welcome ' . $_SESSION['name'] . '!';
 		header('Location: home.php');
 	} else {
-		echo 'Incorrect password!';
+		$_SESSION['message'] = 'Incorrect password!';
+		header('Location: index.php');
 	}
 } else {
-	echo 'Incorrect username!';
+	$_SESSION['message'] = 'Incorrect username!';
+	header('Location: index.php');
 }
